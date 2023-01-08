@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="https://jscdn.com.cn/highcharts/images/favicon.ico">
+    <!-- import CSS -->
+    <link rel="stylesheet" href="/static/elementUI/index.css">
+    <style>
+        .el-table .warning-row {
+            background: oldlace;
+        }
+
+        .el-table .success-row {
+            background: #f0f9eb;
+        }
+    </style>
+
+</head>
+<body>
+<div id="app">
+    <el-tabs v-model="activeName">
+
+        <el-tab-pane label="基金等级" name="first">
+            <el-table
+                    :row-class-name="tableRowClassName"
+                    border
+                    :data="tableData1"
+                    heigth="500"
+                    style="width: 100%">
+                <el-table-column
+                        prop="fundName"
+                        label="基金名称"
+                        width="150">
+                </el-table-column>
+                <el-table-column
+                        prop="fundInfoCode"
+                        label="代码">
+                </el-table-column>
+                <el-table-column
+                        prop="maxNetWorthDate"
+                        :formatter="dateFormatter"
+                        width="110"
+                        label="最大净值日期">
+                </el-table-column>
+                <el-table-column
+                        prop="maxNetWorth"
+                        label="最高净值">
+                    <template slot-scope="scope">
+                        <span v-if=" scope.row.levelNumber==0"
+                              style="color: white; background-color: red;">{{scope.row.maxNetWorth}}</span>
+                        <span v-else style="color: #f49505;">{{scope.row.maxNetWorth}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="level1"
+                        label="第1次">
+                    <template slot-scope="scope">
+                        <span v-if=" scope.row.levelNumber==1"
+                              style="color: white; background-color: red;">{{scope.row.level1}}</span>
+                        <span v-else-if="scope.row.levelNumber==0"
+                              style="color: white; background-color: green;">{{scope.row.level1}}</span>
+                        <span v-else>{{scope.row.level1}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="level2"
+                        label="第2次">
+                    <template slot-scope="scope">
+                        <span v-if=" scope.row.levelNumber==2"
+                              style="color: white; background-color: red;">{{scope.row.level2}}</span>
+                        <span v-else-if="scope.row.levelNumber==1"
+                              style="color: white; background-color: green;">{{scope.row.level2}}</span>
+                        <span v-else>{{scope.row.level2}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="level3"
+                        label="第3次">
+                    <template slot-scope="scope">
+                        <span v-if=" scope.row.levelNumber==3"
+                              style="color: white; background-color: red;">{{scope.row.level3}}</span>
+                        <span v-else-if="scope.row.levelNumber==2"
+                              style="color: white; background-color: green;">{{scope.row.level3}}</span>
+                        <span v-else>{{scope.row.level3}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="level4"
+                        label="第4次">
+                    <template slot-scope="scope">
+                        <span v-if=" scope.row.levelNumber==4"
+                              style="color: white; background-color: red;">{{scope.row.level4}}</span>
+                        <span v-else-if="scope.row.levelNumber==3"
+                              style="color: white; background-color: green;">{{scope.row.level4}}</span>
+                        <span v-else>{{scope.row.level4}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="level5"
+                        label="第5次">
+                    <template slot-scope="scope">
+                        <span v-if=" scope.row.levelNumber==5"
+                              style="color: white; background-color: red;">{{scope.row.level5}}</span>
+                        <span v-else-if="scope.row.levelNumber==4"
+                              style="color: white; background-color: green;">{{scope.row.level5}}</span>
+                        <span v-else style="color: #f49505;">{{scope.row.level5}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="level6"
+                        label="第6次">
+                    <template slot-scope="scope">
+                        <span v-if=" scope.row.levelNumber==6"
+                              style="color: white; background-color: red;">{{scope.row.level6}}</span>
+                        <span v-else-if="scope.row.levelNumber==5"
+                              style="color: white; background-color: green;">{{scope.row.level6}}</span>
+                        <span v-else>{{scope.row.level6}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="level7"
+                        label="第7次">
+                    <template slot-scope="scope">
+                        <span v-if=" scope.row.levelNumber==7"
+                              style="color: white; background-color: red;">{{scope.row.level7}}</span>
+                        <span v-else-if="scope.row.levelNumber==6"
+                              style="color: white; background-color: green;">{{scope.row.level7}}</span>
+                        <span v-else>{{scope.row.level7}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="level8"
+                        label="第8次">
+                    <template slot-scope="scope">
+                        <span v-if=" scope.row.levelNumber==8"
+                              style="color: white; background-color: red;">{{scope.row.level8}}</span>
+                        <span v-else-if="scope.row.levelNumber==7"
+                              style="color: white; background-color: green;">{{scope.row.level8}}</span>
+                        <span v-else>{{scope.row.level8}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="level9"
+                        label="第9次">
+                    <template slot-scope="scope">
+                        <span v-if=" scope.row.levelNumber==9"
+                              style="color: white; background-color: red;">{{scope.row.level19}}</span>
+                        <span v-else-if="scope.row.levelNumber==8"
+                              style="color: white; background-color: green;">{{scope.row.level9}}</span>
+                        <span v-else>{{scope.row.level9}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="level10"
+                        label="第10次">
+                    <template slot-scope="scope">
+                        <span v-if=" scope.row.levelNumber==10"
+                              style="color: white; background-color: red;">{{scope.row.level10}}</span>
+                        <span v-else-if="scope.row.levelNumber==9"
+                              style="color: white; background-color: green;">{{scope.row.level10}}</span>
+                        <span v-else style="color: #f49505;">{{scope.row.level10}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="level11"
+                        label="第11次">
+                    <template slot-scope="scope">
+                        <span v-if=" scope.row.levelNumber==11"
+                              style="color: white; background-color: red;">{{scope.row.level11}}</span>
+                        <span v-else-if="scope.row.levelNumber==10"
+                              style="color: white; background-color: green;">{{scope.row.level11}}</span>
+                        <span v-else>{{scope.row.level11}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="level12"
+                        label="第12次">
+                    <template slot-scope="scope">
+                        <span v-if=" scope.row.levelNumber==12"
+                              style="color: white; background-color: red;">{{scope.row.level12}}</span>
+                        <span v-else-if="scope.row.levelNumber==11"
+                              style="color: white; background-color: green;">{{scope.row.level12}}</span>
+                        <span v-else>{{scope.row.level12}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="level13"
+                        label="第13次">
+                    <template slot-scope="scope">
+                        <span v-if=" scope.row.levelNumber==13"
+                              style="color: white; background-color: red;">{{scope.row.level13}}</span>
+                        <span v-else-if="scope.row.levelNumber==12"
+                              style="color: white; background-color: green;">{{scope.row.level13}}</span>
+                        <span v-else>{{scope.row.level13}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="level14"
+                        label="第14次">
+                    <template slot-scope="scope">
+                        <span v-if=" scope.row.levelNumber==14"
+                              style="color: white; background-color: red;">{{scope.row.level14}}</span>
+                        <span v-else-if="scope.row.levelNumber==13"
+                              style="color: white; background-color: green;">{{scope.row.level14}}</span>
+                        <span v-else>{{scope.row.level14}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="level15"
+                        label="第15次">
+                    <template slot-scope="scope">
+                        <span v-if=" scope.row.levelNumber==15"
+                              style="color: white; background-color: red;">{{scope.row.level15}}</span>
+                        <span v-else-if="scope.row.levelNumber==14"
+                              style="color: white; background-color: green;">{{scope.row.level15}}</span>
+                        <span v-else style="color: #f49505;">{{scope.row.level15}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="level16"
+                        label="第16次">
+                    <template slot-scope="scope">
+                        <span v-if=" scope.row.levelNumber==16"
+                              style="color: white; background-color: red;">{{scope.row.level16}}</span>
+                        <span v-else-if="scope.row.levelNumber==15"
+                              style="color: white; background-color: green;">{{scope.row.level16}}</span>
+                        <span v-else>{{scope.row.level16}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="level17"
+                        label="第17次">
+                    <template slot-scope="scope">
+                        <span v-if=" scope.row.levelNumber==17"
+                              style="color: white; background-color: red;">{{scope.row.level17}}</span>
+                        <span v-else-if="scope.row.levelNumber==16"
+                              style="color: white; background-color: green;">{{scope.row.level17}}</span>
+                        <span v-else>{{scope.row.level17}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="level18"
+                        label="第18次">
+                    <template slot-scope="scope">
+                        <span v-if=" scope.row.levelNumber==18"
+                              style="color: white; background-color: red;">{{scope.row.level18}}</span>
+                        <span v-else-if="scope.row.levelNumber==17"
+                              style="color: white; background-color: green;">{{scope.row.level18}}</span>
+                        <span v-else>{{scope.row.level18}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="level19"
+                        label="第19次">
+                    <template slot-scope="scope">
+                        <span v-if=" scope.row.levelNumber==19"
+                              style="color: white; background-color: red;">{{scope.row.level19}}</span>
+                        <span v-else-if="scope.row.levelNumber==18"
+                              style="color: white; background-color: green;">{{scope.row.level19}}</span>
+                        <span v-else>{{scope.row.level19}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="level20"
+                        label="第20次">
+                    <template slot-scope="scope">
+                        <span v-if=" scope.row.levelNumber==20"
+                              style="color: white; background-color: red;">{{scope.row.level20}}</span>
+                        <span v-else-if="scope.row.levelNumber==19"
+                              style="color: white; background-color: green;">{{scope.row.level20}}</span>
+                        <span v-else style="color: #f49505;">{{scope.row.level20}}</span>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </el-tab-pane>
+
+        <div style="text-align: center;margin-top: 30px">
+            <el-pagination
+                    :page-size="page.pageSize"
+                    :pager-count="11"
+                    layout="prev, pager, next"
+                    @current-change="changePage"
+                    @prev-click="changePage"
+                    @next-click="changePage"
+                    :total="page.pageTotal">
+            </el-pagination>
+        </div>
+    </el-tabs>
+</div>
+</body>
+<!-- import Vue before Element -->
+<script src="/static/js/vue.js"></script>
+<script src="/static/js/axios.min.js"></script>
+<!-- import JavaScript -->
+<script src="/static/elementUI/index.js"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data: function () {
+            return {
+                activeName: 'first',
+                tableData1: [],
+
+                page: {
+                    pageCurrent: 1,
+                    pageSize: 1000,
+                    pageTotal: 0
+                },
+            }
+        },
+        created() {
+            this.getFundLevelTable();
+        },
+        methods: {
+            tableRowClassName({row, rowIndex}) {
+                if (rowIndex % 4 == 1) {
+                    return 'warning-row';
+                } else if (rowIndex % 4 == 3) {
+                    return 'success-row';
+                }
+                return '';
+            },
+            changePage(page) {
+                this.page.pageCurrent = page;
+                this.getFundLevelTable();
+            },
+            //基金等级
+            getFundLevelTable() {
+                let that = this;
+                let fromData = {
+                    page: (that.page.pageCurrent - 1) * 10,
+                    limit: that.page.pageSize,
+                }
+                axios.post('/fund/fundLevel/findFundLevelList', fromData)
+                    .then(function (res) {
+                        console.log(res);
+                        that.tableData1 = res.data.data;
+                        that.page.pageTotal = res.data.count;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            },
+            //百分比
+            formatPercentage(row, column) {
+                return (row.volatility_value * 100).toFixed(2) + "%";
+            },
+            formatPercentage2(row, column) {
+                return (row.max_pullback * 100).toFixed(2) + "%";
+            },
+            // 日期格式化
+            dateFormatter(row, column) {
+                if(row.maxNetWorthDate){
+                    return row.maxNetWorthDate.substring(0, 10);
+                }else{
+                    return "";
+                }
+
+            },
+        }
+    })
+</script>
+</html>

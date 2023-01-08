@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yys.fund.mapper.UUserFundMapper">
+
+
+    <insert id="addUserFund" parameterType="java.util.Map">
+        insert into u_user_fund (user_id, fund_info_name_number, fund_info_code, create_time)
+        values (#{userId}, #{fundInfoNameNumber}, #{fundInfoCode}, now());
+    </insert>
+
+
+    <!--查询分页信息列表
+                               ffi.*,
+                ffd1.now_holding_times as now_holding_times1,
+               ffd1.yield as yield1,
+               ffd1.investment_amount as investment_amount1,
+               #{fundday1} as fund_day1,
+               ffd2.now_holding_times as now_holding_times2,
+               ffd2.yield as yield2,
+               ffd2.investment_amount as investment_amount2,
+               #{fundday2} as fund_day2,
+               ffd3.now_holding_times as now_holding_times3,
+               ffd3.yield as yield3,
+               ffd3.investment_amount as investment_amount3,
+               #{fundday3} as fund_day3,
+               ffd4.now_holding_times as now_holding_times4,
+               ffd4.yield as yield4,
+               ffd4.investment_amount as investment_amount4,
+               #{fundday4} as fund_day4,
+               ffd5.now_holding_times as now_holding_times5,
+               ffd5.yield as yield5,
+               ffd5.investment_amount as investment_amount5,
+               #{fundday5} as fund_day5,
+               ffd6.now_holding_times as now_holding_times6,
+               ffd6.yield as yield6,
+               ffd6.investment_amount as investment_amount6,
+               #{fundday6} as fund_day6,
+               ffd7.now_holding_times as now_holding_times7,
+               ffd7.yield as yield7,
+               ffd7.investment_amount as investment_amount7,
+               #{fundday7} as fund_day7,
+               ffd8.now_holding_times as now_holding_times8,
+               ffd8.yield as yield8,
+               ffd8.investment_amount as investment_amount8,
+               #{fundday8} as fund_day8,
+               ffd9.now_holding_times as now_holding_times9,
+               ffd9.yield as yield9,
+               ffd9.investment_amount as investment_amount9,
+               #{fundday9} as fund_day9,
+               ffd10.now_holding_times as now_holding_times10,
+               ffd10.yield as yield10,
+               ffd10.investment_amount as investment_amount10,
+               #{fundday10} as fund_day10,
+               ffnw1.fund_net_worth as fund_net_worth1,
+               ffnw2.fund_net_worth as fund_net_worth2,
+               ffnw3.fund_net_worth  as fund_net_worth3,
+               ffnw4.fund_net_worth  as fund_net_worth4,
+               ffnw5.fund_net_worth  as fund_net_worth5,
+               ffnw6.fund_net_worth  as fund_net_worth6,
+               ffnw7.fund_net_worth  as fund_net_worth7,
+               ffnw8.fund_net_worth  as fund_net_worth8,
+               ffnw9.fund_net_worth  as fund_net_worth9,
+               ffnw10.fund_net_worth as fund_net_worth10
+
+        left join f_fund_day ffd1 on ffd1.fund_info_code=ffi.fund_code and ffd1.fund_day=#{fundday1}
+        left join f_fund_day ffd2 on ffd2.fund_info_code=ffi.fund_code and ffd2.fund_day=#{fundday2}
+        left join f_fund_day ffd3 on ffd3.fund_info_code=ffi.fund_code and ffd3.fund_day=#{fundday3}
+        left join f_fund_day ffd4 on ffd4.fund_info_code=ffi.fund_code and ffd4.fund_day=#{fundday4}
+        left join f_fund_day ffd5 on ffd5.fund_info_code=ffi.fund_code and ffd5.fund_day=#{fundday5}
+        left join f_fund_day ffd6 on ffd6.fund_info_code=ffi.fund_code and ffd6.fund_day=#{fundday6}
+        left join f_fund_day ffd7 on ffd7.fund_info_code=ffi.fund_code and ffd7.fund_day=#{fundday7}
+        left join f_fund_day ffd8 on ffd8.fund_info_code=ffi.fund_code and ffd8.fund_day=#{fundday8}
+        left join f_fund_day ffd9 on ffd9.fund_info_code=ffi.fund_code and ffd9.fund_day=#{fundday9}
+        left join f_fund_day ffd10 on ffd10.fund_info_code=ffi.fund_code and ffd10.fund_day=#{fundday10}
+        left join f_fund_net_worth ffnw1 on ffnw1.fund_info_code=ffi.fund_code and ffnw1.fund_day=#{fundday1}
+        left join f_fund_net_worth ffnw2 on ffnw2.fund_info_code=ffi.fund_code and ffnw2.fund_day=#{fundday2}
+        left join f_fund_net_worth ffnw3 on ffnw3.fund_info_code=ffi.fund_code and ffnw3.fund_day=#{fundday3}
+        left join f_fund_net_worth ffnw4 on ffnw4.fund_info_code=ffi.fund_code and ffnw4.fund_day=#{fundday4}
+        left join f_fund_net_worth ffnw5 on ffnw5.fund_info_code=ffi.fund_code and ffnw5.fund_day=#{fundday5}
+        left join f_fund_net_worth ffnw6 on ffnw6.fund_info_code=ffi.fund_code and ffnw6.fund_day=#{fundday6}
+        left join f_fund_net_worth ffnw7 on ffnw7.fund_info_code=ffi.fund_code and ffnw7.fund_day=#{fundday7}
+        left join f_fund_net_worth ffnw8 on ffnw8.fund_info_code=ffi.fund_code and ffnw8.fund_day=#{fundday8}
+        left join f_fund_net_worth ffnw9 on ffnw9.fund_info_code=ffi.fund_code and ffnw9.fund_day=#{fundday9}
+        left join f_fund_net_worth ffnw10 on ffnw10.fund_info_code=ffi.fund_code and ffnw10.fund_day=#{fundday10}
+
+
+    -->
+    <select id="findUserFundList" resultType="java.util.Map" parameterType="java.util.Map">
+        select uuf.id,
+               uuf.fund_info_name_number AS fundInfoNameNumber,
+               ffi.fund_code             AS fundCode,
+               ffi.fund_name             AS fundName,
+               ffi.max_net_worth_date    AS maxNetWorthDate,
+               ffi.max_net_worth         AS maxNetWorth,
+               ffi.id                    AS fundInfoId,
+               ffi.fund_type_id          AS fundTypeId,
+               fft.fund_type_name        AS fundTypeName,
+               fft.fund_type_number      AS fundTypeNumber,
+               ffi.sorting,
+               ffnwt.id                  AS fundNetWorthTempId,
+               ffi.volatility_value      AS volatilityValue
+        from u_user_fund uuf
+                 left join db_user dbu on dbu.id = uuf.user_id
+                 left join f_fund_info ffi on ffi.fund_code = uuf.fund_info_code
+                 left join f_fund_type fft on ffi.fund_type_id = fft.id
+                 left join f_fund_net_worth_temp ffnwt on uuf.fund_info_code = ffnwt.fund_info_code
+        where uuf.delete_status = 0
+          and uuf.user_id = #{userId}
+        order by ffi.sorting, ffi.create_time limit #{page}, #{limit};
+    </select>
+    <select id="findUserFundListCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+        select count(*)
+        from u_user_fund
+        where delete_status = 0
+          and user_id = #{userId}
+    </select>
+
+    <!--    删除文章菜单-->
+    <update id="deleteUserFund" parameterType="java.util.Map">
+        update u_user_fund
+        set update_time   = now()
+          , delete_status = #{deleteStatus}
+        where id = #{id}
+          and user_id = #{userId}
+    </update>
+
+</mapper>

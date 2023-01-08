@@ -1,0 +1,30 @@
+
+server:
+  port: 7071
+  servlet:
+    context-path: /
+
+
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/fund_soaring?allowMultiQueries=true&serverTimezone=Asia/Shanghai&characterEncoding=UTF-8
+    username: root
+    password: 123456
+    driver-class-name:  com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+
+#如果数据为空的字段，则该字段省略不显示，可以通过添加配置文件，规定查询数据为空是则返回null。
+mybatis:
+  configuration:
+    call-setters-on-nulls: true
+
+
+
+
+
+
+

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="https://jscdn.com.cn/highcharts/images/favicon.ico">
+    <!-- import CSS -->
+    <link rel="stylesheet" href="/static/elementUI/index.css">
+    <style>
+        html {
+
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            height: 100%;
+            width: 100%;
+            display: block;
+            margin: 0px;
+        }
+
+        #app {
+            width: 100%;
+            height: 100%;
+        }
+
+        .tac {
+            height: 100%;
+            overflow: hidden;
+            width: 100%;
+            margin-top: 60px;
+            display: block;
+            float: left;
+        }
+
+        .el-select {
+            width: 100%;
+        }
+
+        .el-table .warning-row {
+            background: oldlace;
+        }
+
+        .el-table .success-row {
+            background: #f0f9eb;
+        }
+
+        .home_header {
+            height: 60px;
+            background-color: rgb(84, 92, 100);
+            position: absolute;
+            width: 100%;
+
+        }
+
+        .line {
+            height: 1px;
+            background-color: #ffd04b;
+        }
+
+        .home_header_out {
+            float: right;
+            width: 80px;
+        }
+
+        .home_header_title {
+            float: left;
+            width: 180px;
+            text-align: center;
+        }
+
+        .home_header_title span {
+            line-height: 60px;
+            color: #ffd04b;
+            cursor: pointer;
+            font-size: 24px;
+        }
+
+        .home_header_out span {
+            line-height: 60px;
+            color: #e0e6ed;
+            cursor: pointer;
+        }
+
+        .home_header_out span:hover {
+            color: rgb(255, 208, 75);
+        }
+
+        .home_iframe {
+            width: 100%;
+            height: 100%;
+            border: 0px;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <div class="home_header">
+        <div class="home_header_title"><span>基金网站</span></div>
+        <div class="home_header_out"><span @click="signOut">退出</span></div>
+        <div class="home_header_out"><span th:text="${dbUser.userName}"></span></div>
+    </div>
+    <div class="tac">
+        <div class="line"></div>
+        <el-row style="height: 100%">
+
+            <el-col :span="2" style="height: 100%; background-color: #545c64;">
+                <el-menu
+                        default-active="1"
+                        class="el-menu-vertical-demo"
+                        @open="handleOpen"
+                        @close="handleClose"
+                        background-color="#545c64"
+                        text-color="#fff"
+                        active-text-color="#ffd04b">
+                    <el-menu-item index="1" @click="togoPage('/fund/userFundTransaction/userFundTransaction.html')">
+                        <i class="el-icon-location"></i>
+                        <span slot="title"
+                              >买卖</span>
+                    </el-menu-item>
+                    <el-menu-item index="2" @click="togoPage('/fund/userFund/userFund.html')">
+                        <i class="el-icon-menu"></i>
+                        <span slot="title"
+                              >我的基金</span>
+                    </el-menu-item>
+                    <el-menu-item index="3" @click="togoPage('/fund/fundInfo/fundInfo.html')">
+                        <i class="el-icon-document"></i>
+                        <span slot="title"
+                              >基金信息</span>
+                    </el-menu-item>
+                    <el-menu-item index="4"  @click="togoPage('/fund/fundLevel/fundLevel.html')">
+                        <i class="el-icon-setting"></i>
+                        <span slot="title"
+                             >基金等级</span>
+                    </el-menu-item>
+                    <el-menu-item index="5" @click="togoPage('/fund/fundLevelMoney/fundLevelMoney.html')">
+                        <i class="el-icon-setting"></i>
+                        <span slot="title"
+                              >等级金额</span>
+                    </el-menu-item>
+                    <el-menu-item index="6" @click="togoPage('/fund/fundType/fundType.html')">
+                        <i class="el-icon-setting"></i>
+                        <span slot="title"
+                              >基金类型</span>
+                    </el-menu-item>
+                </el-menu>
+            </el-col>
+            <el-col :span="22" style="height: 100%;padding-bottom: 60px;">
+                <iframe :src="urlPage" class="home_iframe"></iframe>
+            </el-col>
+        </el-row>
+    </div>
+
+</div>
+</body>
+<!-- import Vue before Element -->
+<script src="/static/js/vue.js"></script>
+<script src="/static/js/axios.min.js"></script>
+<!-- import JavaScript -->
+<script src="/static/elementUI/index.js"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data: function () {
+            return {
+                urlPage: '/fund/userFundTransaction/userFundTransaction.html',
+            }
+        },
+        created() {
+
+        },
+        methods: {
+            togoPage(urlPage) {
+                this.urlPage = urlPage;
+            },
+            signOut() {
+                let that = this;
+                axios.post('/fund/userLogin/loginOut', {})
+                    .then(function (res) {
+                        if (res.data.code == 200) {
+                            that.$message.success("退出成功");
+                            window.location = '/fund/userLogin/login.html'
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            },
+            handleSelect(key, keyPath) {
+                console.log(key, keyPath);
+            },
+            handleOpen(key, keyPath) {
+                console.log(key, keyPath);
+            },
+            handleClose(key, keyPath) {
+                console.log(key, keyPath);
+            }
+        }
+    })
+</script>
+</html>

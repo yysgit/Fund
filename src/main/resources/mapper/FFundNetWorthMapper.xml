@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yys.fund.mapper.FFundNetWorthMapper">
+
+
+    <!--添加文章菜单-->
+    <insert id="addFundNetWorth" parameterType="com.yys.fund.entity.FFundNetWorth">
+        insert into f_fund_net_worth (fund_info_code, fund_day, fund_net_worth,
+                                      level_number, level_front, level_behind, create_time)
+        values (#{fundInfoCode}, #{fundDay}, #{fundNetWorth},
+                #{levelNumber}, #{levelFront}, #{levelBehind},now());
+    </insert>
+
+    <!--添加文章菜单-->
+    <insert id="addFundNetWorthTemp" parameterType="com.yys.fund.entity.FFundNetWorth">
+        insert into f_fund_net_worth_temp (fund_info_code, fund_day, fund_net_worth,
+                                      level_number, level_front, level_behind, create_time)
+        values (#{fundInfoCode}, #{fundDay}, #{fundNetWorth},
+                #{levelNumber}, #{levelFront}, #{levelBehind},now());
+    </insert>
+
+
+    <!--查询分页类型列表-->
+    <select id="findFundNetWorthList" resultType="com.yys.fund.entity.FFundNetWorth" parameterType="java.util.Map">
+        select id,
+               fund_type_number AS fundTypeNumber,
+               fund_type_name   AS fundTypeName,
+               sorting,
+               create_time      AS createTime,
+               update_time      AS updateTime
+        from f_fund_net_worth
+        where delete_status = 0
+        order by sorting, create_time limit #{page}, #{limit};
+    </select>
+
+
+    <select id="findFundNetWorthListCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+        select count(*)
+        from f_fund_net_worth
+        where fund_info_code = #{fundCode}
+    </select>
+
+    <!--查询所有类型列表-->
+    <select id="findFundNetWorthAllList" resultType="com.yys.fund.entity.FFundNetWorth">
+        select id,
+               fund_type_number AS fundTypeNumber,
+               fund_type_name   AS fundTypeName,
+               sorting,
+               create_time      AS createTime,
+               update_time      AS updateTime
+        from f_fund_net_worth
+        where delete_status = 0
+        order by sorting, create_time
+    </select>
+
+
+    <!--更新菜单-->
+    <update id="updateFundNetWorth" parameterType="com.yys.fund.entity.FFundNetWorth">
+        update f_fund_net_worth
+        set update_time      = now()
+          , fund_type_name   = #{fundTypeName}
+          , fund_type_number = #{fundTypeNumber}
+          , sorting          = #{sorting}
+        where id = #{id}
+    </update>
+
+    <!--更新菜单-->
+    <update id="updateFundNetWorthTemp" parameterType="com.yys.fund.entity.FFundNetWorth">
+        update f_fund_net_worth_temp
+        set create_time      = now()
+          , fund_net_worth = #{fundNetWorth}
+          , level_number          = #{levelNumber}
+          , level_front          = #{levelFront}
+          , level_behind          = #{levelBehind}
+        where fund_info_code = #{fundInfoCode}
+    </update>
+
+    <!--    删除文章菜单-->
+    <update id="deleteFundNetWorth" parameterType="com.yys.fund.entity.FFundNetWorth">
+        update f_fund_net_worth
+        set update_time   = now()
+          , delete_status = #{deleteStatus}
+        where id = #{id}
+    </update>
+
+
+    <!--通过基金类型名称 获取基金类型-->
+    <select id="findFundNetWorthByNameAndNumber" resultType="com.yys.fund.entity.FFundNetWorth">
+        select id,
+        fund_type_number AS fundTypeNumber,
+        fund_type_name AS fundTypeName,
+        sorting,
+        create_time AS createTime,
+        update_time AS updateTime
+        from f_fund_net_worth
+        <if test="id==null or id==0">
+            where (fund_type_number=#{fundTypeNumber} or fund_type_name=#{fundTypeName}) and delete_status=0;
+        </if>
+        <if test="id!=null and id!=0">
+            where id!=#{id} and (fund_type_number=#{fundTypeNumber} or fund_type_name=#{fundTypeName}) and
+            delete_status=0;
+        </if>
+    </select>
+
+</mapper>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yys.fund.mapper.FFundLevelMapper">
+
+
+    <!--添加基金等级-->
+    <insert id="addFundLevel" parameterType="java.util.Map">
+        insert into f_fund_level (fund_info_code, level1, level2,
+                                  level3,
+                                  level4, level5, level6, level7,
+                                  level8, level9, level10, level11, level12,
+                                  level13,
+                                  level14, level15, level16, level17,
+                                  level18, level19, level20)
+        values (#{fundInfoCode},#{level1},#{level2}, #{level3}, #{level4}, #{level5}, #{level6},
+                #{level7}, #{level8}, #{level9}, #{level10},#{level11},#{level12}, #{level13}, #{level14}, #{level15}, #{level16},
+                #{level17}, #{level18}, #{level19}, #{level20});
+
+    </insert>
+
+    <!--更新基金等级-->
+    <update id="updateFundLevel" parameterType="java.util.Map">
+        update f_fund_level
+        set level1 = #{level1}
+          , level2 = #{level2}
+          , level3 = #{level3}
+          , level4 = #{level4}
+          , level5 = #{level5}
+          , level6 = #{level6}
+          , level7 = #{level7}
+          , level8 = #{level8}
+          , level9 = #{level9}
+          , level10 = #{level10}
+          , level11= #{level11}
+          , level12 = #{level12}
+          , level13= #{level13}
+          , level14 = #{level14}
+          , level15 = #{level15}
+          , level16 = #{level16}
+          , level17 = #{level17}
+          , level18 = #{level18}
+          , level19 = #{level19}
+          , level20 = #{level20}
+        where fund_info_code = #{fundInfoCode}
+    </update>
+
+
+
+
+    <!--查询分页基金等级列表-->
+    <select id="findFundLevelList" resultType="java.util.Map" parameterType="java.util.Map">
+        select ffl.id,
+               ffl.fund_info_code AS fundInfoCode,
+               ffl.level1, ffl.level2,
+               ffl.level3,
+               ffl.level4, ffl.level5, ffl.level6, ffl.level7,
+               ffl.level8, ffl.level9, ffl.level10, ffl.level11, ffl.level12,
+               ffl.level13,
+               ffl.level14, ffl.level15, ffl.level16, ffl.level17,
+               ffl.level18, ffl.level19, ffl.level20,
+               ffi.fund_name AS fundName,
+               ffi.max_net_worth_date AS maxNetWorthDate,
+               ffi.max_net_worth AS maxNetWorth,
+               ffnwt.level_number AS levelNumber
+        from f_fund_level ffl
+            left join f_fund_info  ffi on ffi.fund_code=ffl.fund_info_code
+            left join f_fund_net_worth_temp  ffnwt on ffnwt.fund_info_code=ffl.fund_info_code
+            limit #{page} , #{limit};
+    </select>
+    <select id="findFundLevelListCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+        select
+        count(*)
+        from f_fund_level
+    </select>
+
+
+
+    <!--通过基金代码查询基金等级-->
+    <select id="findFundLevelByFundInfoCode" resultType="java.util.Map">
+        select id,
+        fund_info_code AS fundInfoCode,
+        level1, level2,
+        level3,
+        level4, level5, level6, level7,
+        level8, level9, level10, level11, level12,
+        level13,
+        level14, level15, level16, level17,
+        level18, level19, level20
+        from f_fund_level where fund_info_code=#{id}
+    </select>
+
+</mapper>

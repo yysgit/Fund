@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yys.fund.mapper.UFundTransactionMapper">
+
+
+    <!--查询分页信息列表-->
+    <select id="findFundTransactionPurchaseList" resultType="java.util.Map" parameterType="java.util.Map">
+        select uftp.fund_info_code       as fundInfoCode,
+               uuf.fund_info_name_number as fundInfoNameNumber,
+               ffi.fund_name             as fundName,
+               uftp.purchase_time        as purchaseTime,
+               uftp.purchase_commission  as purchaseCommission,
+               uftp.purchase_share       as purchaseShare,
+               uftp.purchase_net_worth   as purchaseNetWorth,
+               uftp.purchase_amount      as purchaseAmount,
+               uftp.yield                as yield,
+               uftp.income_amount        as income_amount,
+               uftp.today_time           as todayTime,
+               uftp.today_net_worth      as todayNetWorth
+        from u_fund_transaction_purchase uftp
+                 left join f_fund_info ffi on ffi.fund_code = uftp.fund_info_code
+                 left join u_user_fund uuf on uuf.fund_info_code = uftp.fund_info_code and uftp.user_id = uuf.user_id
+        where uftp.user_id = #{userId}
+          and uftp.state = 0
+        order by uftp.yield, uftp.create_time desc limit #{page}, #{limit};
+    </select>
+    <select id="findFundTransactionPurchaseCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+        select count(*)
+        from u_fund_transaction_purchase
+        where uftp.user_id = #{userId}
+          and uftp.state = 0
+    </select>
+</mapper>

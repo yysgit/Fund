@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yys.fund.mapper.FFundInfoMapper">
+
+
+    <!--添加文章菜单-->
+    <insert id="addFundInfo" parameterType="com.yys.fund.entity.FFundInfo">
+        insert into f_fund_info (fund_name, fund_code,max_net_worth_date,max_net_worth, sorting,fund_type_id, create_time, update_time)
+        values (#{fundName}, #{fundCode},#{maxNetWorthDate},#{maxNetWorth},#{sorting}, #{fundTypeId},  now(),now());
+    </insert>
+
+
+
+    <!--查询分页信息列表-->
+    <select id="findFundInfoList" resultType="java.util.Map" parameterType="java.util.Map">
+        select ffi.id,
+               ffi.fund_name AS fundName,
+               ffi.fund_code AS fundCode,
+               ffi.max_net_worth_date AS maxNetWorthDate,
+               ffi.max_net_worth AS maxNetWorth,
+               ffi.fund_type_id AS fundTypeId,
+               fft.fund_type_name AS fundTypeName,
+               fft.fund_type_number AS fundTypeNumber,
+               ffi.sorting,
+               ffnwt.id AS fundNetWorthTempId,
+               ffl.id AS fundLevelId,
+               ffi.volatility_value AS volatilityValue
+        from f_fund_info ffi
+        left join f_fund_type fft on fft.id=ffi.fund_type_id
+        left join f_fund_net_worth_temp ffnwt on ffi.fund_code=ffnwt.fund_info_code
+        left join f_fund_level ffl on ffi.fund_code=ffl.fund_info_code
+        where ffi.delete_status = 0
+        order by ffi.sorting, ffi.create_time limit #{page} , #{limit};
+    </select>
+    <select id="findFundInfoListCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+        select
+        count(*)
+        from f_fund_info
+        where delete_status = 0
+    </select>
+    
+    <!--更新菜单-->
+    <update id="updateFundInfo" parameterType="com.yys.fund.entity.FFundInfo">
+        update f_fund_info
+        set update_time = now()
+        ,fund_name = #{fundName}
+        ,fund_code = #{fundCode}
+        ,max_net_worth_date = #{maxNetWorthDate}
+        ,max_net_worth = #{maxNetWorth}
+        ,fund_type_id = #{fundTypeId}
+        ,sorting = #{sorting}
+        ,volatility_value = #{volatilityValue}
+        where id = #{id}
+    </update>
+
+    <update id="updateFundInfoForNetWorth" parameterType="java.util.Map">
+        update f_fund_info
+        set update_time = now()
+          ,max_net_worth_date = #{maxNetWorthDate}
+          ,max_net_worth = #{maxNetWorth}
+        where fund_code = #{fundCode}
+    </update>
+
+
+    <!--    删除文章菜单-->
+    <update id="deleteFundInfo" parameterType="com.yys.fund.entity.FFundInfo">
+        update f_fund_info
+        set update_time    = now()
+          , delete_status  = #{deleteStatus}
+        where id = #{id}
+    </update>
+
+
+    <!--通过基金信息编号-->
+    <select id="findFundInfoByCode" resultType="java.util.Map" parameterType="com.yys.fund.entity.FFundInfo">
+        select ffi.id,
+        ffi.fund_name AS fundName,
+        ffi.fund_code AS fundCode,
+        ffi.max_net_worth_date AS maxNetWorthDate,
+        ffi.max_net_worth AS maxNetWorth,
+        ffi.fund_type_id AS fundTypeId,
+        fft.fund_type_name AS fundTypeName,
+        fft.fund_type_number AS fundTypeNumber,
+        ffi.sorting,
+        ffi.volatility_value AS volatilityValue
+        from f_fund_info ffi
+        left join f_fund_type fft on fft.id=ffi.fund_type_id
+        <if test="id==null or id==0">
+            where ffi.fund_code=#{fundCode}  and ffi.delete_status=0;
+        </if>
+        <if test="id!=null and id!=0">
+            where ffi.id!=#{id} and ffi.fund_code=#{fundCode} and ffi.delete_status=0;
+        </if>
+    </select>
+
+</mapper>

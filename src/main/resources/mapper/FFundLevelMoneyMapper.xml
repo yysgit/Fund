@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yys.fund.mapper.FFundLevelMoneyMapper">
+
+
+    <!--添加基金等级-->
+    <insert id="addFundLevelMoney" parameterType="java.util.Map">
+        insert into u_fund_level_money (fund_info_code,user_id)
+        values (#{fundInfoCode},#{userId});
+    </insert>
+
+    <!--更新基金等级-->
+    <update id="updateFundLevelMoney" parameterType="java.util.Map">
+        update u_fund_level_money
+        set money1 = #{money1}
+          , money2 = #{money2}
+          , money3 = #{money3}
+          , money4 = #{money4}
+          , money5 = #{money5}
+          , money6 = #{money6}
+          , money7 = #{money7}
+          , money8 = #{money8}
+          , money9 = #{money9}
+          , money10 = #{money10}
+          , money11= #{money11}
+          , money12 = #{money12}
+          , money13= #{money13}
+          , money14 = #{money14}
+          , money15 = #{money15}
+          , money16 = #{money16}
+          , money17 = #{money17}
+          , money18 = #{money18}
+          , money19 = #{money19}
+          , money20 = #{money20}
+        where fund_info_code = #{fundInfoCode}
+    </update>
+
+
+
+
+    <!--查询分页基金等级列表-->
+    <select id="findFundLevelMoneyList" resultType="java.util.Map" parameterType="java.util.Map">
+        select ffl.id,
+               ffl.fund_info_code AS fundInfoCode,
+               ffl.money1, ffl.money2,
+               ffl.money3,
+               ffl.money4, ffl.money5, ffl.money6, ffl.money7,
+               ffl.money8, ffl.money9, ffl.money10, ffl.money11, ffl.money12,
+               ffl.money13,
+               ffl.money14, ffl.money15, ffl.money16, ffl.money17,
+               ffl.money18, ffl.money19, ffl.money20,
+               ffi.fund_name AS fundName,
+               ffi.max_net_worth_date AS maxNetWorthDate,
+               ffi.max_net_worth AS maxNetWorth,
+               ffnwt.level_number AS levelNumber
+        from u_fund_level_money ffl
+            left join f_fund_info  ffi on ffi.fund_code=ffl.fund_info_code
+            left join f_fund_net_worth_temp  ffnwt on ffnwt.fund_info_code=ffl.fund_info_code
+            where ffl.user_id=#{userId}
+            limit #{page} , #{limit};
+    </select>
+    <select id="findFundLevelMoneyListCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+        select
+        count(*)
+        from u_fund_level_money
+        where user_id=#{userId}
+    </select>
+
+
+
+    <!--通过基金代码查询基金等级-->
+    <select id="findFundLevelMoneyByFundInfoCode" resultType="java.util.Map">
+        select id,
+        fund_info_code AS fundInfoCode,
+        money1, money2,
+        money3,
+        money4, money5, money6, money7,
+        money8, money9, money10, money11, money12,
+        money13,
+        money14, money15, money16, money17,
+        money18, money19, money20
+        from u_fund_level_money where fund_info_code=#{id}
+    </select>
+
+</mapper>

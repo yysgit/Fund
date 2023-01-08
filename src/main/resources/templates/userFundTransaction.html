@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="https://jscdn.com.cn/highcharts/images/favicon.ico">
+    <!-- import CSS -->
+    <link rel="stylesheet" href="/static/elementUI/index.css">
+    <style>
+        .el-select {
+            width: 100%;
+        }
+
+        .el-table .warning-row {
+            background: oldlace;
+        }
+
+        .el-table .success-row {
+            background: #f0f9eb;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <el-tabs v-model="activeName">
+        <el-tab-pane label="买卖信息" name="first">
+            <el-table
+                    :row-class-name="tableRowClassName"
+                    border
+                    :data="tableData1"
+                    @cell-dblclick="doubleClickCell"
+                    style="width: 100%">
+                <el-table-column fixed="left" label="操作" width="160">
+                    <template slot-scope="scope">
+                        <el-button
+                                size="mini"
+                                type="primary"
+                                @click="handleFundSell(scope.$index, scope.row)">卖出
+                        </el-button>
+
+                    </template>
+                </el-table-column>
+
+
+                uftp.fund_info_code as fundInfoCode,
+                uuf.fund_info_name_number as fundInfoNameNumber,
+                ffi.fund_name as fundName,
+                uftp.purchase_time as purchaseTime,
+                uftp.purchase_commission as purchaseCommission,
+                uftp.purchase_share as purchaseShare,
+                uftp.purchase_net_worth as purchaseNetWorth,
+                uftp.purchase_amount as purchaseAmount,
+                uftp.yield as yield,
+                uftp.income_amount as income_amount,
+                uftp.today_time as todayTime,
+                uftp.today_net_worth as todayNetWorth
+
+                <el-table-column
+                        sortable
+                        prop="fundName"
+                        label="名称"
+                        align="center">
+                    <template slot-scope="scope">
+                        <span>{{scope.row.fundInfoNameNumber + "_" + scope.row.fundName}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        sortable
+                        prop="purchaseTime"
+                        label="买入时间">
+                    <template slot-scope="scope">
+                        <span>{{scope.row.purchaseTime}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        sortable
+                        prop="purchaseShare"
+                        label="买入份额">
+                    <template slot-scope="scope">
+                        <span >{{scope.row.purchaseShare}}</span>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </el-tab-pane>
+
+        <div style="text-align: center;margin-top: 30px">
+            <el-pagination
+                    :page-size="page.pageSize"
+                    :pager-count="11"
+                    layout="prev, pager, next"
+                    @current-change="changePage"
+                    @prev-click="changePage"
+                    @next-click="changePage"
+                    :total="page.pageTotal">
+            </el-pagination>
+        </div>
+    </el-tabs>
+    <el-dialog
+            title="新增基金信息"
+            :visible.sync="dialogVisible"
+            width="60%">
+        <el-form ref="form" :model="fundDataForm" label-width="180px">
+            <el-form-item label="基金编号">
+                <el-input v-model="fundDataForm.fundCode"></el-input>
+            </el-form-item>
+            <el-form-item label="基金类型">
+                <el-select v-model="fundDataForm.fundTypeId" placeholder="请选择">
+                    <el-option
+                            v-for="item in fundTypeAll"
+                            :key="item.id"
+                            :label="item.fundTypeNumber +'.'+item.fundTypeName"
+                            :value="item.id">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="排序">
+                <el-input v-model="fundDataForm.sorting"></el-input>
+            </el-form-item>
+        </el-form>
+
+
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="dialogVisible = false">取 消</el-button>
+            <el-button type="primary" @click="addFundInfo">确 定</el-button>
+        </span>
+    </el-dialog>
+</div>
+</body>
+<!-- import Vue before Element -->
+<script src="/static/js/vue.js"></script>
+<script src="/static/js/axios.min.js"></script>
+<!-- import JavaScript -->
+<script src="/static/elementUI/index.js"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data: function () {
+            return {
+                activeName: 'first',
+                tableData1: [],
+                fundDataForm: {
+                    sorting: '',
+                    fundCode: '',
+                    fundTypeId: '',
+                },
+                page: {
+                    pageCurrent: 1,
+                    pageSize: 1000,
+                    pageTotal: 0
+                },
+                dialogVisible: false,
+                fundTypeAll: [],
+
+            }
+        },
+        created() {
+            //查询所有基金类型
+            this.getFundTransactionTable();
+        },
+        methods: {
+            tableRowClassName({row, rowIndex}) {
+                if (rowIndex % 4 == 1) {
+                    return 'warning-row';
+                } else if (rowIndex % 4 == 3) {
+                    return 'success-row';
+                }
+                return '';
+            },
+            //查询所有基金类型
+            getFundTypeAll() {
+                let that = this;
+                axios.post('/fund/fundType/findFundTypeAllList')
+                    .then(function (res) {
+                        that.fundTypeAll = res.data.data;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            },
+
+            //分页改变时
+            changePage(page) {
+                this.page.pageCurrent = page;
+                this.getFundTransactionTable();
+            },
+            addFundInfoClick() {
+                this.fundDataForm = {
+                    sorting: '',
+                    fundInfoNumber: '',
+                    fundInfoName: '',
+                };
+                this.dialogVisible = true;
+            },
+            addFundInfo() {
+                let that = this;
+                axios.post('/fund/fundInfo/addFundInfo', this.fundDataForm)
+                    .then(function (res) {
+                        that.$message.success(res.data.msg);
+                        that.page.pageCurrent = 1;
+                        that.getFundInfoTable();
+                        that.dialogVisible = false;
+
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            },
+            handleFundSell(index, row) {
+                let that = this;
+                axios.post('/fund/fundInfo/addUserFund', {fundInfoCode: row.fundCode})
+                    .then(function (res) {
+                        that.$message.success(res.data.msg);
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+
+            },
+
+
+            handleDelete(index, row) {
+                let that = this;
+                axios.post('/fund/fundType/deleteFundInfo', {id: row.id})
+                    .then(function (res) {
+                        that.$message.success(res.data.msg);
+                        that.page.pageCurrent = 1;
+                        that.getFundTypeTable();
+                        that.dialogVisible = false;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            },
+            doubleClickCell(row, column, cell, event) {
+                this.$set(row, "edit", true);
+            },
+            levelChange(row) {
+                this.$set(row, "edit", false);
+                //业务处理
+                let that = this;
+                // axios.post('/fund/fundInfo/updateFundInfo', row)
+                //     .then(function (res) {
+                //         that.$message.success(res.data.msg);
+                //
+                //         that.$nextTick(() => {
+                //             that.page.pageCurrent = 1;
+                //             that.getFundInfoTable()
+                //         })
+                //
+                //     })
+                //     .catch(function (error) {
+                //         console.log(error);
+                //     });
+            },
+
+            //基金信息
+            getFundTransactionTable() {
+                let that = this;
+                let fromData = {
+                    page: (that.page.pageCurrent - 1) * 10,
+                    limit: that.page.pageSize,
+                }
+                axios.post('/fund/userFundTransaction/findFundTransactionPurchaseList', fromData)
+                    .then(function (res) {
+                        console.log(res);
+                        that.tableData1 = res.data.data;
+                        that.page.pageTotal = res.data.count;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            },
+            //百分比
+            formatPercentage(row, column) {
+                return (row.volatility_value * 100).toFixed(2) + "%";
+            },
+            formatPercentage2(row, column) {
+                return (row.max_pullback * 100).toFixed(2) + "%";
+            },
+            // 日期格式化
+            dateFormatter(row, column) {
+                return row.maxNetWorthDate.substring(0, 10);
+            },
+        }
+    })
+</script>
+</html>

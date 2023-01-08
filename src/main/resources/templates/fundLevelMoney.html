@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="https://jscdn.com.cn/highcharts/images/favicon.ico">
+    <!-- import CSS -->
+    <link rel="stylesheet" href="/static/elementUI/index.css">
+    <style>
+        .el-table .warning-row {
+            background: oldlace;
+        }
+
+        .el-table .success-row {
+            background: #f0f9eb;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <el-tabs v-model="activeName">
+
+        <el-tab-pane label="基金等级金额" name="first">
+            <el-table
+                    :row-class-name="tableRowClassName"
+                    border
+                    :data="tableData1"
+                    @cell-dblclick="doubleClickCell"
+                    heigth="500"
+                    style="width: 100%">
+                <el-table-column
+                        prop="fundName"
+                        label="基金名称"
+                        width="150">
+                </el-table-column>
+                <el-table-column
+                        prop="fundInfoCode"
+                        label="代码">
+                </el-table-column>
+                <el-table-column
+                        prop="maxNetWorthDate"
+                        :formatter="dateFormatter"
+                        width="110"
+                        label="最大净值日期">
+                </el-table-column>
+                <el-table-column
+                        prop="maxNetWorth"
+                        label="最高净值">
+                    <template slot-scope="scope">
+                        <span v-if=" scope.row.levelNumber==0"
+                              style="color: white; background-color: red;">{{scope.row.maxNetWorth}}</span>
+                        <span v-else style="color: #f49505;">{{scope.row.maxNetWorth}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="money1"
+                        label="第1次">
+                    <template slot-scope="scope">
+                        <span v-if="!scope.row.edit">
+                            <span v-if=" scope.row.levelNumber==1"
+                                  style="color: white; background-color: red;">{{scope.row.money1}}</span>
+                            <span v-else-if="scope.row.levelNumber==0"
+                                  style="color: white; background-color: green;">{{scope.row.money1}}</span>
+                            <span v-else>{{scope.row.money1}}</span>
+                        </span>
+                        <el-input v-else="scope.row.edit" v-model="scope.row.money1"
+                                  @blur="levelChange(scope.row)">{{scope.row.money1}}
+                        </el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="money2"
+                        label="第2次">
+                    <template slot-scope="scope">
+                        <span v-if="!scope.row.edit">
+                             <span v-if=" scope.row.levelNumber==2"
+                                   style="color: white; background-color: red;">{{scope.row.money2}}</span>
+                            <span v-else-if="scope.row.levelNumber==1"
+                                  style="color: white; background-color: green;">{{scope.row.money2}}</span>
+                            <span v-else>{{scope.row.money2}}</span>
+                        </span>
+                        <el-input v-else="scope.row.edit" v-model="scope.row.money2"
+                                  @blur="levelChange(scope.row)">{{scope.row.money2}}
+                        </el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="money3"
+                        label="第3次">
+                    <template slot-scope="scope">
+                        <span v-if="!scope.row.edit">
+                             <span v-if=" scope.row.levelNumber==3"
+                                   style="color: white; background-color: red;">{{scope.row.money3}}</span>
+                            <span v-else-if="scope.row.levelNumber==2"
+                                  style="color: white; background-color: green;">{{scope.row.money3}}</span>
+                            <span v-else>{{scope.row.money3}}</span>
+                        </span>
+                        <el-input v-else="scope.row.edit" v-model="scope.row.money3"
+                                  @blur="levelChange(scope.row)">{{scope.row.money3}}
+                        </el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="money4"
+                        label="第4次">
+                    <template slot-scope="scope">
+                        <span v-if="!scope.row.edit">
+                              <span v-if=" scope.row.levelNumber==4"
+                                    style="color: white; background-color: red;">{{scope.row.money4}}</span>
+                              <span v-else-if="scope.row.levelNumber==3"
+                                    style="color: white; background-color: green;">{{scope.row.money4}}</span>
+                        <span v-else>{{scope.row.money4}}</span>
+                        </span>
+                        <el-input v-else="scope.row.edit" v-model="scope.row.money4"
+                                  @blur="levelChange(scope.row)">{{scope.row.money4}}
+                        </el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="money5"
+                        label="第5次">
+                    <template slot-scope="scope">
+                        <span v-if="!scope.row.edit">
+                            <span v-if=" scope.row.levelNumber==5"
+                                  style="color: white; background-color: red;">{{scope.row.money5}}</span>
+                            <span v-else-if="scope.row.levelNumber==4"
+                                  style="color: white; background-color: green;">{{scope.row.money5}}</span>
+                            <span v-else style="color: #f49505;">{{scope.row.money5}}</span>
+                        </span>
+                        <el-input v-else="scope.row.edit" v-model="scope.row.money5"
+                                  @blur="levelChange(scope.row)">{{scope.row.money5}}
+                        </el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="money6"
+                        label="第6次">
+                    <template slot-scope="scope">
+                        <span v-if="!scope.row.edit">
+                        <span v-if=" scope.row.levelNumber==6"
+                              style="color: white; background-color: red;">{{scope.row.money6}}</span>
+                        <span v-else-if="scope.row.levelNumber==5"
+                              style="color: white; background-color: green;">{{scope.row.money6}}</span>
+                        <span v-else>{{scope.row.money6}}</span>
+                        </span>
+                        <el-input v-else="scope.row.edit" v-model="scope.row.money6"
+                                  @blur="levelChange(scope.row)">{{scope.row.money6}}
+                        </el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="money7"
+                        label="第7次">
+                    <template slot-scope="scope">
+                        <span v-if="!scope.row.edit">
+                        <span v-if=" scope.row.levelNumber==7"
+                              style="color: white; background-color: red;">{{scope.row.money7}}</span>
+                        <span v-else-if="scope.row.levelNumber==6"
+                              style="color: white; background-color: green;">{{scope.row.money7}}</span>
+                        <span v-else>{{scope.row.money7}}</span>
+                        </span>
+                        <el-input v-else="scope.row.edit" v-model="scope.row.money7"
+                                  @blur="levelChange(scope.row)">{{scope.row.money7}}
+                        </el-input>
+
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="money8"
+                        label="第8次">
+                    <template slot-scope="scope">
+                        <span v-if="!scope.row.edit">
+                        <span v-if=" scope.row.levelNumber==8"
+                              style="color: white; background-color: red;">{{scope.row.money8}}</span>
+                        <span v-else-if="scope.row.levelNumber==7"
+                              style="color: white; background-color: green;">{{scope.row.money8}}</span>
+                        <span v-else>{{scope.row.money8}}</span>
+                        </span>
+                        <el-input v-else="scope.row.edit" v-model="scope.row.money8"
+                                  @blur="levelChange(scope.row)">{{scope.row.money8}}
+                        </el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="money9"
+                        label="第9次">
+                    <template slot-scope="scope">
+                        <span v-if="!scope.row.edit">
+                        <span v-if=" scope.row.levelNumber==9"
+                              style="color: white; background-color: red;">{{scope.row.money19}}</span>
+                        <span v-else-if="scope.row.levelNumber==8"
+                              style="color: white; background-color: green;">{{scope.row.money9}}</span>
+                        <span v-else>{{scope.row.money9}}</span>
+                        </span>
+                        <el-input v-else="scope.row.edit" v-model="scope.row.money9"
+                                  @blur="levelChange(scope.row)">{{scope.row.money9}}
+                        </el-input>
+
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="money10"
+                        label="第10次">
+                    <template slot-scope="scope">
+                        <span v-if="!scope.row.edit">
+                        <span v-if=" scope.row.levelNumber==10"
+                              style="color: white; background-color: red;">{{scope.row.money10}}</span>
+                        <span v-else-if="scope.row.levelNumber==9"
+                              style="color: white; background-color: green;">{{scope.row.money10}}</span>
+                        <span v-else style="color: #f49505;">{{scope.row.money10}}</span>
+                        </span>
+                        <el-input v-else="scope.row.edit" v-model="scope.row.money10"
+                                  @blur="levelChange(scope.row)">{{scope.row.money10}}
+                        </el-input>
+
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="money11"
+                        label="第11次">
+                    <template slot-scope="scope">
+                        <span v-if="!scope.row.edit">
+                        <span v-if=" scope.row.levelNumber==11"
+                              style="color: white; background-color: red;">{{scope.row.money11}}</span>
+                        <span v-else-if="scope.row.levelNumber==10"
+                              style="color: white; background-color: green;">{{scope.row.money11}}</span>
+                        <span v-else>{{scope.row.money11}}</span>
+                        </span>
+                        <el-input v-else="scope.row.edit" v-model="scope.row.money11"
+                                  @blur="levelChange(scope.row)">{{scope.row.money11}}
+                        </el-input>
+
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="money12"
+                        label="第12次">
+                    <template slot-scope="scope">
+                        <span v-if="!scope.row.edit">
+                        <span v-if=" scope.row.levelNumber==12"
+                              style="color: white; background-color: red;">{{scope.row.money12}}</span>
+                        <span v-else-if="scope.row.levelNumber==11"
+                              style="color: white; background-color: green;">{{scope.row.money12}}</span>
+                        <span v-else>{{scope.row.money12}}</span>
+                        </span>
+                        <el-input v-else="scope.row.edit" v-model="scope.row.money12"
+                                  @blur="levelChange(scope.row)">{{scope.row.money12}}
+                        </el-input>
+
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="money13"
+                        label="第13次">
+                    <template slot-scope="scope">
+                        <span v-if="!scope.row.edit">
+                        <span v-if=" scope.row.levelNumber==13"
+                              style="color: white; background-color: red;">{{scope.row.money13}}</span>
+                        <span v-else-if="scope.row.levelNumber==12"
+                              style="color: white; background-color: green;">{{scope.row.money13}}</span>
+                        <span v-else>{{scope.row.money13}}</span>
+                        </span>
+                        <el-input v-else="scope.row.edit" v-model="scope.row.money13"
+                                  @blur="levelChange(scope.row)">{{scope.row.money13}}
+                        </el-input>
+
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="money14"
+                        label="第14次">
+                    <template slot-scope="scope">
+                        <span v-if="!scope.row.edit">
+                        <span v-if=" scope.row.levelNumber==14"
+                              style="color: white; background-color: red;">{{scope.row.money14}}</span>
+                        <span v-else-if="scope.row.levelNumber==13"
+                              style="color: white; background-color: green;">{{scope.row.money14}}</span>
+                        <span v-else>{{scope.row.money14}}</span>
+                        </span>
+                        <el-input v-else="scope.row.edit" v-model="scope.row.money14"
+                                  @blur="levelChange(scope.row)">{{scope.row.money14}}
+                        </el-input>
+
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="money15"
+                        label="第15次">
+                    <template slot-scope="scope">
+                        <span v-if="!scope.row.edit">
+                            <span v-if=" scope.row.levelNumber==15"
+                                style="color: white; background-color: red;">{{scope.row.money15}}</span>
+                            <span v-else-if="scope.row.levelNumber==14"
+                                  style="color: white; background-color: green;">{{scope.row.money15}}</span>
+                            <span v-else style="color: #f49505;">{{scope.row.money15}}</span>
+                        </span>
+                        <el-input v-else="scope.row.edit" v-model="scope.row.money15"
+                                  @blur="levelChange(scope.row)">{{scope.row.money15}}
+                        </el-input>
+
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="money16"
+                        label="第16次">
+                    <template slot-scope="scope">
+                        <span v-if="!scope.row.edit">
+                        <span v-if=" scope.row.levelNumber==16"
+                              style="color: white; background-color: red;">{{scope.row.money16}}</span>
+                        <span v-else-if="scope.row.levelNumber==15"
+                              style="color: white; background-color: green;">{{scope.row.money16}}</span>
+                        <span v-else>{{scope.row.money16}}</span>
+                        </span>
+                        <el-input v-else="scope.row.edit" v-model="scope.row.money16"
+                                  @blur="levelChange(scope.row)">{{scope.row.money16}}
+                        </el-input>
+
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="money17"
+                        label="第17次">
+                    <template slot-scope="scope">
+                        <span v-if="!scope.row.edit">
+                        <span v-if=" scope.row.levelNumber==17"
+                              style="color: white; background-color: red;">{{scope.row.money17}}</span>
+                        <span v-else-if="scope.row.levelNumber==16"
+                              style="color: white; background-color: green;">{{scope.row.money17}}</span>
+                        <span v-else>{{scope.row.money17}}</span>
+                        </span>
+                        <el-input v-else="scope.row.edit" v-model="scope.row.money17"
+                                  @blur="levelChange(scope.row)">{{scope.row.money17}}
+                        </el-input>
+
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="money18"
+                        label="第18次">
+                    <template slot-scope="scope">
+                        <span v-if="!scope.row.edit">
+                        <span v-if=" scope.row.levelNumber==18"
+                              style="color: white; background-color: red;">{{scope.row.money18}}</span>
+                        <span v-else-if="scope.row.levelNumber==17"
+                              style="color: white; background-color: green;">{{scope.row.money18}}</span>
+                        <span v-else>{{scope.row.money18}}</span>
+                        </span>
+                        <el-input v-else="scope.row.edit" v-model="scope.row.money18"
+                                  @blur="levelChange(scope.row)">{{scope.row.money18}}
+                        </el-input>
+
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="money19"
+                        label="第19次">
+                    <template slot-scope="scope">
+                        <span v-if="!scope.row.edit">
+                        <span v-if=" scope.row.levelNumber==19"
+                              style="color: white; background-color: red;">{{scope.row.money19}}</span>
+                        <span v-else-if="scope.row.levelNumber==18"
+                              style="color: white; background-color: green;">{{scope.row.money19}}</span>
+                        <span v-else>{{scope.row.money19}}</span>
+                        </span>
+                        <el-input v-else="scope.row.edit" v-model="scope.row.money19"
+                                  @blur="levelChange(scope.row)">{{scope.row.money19}}
+                        </el-input>
+
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="money20"
+                        label="第20次">
+                    <template slot-scope="scope">
+                        <span v-if="!scope.row.edit">
+                        <span v-if=" scope.row.levelNumber==20"
+                              style="color: white; background-color: red;">{{scope.row.money20}}</span>
+                        <span v-else-if="scope.row.levelNumber==19"
+                              style="color: white; background-color: green;">{{scope.row.money20}}</span>
+                        <span v-else style="color: #f49505;">{{scope.row.money20}}</span>
+                        </span>
+                        <el-input v-else="scope.row.edit" v-model="scope.row.money20"
+                                  @blur="levelChange(scope.row)">{{scope.row.money20}}
+                        </el-input>
+
+                    </template>
+                </el-table-column>
+            </el-table>
+        </el-tab-pane>
+
+        <div style="text-align: center;margin-top: 30px">
+            <el-pagination
+                    :page-size="page.pageSize"
+                    :pager-count="11"
+                    layout="prev, pager, next"
+                    @current-change="changePage"
+                    @prev-click="changePage"
+                    @next-click="changePage"
+                    :total="page.pageTotal">
+            </el-pagination>
+        </div>
+    </el-tabs>
+</div>
+</body>
+<!-- import Vue before Element -->
+<script src="/static/js/vue.js"></script>
+<script src="/static/js/axios.min.js"></script>
+<!-- import JavaScript -->
+<script src="/static/elementUI/index.js"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data: function () {
+            return {
+                activeName: 'first',
+                tableData1: [],
+
+                page: {
+                    pageCurrent: 1,
+                    pageSize: 1000,
+                    pageTotal: 0
+                },
+            }
+        },
+        created() {
+            this.getFundLevelMoneyTable();
+        },
+        methods: {
+            doubleClickCell(row, column, cell, event) {
+                this.$set(row, "edit", true);
+            },
+            levelChange(row) {
+                this.$set(row, "edit", false);
+                //业务处理
+
+                let that = this;
+                axios.post('/fund/fundLevelMoney/updateFundLevelMoney', row)
+                    .then(function (res) {
+                        that.$message.success(res.data.msg);
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            },
+
+            tableRowClassName({row, rowIndex}) {
+                if (rowIndex % 4 == 1) {
+                    return 'warning-row';
+                } else if (rowIndex % 4 == 3) {
+                    return 'success-row';
+                }
+                return '';
+            },
+            changePage(page) {
+                this.page.pageCurrent = page;
+                this.getFundLevelMoneyTable();
+            },
+            //基金等级
+            getFundLevelMoneyTable() {
+                let that = this;
+                let fromData = {
+                    page: (that.page.pageCurrent - 1) * 10,
+                    limit: that.page.pageSize,
+                }
+                axios.post('/fund/fundLevelMoney/findFundLevelMoneyList', fromData)
+                    .then(function (res) {
+                        if (res.data.code == 200) {
+                            that.tableData1 = res.data.data;
+                            that.page.pageTotal = res.data.count;
+                        } else {
+                            that.$message.success(res.data.msg);
+                        }
+
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            },
+            //百分比
+            formatPercentage(row, column) {
+                return (row.volatility_value * 100).toFixed(2) + "%";
+            },
+            formatPercentage2(row, column) {
+                return (row.max_pullback * 100).toFixed(2) + "%";
+            },
+            // 日期格式化
+            dateFormatter(row, column) {
+                if (row.maxNetWorthDate) {
+                    return row.maxNetWorthDate.substring(0, 10);
+                } else {
+                    return "";
+                }
+
+            },
+        }
+    })
+</script>
+</html>

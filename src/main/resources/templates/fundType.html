@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="https://jscdn.com.cn/highcharts/images/favicon.ico">
+    <!-- import CSS -->
+    <link rel="stylesheet" href="/static/elementUI/index.css">
+    <style>
+        .el-select {
+            width: 100%;
+        }
+        .el-table .warning-row {
+            background: oldlace;
+        }
+
+        .el-table .success-row {
+            background: #f0f9eb;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <el-tabs v-model="activeName">
+
+        <div style="margin-bottom: 30px;">
+            <el-button type="primary" icon="el-icon-plus" @click="addFundTypeClick">添加</el-button>
+        </div>
+        <el-tab-pane label="基金类型" name="first">
+            <el-table
+                    :row-class-name="tableRowClassName"
+                    border
+                    :data="tableData1"
+                    @cell-dblclick="doubleClickCell"
+                    style="width: 100%">
+                <el-table-column fixed="left" label="操作"  width="80">
+                    <template slot-scope="scope">
+                        <el-button
+                                size="mini"
+                                type="danger"
+                                @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        sortable
+                        prop="fundTypeNumber"
+                        label="编号"
+                        align="center"
+                        width="130">
+                    <template slot-scope="scope">
+                        <span v-if=" !scope.row.edit">{{scope.row.fundTypeNumber}}</span>
+                        <el-input v-else="scope.row.edit" v-model="scope.row.fundTypeNumber"
+                                  @blur="levelChange(scope.row)">{{scope.row.fundTypeNumber}}
+                        </el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="fundTypeName"
+                        label="名称"
+                        width="180">
+                    <template slot-scope="scope">
+                        <span v-if=" !scope.row.edit">{{scope.row.fundTypeName}}</span>
+                        <el-input v-else="scope.row.edit" v-model="scope.row.fundTypeName"
+                                  @blur="levelChange(scope.row)">{{scope.row.fundTypeName}}
+                        </el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        sortable
+                        prop="sorting"
+                        label="排序">
+                    <template slot-scope="scope">
+                        <span v-if=" !scope.row.edit">{{scope.row.sorting}}</span>
+                        <el-input v-else="scope.row.edit" v-model="scope.row.sorting"
+                                  @blur="levelChange(scope.row)">{{scope.row.sorting}}
+                        </el-input>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </el-tab-pane>
+
+        <div style="text-align: center;margin-top: 30px">
+            <el-pagination
+                    :page-size="page.pageSize"
+                    :pager-count="11"
+                    layout="prev, pager, next"
+                    @current-change="changePage"
+                    @prev-click="changePage"
+                    @next-click="changePage"
+                    :total="page.pageTotal">
+            </el-pagination>
+        </div>
+    </el-tabs>
+    <el-dialog
+            title="新增基金类型"
+            :visible.sync="dialogVisible"
+            width="60%">
+        <el-form ref="form" :model="fundDataForm" label-width="180px">
+            <el-form-item label="基金类型编号">
+                <el-input v-model="fundDataForm.fundTypeNumber"></el-input>
+            </el-form-item>
+            <el-form-item label="基金类型名称">
+                <el-input v-model="fundDataForm.fundTypeName"></el-input>
+            </el-form-item>
+            <el-form-item label="排序">
+                <el-input v-model="fundDataForm.sorting"></el-input>
+            </el-form-item>
+        </el-form>
+
+
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="dialogVisible = false">取 消</el-button>
+            <el-button type="primary" @click="addFundType">确 定</el-button>
+        </span>
+    </el-dialog>
+</div>
+</body>
+<!-- import Vue before Element -->
+<script src="/static/js/vue.js"></script>
+<script src="/static/js/axios.min.js"></script>
+<!-- import JavaScript -->
+<script src="/static/elementUI/index.js"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data: function () {
+            return {
+                activeName: 'first',
+                tableData1: [],
+                fundDataForm: {
+                    sorting: '',
+                    fundTypeNumber: '',
+                    fundTypeName: '',
+                },
+                page: {
+                    pageCurrent: 1,
+                    pageSize: 100,
+                    pageTotal: 0
+                },
+                dialogVisible: false,
+
+
+            }
+        },
+        created() {
+            this.getFundTypeTable();
+        },
+        methods: {
+            tableRowClassName({row, rowIndex}) {
+                if (rowIndex %4==1) {
+                    return 'warning-row';
+                } else if (rowIndex %4==3) {
+                    return 'success-row';
+                }
+                return '';
+            },
+            changePage(page) {
+                this.page.pageCurrent = page;
+                this.getFundTypeTable();
+            },
+            addFundTypeClick() {
+                this.fundDataForm = {
+                    sorting: '',
+                    fundTypeNumber: '',
+                    fundTypeName: '',
+                };
+                this.dialogVisible = true;
+            },
+            addFundType() {
+                let that = this;
+                axios.post('/fund/fundType/addFundType', this.fundDataForm)
+                    .then(function (res) {
+                        that.$message.success(res.data.msg);
+                        that.page.pageCurrent = 1;
+                        that.getFundTypeTable();
+                        that.dialogVisible = false;
+
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            },
+            handleDelete(index ,row){
+                let that = this;
+                axios.post('/fund/fundType/deleteFundType', {id:row.id})
+                    .then(function (res) {
+                        that.$message.success(res.data.msg);
+                        that.page.pageCurrent = 1;
+                        that.getFundTypeTable();
+                        that.dialogVisible = false;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            },
+
+            doubleClickCell(row, column, cell, event) {
+                this.$set(row, "edit", true);
+            },
+            levelChange(row) {
+                this.$set(row, "edit", false);
+                //业务处理
+
+                let that = this;
+                axios.post('/fund/fundType/updateFundType', row)
+                    .then(function (res) {
+                        that.$message.success(res.data.msg);
+                        that.page.pageCurrent = 1;
+                        that.getFundTypeTable()
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            },
+
+            //基金类型
+            getFundTypeTable() {
+                let that = this;
+                let fromData = {
+                    page: (that.page.pageCurrent - 1) * 10,
+                    limit: that.page.pageSize,
+                }
+                axios.post('/fund/fundType/findFundTypeList', fromData)
+                    .then(function (res) {
+                        console.log(res);
+                        that.tableData1 = res.data.data;
+                        that.page.pageTotal = res.data.count;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            },
+            //百分比
+            formatPercentage(row, column) {
+                return (row.volatility_value * 100).toFixed(2) + "%";
+            },
+            formatPercentage2(row, column) {
+                return (row.max_pullback * 100).toFixed(2) + "%";
+            },
+            // 日期格式化
+            dateFormatter(row, column) {
+                return row.max_net_worth_date.substring(0, 10);
+            },
+        }
+    })
+</script>
+</html>

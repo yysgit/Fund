@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yys.fund.mapper.DbUserMapper">
+
+
+    <!--注册用户-->
+    <insert id="addUser" parameterType="com.yys.fund.entity.DbUser">
+        insert into db_user_user (role_id, user_name, email, user_password, user_fullname, user_phone, create_time,
+                                  update_time)
+        values (#{roleId}, #{userName}, #{email}, #{userPassword}, #{userFullname}, #{userPhone}, now(), now());
+    </insert>
+
+    <!-- 登陆-->
+    <select id="findUserByUsernamePassword" resultType="com.yys.fund.entity.DbUser"
+            parameterType="java.util.Map">
+        select dbu.id,
+               dbu.user_name     AS userName,
+               dbu.user_fullname AS userFullname,
+               dbu.email         AS email,
+               dbu.user_phone    AS userPhone,
+               dbu.role_id       AS roleId,
+               dbu.create_time   AS createTime,
+               dbu.update_time   AS updateTime,
+               dbu.last_login_time AS lastLoginTime
+        from db_user dbu
+        where dbu.user_name = #{userName}
+          and dbu.user_password = #{userPassword}
+          and dbu.delete_status = 0;
+    </select>
+
+
+    <!--更新管理员用户-->
+    <update id="updateUser" parameterType="com.yys.fund.entity.DbUser">
+        update db_user_user
+        set update_time   =now()
+          , user_fullname = #{userFullname}
+          , user_phone    = #{userPhone}
+        where user_name = #{userName}
+    </update>
+
+    <update id="updateUserLoginTime" parameterType="com.yys.fund.entity.DbUser">
+        update db_user_user
+        set last_login_time   =now()
+        where user_name = #{userName}
+    </update>
+
+    <!--更新管理员用户-->
+    <update id="deleteUser" parameterType="com.yys.fund.entity.DbUser">
+        update db_user_user
+        set update_time   =now()
+          , delete_status = #{deleteStatus}
+        where id = #{id}
+    </update>
+
+
+    <!--通过登陆名称查询单个管理员用户-->
+    <select id="findUserByUserName" resultType="com.yys.fund.entity.DbUser">
+        select
+        dbu.id,
+        dbu.user_name     AS userName,
+        dbu.user_fullname AS userFullname,
+        dbu.email         AS email,
+        dbu.user_phone    AS userPhone,
+        dbu.role_id       AS roleId,
+        dbu.create_time   AS createTime,
+        dbu.update_time   AS updateTime,
+        dbu.lastLoginTime AS lastLoginTime
+        from db_user dbu
+        <if test="userId==null or userId==0">
+            where dbu.user_name=#{userName};
+        </if>
+        <if test="userId!=null and userId!=0">
+            where dbu.id!=#{userId} and dbau.user_name=#{userName};
+        </if>
+
+    </select>
+
+
+</mapper>
