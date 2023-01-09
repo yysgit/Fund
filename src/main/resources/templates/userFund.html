@@ -6,12 +6,14 @@
     <!-- import CSS -->
     <link rel="stylesheet" href="/static/elementUI/index.css">
     <style>
-        .el-select {
-            width: 100%;
+        .el-select,.el-date-editor{
+            width: 100%!important;
         }
+
         .el-table .warning-row {
             background: oldlace;
         }
+
         .el-table .success-row {
             background: #f0f9eb;
         }
@@ -57,7 +59,7 @@
                         width="120"
                         label="类型">
                     <template slot-scope="scope">
-                    <span>{{scope.row.fundTypeName}}</span>
+                        <span>{{scope.row.fundTypeName}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -124,25 +126,25 @@
             <el-form-item label="基金编号">
                 <el-input v-model="fundDataForm.fundCode"></el-input>
             </el-form-item>
-            <el-form-item label="基金类型">
-                <el-select v-model="fundDataForm.fundTypeId" placeholder="请选择">
-                    <el-option
-                            v-for="item in fundTypeAll"
-                            :key="item.id"
-                            :label="item.fundTypeNumber +'.'+item.fundTypeName"
-                            :value="item.id">
-                    </el-option>
-                </el-select>
+            <el-form-item label="选择日期">
+                <el-date-picker
+                        v-model="fundDataForm.purchaseTime"
+                        type="date"
+                        value-format="yyyy-MM-dd"
+                        placeholder="选择日期">
+                </el-date-picker>
             </el-form-item>
-            <el-form-item label="排序">
-                <el-input v-model="fundDataForm.sorting"></el-input>
+
+
+            <el-form-item label="金额">
+                <el-input v-model="fundDataForm.purchaseAmount"></el-input>
             </el-form-item>
         </el-form>
 
 
         <span slot="footer" class="dialog-footer">
             <el-button @click="dialogVisible = false">取 消</el-button>
-            <el-button type="primary" @click="addFundInfo">确 定</el-button>
+            <el-button type="primary" @click="addUserFundTransaction">确 定</el-button>
         </span>
     </el-dialog>
 </div>
@@ -160,9 +162,9 @@
                 activeName: 'first',
                 tableData1: [],
                 fundDataForm: {
-                    sorting: '',
                     fundCode: '',
-                    fundTypeId: '',
+                    purchaseTime: '',
+                    purchaseAmount: '',
                 },
                 page: {
                     pageCurrent: 1,
@@ -181,9 +183,9 @@
         },
         methods: {
             tableRowClassName({row, rowIndex}) {
-                if (rowIndex %4==1) {
+                if (rowIndex % 4 == 1) {
                     return 'warning-row';
-                } else if (rowIndex %4==3) {
+                } else if (rowIndex % 4 == 3) {
                     return 'success-row';
                 }
                 return '';
@@ -205,25 +207,24 @@
                 this.page.pageCurrent = page;
                 this.getFundInfoTable();
             },
-            handleAddUserFundTransactionClick() {
-
+            handleAddUserFundTransactionClick(index, row) {
+                this.fundDataForm.fundCode = row.fundCode;
+                this.fundDataForm.purchaseTime = this.dateFormat();
+                this.fundDataForm.purchaseAmount = '';
                 this.dialogVisible = true;
             },
-            addFundInfo() {
+            addUserFundTransaction() {
                 let that = this;
-                axios.post('/fund/fundInfo/addFundInfo', this.fundDataForm)
+                axios.post('/fund/userFundTransaction/addUserFundTtransactionPurchase', this.fundDataForm)
                     .then(function (res) {
                         that.$message.success(res.data.msg);
-                        that.page.pageCurrent = 1;
-                        that.getFundInfoTable();
                         that.dialogVisible = false;
-
                     })
                     .catch(function (error) {
                         console.log(error);
                     });
             },
-            handleAddUserFund(index,row){
+            handleAddUserFund(index, row) {
                 let that = this;
                 axios.post('/fund/fundInfo/addUserFund', {fundInfoCode: row.fundCode})
                     .then(function (res) {
@@ -280,11 +281,11 @@
                 }
                 axios.post('/fund/userFund/findUserFundList', fromData)
                     .then(function (res) {
-                        if(res.data.code==200){
-                           // that.$message.success("查询成功");
+                        if (res.data.code == 200) {
+                            // that.$message.success("查询成功");
                             that.tableData1 = res.data.data;
                             that.page.pageTotal = res.data.count;
-                        }else{
+                        } else {
                             that.$message.error(res.data.msg);
                         }
 
@@ -304,6 +305,10 @@
             // 日期格式化
             dateFormatter(row, column) {
                 return row.maxNetWorthDate.substring(0, 10);
+            },
+            dateFormat(){
+                var dT=new Date();//row 表示一行数据, dateTime 表示要格式化的字段名称
+                return dT.getFullYear()+"-"+(dT.getMonth()+1)+"-"+dT.getDate();
             },
         }
     })

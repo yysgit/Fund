@@ -7,4 +7,6 @@ public interface UFundTransactionService {
 
     List<Map> findFundTransactionPurchaseList(Map map);
     Integer findFundTransactionPurchaseCount(Map map);
+
+    Integer addUserFundTtransactionPurchase(Map map);
 }

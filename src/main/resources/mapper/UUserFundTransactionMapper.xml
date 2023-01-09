@@ -30,4 +30,11 @@
         where uftp.user_id = #{userId}
           and uftp.state = 0
     </select>
+
+    <insert id="addUserFundTtransactionPurchase" parameterType="java.util.Map">
+        insert into u_fund_transaction_purchase (user_id, fund_info_code,purchase_time, purchase_amount)
+        values (#{userId}, #{fundCode}, #{purchaseTime}, #{purchaseAmount});
+    </insert>
+
+
 </mapper>

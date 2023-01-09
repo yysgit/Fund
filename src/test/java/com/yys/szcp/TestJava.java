@@ -22,9 +22,21 @@ public class TestJava {
         int x1 = x;
         int y1 = y;
         if (y < str[x].length) {
-            map.put(str[x][y], getMapData(str, new HashMap(), x1, y1 + 1));
+            if(y==str[x].length-1){
+                map.put(str[x][y],1);
+            }else{
+                map.put(str[x][y], getMapData(str, new HashMap(), x1, y1 + 1));
+            }
+
             if ( !getString(str, x, y, str[x][y])) {
-                map.put(getString1(str, x, y, str[x][y]), getMapData(str, new HashMap(),getStringx(str, x, y, str[x][y]), y1 + 1));
+
+                if(y==str[x].length-1){
+                    map.put(getString1(str, x, y, str[x][y]),1);
+                }else{
+                    map.put(getString1(str, x, y, str[x][y]), getMapData(str, new HashMap(),getStringx(str, x, y, str[x][y]), y1 + 1));
+                }
+
+
             }
         }
         return map;

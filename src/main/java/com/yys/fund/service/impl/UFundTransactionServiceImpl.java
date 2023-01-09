@@ -29,4 +29,9 @@ public class UFundTransactionServiceImpl implements UFundTransactionService {
     public Integer findFundTransactionPurchaseCount(Map map) {
         return fundTransactionMapper.findFundTransactionPurchaseCount(map);
     }
+
+    @Override
+    public Integer addUserFundTtransactionPurchase(Map map) {
+        return fundTransactionMapper.addUserFundTtransactionPurchase(map);
+    }
 }

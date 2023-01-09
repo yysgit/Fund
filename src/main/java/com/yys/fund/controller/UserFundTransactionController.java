@@ -24,9 +24,9 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("fund/userFundTransaction/")
-public class userFundTransactionController {
+public class UserFundTransactionController {
 
-    private static final Logger logger = LoggerFactory.getLogger(userFundTransactionController.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserFundTransactionController.class);
 
 
     @Autowired
@@ -63,6 +63,31 @@ public class userFundTransactionController {
         } catch (Exception e) {
             logger.error("查询基金买卖错误: " + e.getMessage());
             return ResultUtil.error("查询失败!");
+        }
+    }
+
+    /**
+     * 添加买入基金
+     *
+     * @param request
+     * @param map
+     * @return
+     */
+    @RequestMapping("/addUserFundTtransactionPurchase")
+    @ResponseBody
+    public ResultUtil addUserFundTtransactionPurchase(HttpServletRequest request, @RequestBody Map map) {
+        try {
+            DbUser dbUser = (DbUser) request.getSession().getAttribute("dbUser");
+            if (dbUser == null) {
+                return ResultUtil.error("查询失败,未登录!");
+            }
+            map.put("userId", dbUser.getId());
+            //判断名称是否重复
+            Integer num = fundTransactionService.addUserFundTtransactionPurchase(map);
+           return ResultUtil.success("添加成功!");
+        } catch (Exception e) {
+            logger.error("添加买入基金错误: " + e.getMessage());
+            return ResultUtil.error("添加失败!");
         }
     }
 
