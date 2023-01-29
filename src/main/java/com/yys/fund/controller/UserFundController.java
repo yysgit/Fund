@@ -109,4 +109,30 @@ public class UserFundController {
         }
     }
 
+    /**
+     * 更新文章菜单
+     *
+     * @param request
+     * @param map
+     * @return
+     */
+    @RequestMapping("/updateUserFund")
+    @ResponseBody
+    public ResultUtil updateUserFund(HttpServletRequest request, @RequestBody Map map) {
+        try {
+            DbUser dbUser = (DbUser) request.getSession().getAttribute("dbUser");
+            if (dbUser == null) {
+                return ResultUtil.error("保存失败,未登录!");
+            }
+            map.put("userId", dbUser.getId());
+            userFundService.updateUserFund(map);
+            return ResultUtil.success("保存成功!");
+        } catch (Exception e) {
+            logger.error("保存基金信息错误: " + e.getMessage());
+            return ResultUtil.error("保存失败!");
+        }
+    }
+
+
+
 }

@@ -27,6 +27,8 @@ public interface UUserFundService {
      * @return
      */
     int deleteUserFund(Map map);
+
+
     /**
      * 查询所有的基金信息
      * @return

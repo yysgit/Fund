@@ -38,11 +38,19 @@
           and user_id = #{userId}
     </select>
 
-    <!--    删除文章菜单-->
+    <!--    删除我的基金-->
     <update id="deleteUserFund" parameterType="java.util.Map">
         update u_user_fund
         set update_time   = now()
           , delete_status = #{deleteStatus}
+        where id = #{id}
+          and user_id = #{userId}
+    </update>
+
+    <update id="updateUserFund" parameterType="java.util.Map">
+        update u_user_fund
+        set update_time   = now()
+          , fund_info_name_number = #{fundInfoNameNumber}
         where id = #{id}
           and user_id = #{userId}
     </update>

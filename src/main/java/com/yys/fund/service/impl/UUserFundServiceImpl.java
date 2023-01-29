@@ -36,6 +36,7 @@ public class UUserFundServiceImpl implements UUserFundService {
         return userFundMapper.deleteUserFund(map);
     }
 
+
     @Override
     public List<Map> findUserFundList(Map map) {
         return userFundMapper.findUserFundList(map);

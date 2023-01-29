@@ -45,6 +45,19 @@
                 </el-table-column>
                 <el-table-column
                         sortable
+                        prop="fundInfoNameNumber"
+                        label="自定义编号"
+                        width="90"
+                        align="center">
+                    <template slot-scope="scope">
+                        <span v-if=" !scope.row.edit">{{scope.row.fundInfoNameNumber}}</span>
+                        <el-input v-else="scope.row.edit" v-model="scope.row.fundInfoNameNumber"
+                                  @blur="levelChange(scope.row)">{{scope.row.fundInfoNameNumber}}
+                        </el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        sortable
                         prop="fundTypeNumber"
                         label="编号"
                         width="90"
@@ -257,13 +270,13 @@
                 this.$set(row, "edit", false);
                 //业务处理
                 let that = this;
-                axios.post('/fund/fundInfo/updateFundInfo', row)
+                axios.post('/fund/userFund/updateUserFund', row)
                     .then(function (res) {
                         that.$message.success(res.data.msg);
 
                         that.$nextTick(() => {
                             that.page.pageCurrent = 1;
-                            that.getFundInfoTable()
+                            that.getUserFundInfoTable()
                         })
 
                     })

@@ -25,8 +25,8 @@ public class FundTask {
     private FFundNetWorthMapper fundNetWorthMapper;
 
 
-        @Scheduled(cron = " 0 54 2 * * *")
-//    @Scheduled(cron = " 0 */5 7-23 * * mon,tue,wed,thu,fri")
+//        @Scheduled(cron = " 0 54 2 * * *")
+    @Scheduled(cron = " 0 */5 7-23 * * mon,tue,wed,thu,fri")
     public void task1() {
 
 
@@ -82,7 +82,8 @@ public class FundTask {
     }
 
 
-    @Scheduled(cron = " 0 1 0 * * tue,wed,thu,fri,Sat")
+//    @Scheduled(cron = " 0 1 0 * * tue,wed,thu,fri,Sat")
+    @Scheduled(cron = " 0 */5 7-23 * * mon,tue,wed,thu,fri")
     public void task2() {
         for (int i = 0; i < 1000; i++) {
             Map map = new HashMap();

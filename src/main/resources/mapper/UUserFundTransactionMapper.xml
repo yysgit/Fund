@@ -22,11 +22,11 @@
                  left join u_user_fund uuf on uuf.fund_info_code = uftp.fund_info_code and uftp.user_id = uuf.user_id
         where uftp.user_id = #{userId}
           and uftp.state = 0
-        order by uftp.yield, uftp.create_time desc limit #{page}, #{limit};
+        order by uftp.yield, uftp.purchase_time desc limit #{page}, #{limit};
     </select>
     <select id="findFundTransactionPurchaseCount" resultType="java.lang.Integer" parameterType="java.util.Map">
         select count(*)
-        from u_fund_transaction_purchase
+        from u_fund_transaction_purchase uftp
         where uftp.user_id = #{userId}
           and uftp.state = 0
     </select>
