@@ -1,11 +1,10 @@
 package com.yys.fund.controller;
 
-import com.alibaba.druid.support.json.JSONUtils;
 import com.yys.fund.constant.ExceptionConstant;
+import com.yys.fund.entity.DbUser;
 import com.yys.fund.entity.FFundType;
 import com.yys.fund.service.FFundTypeService;
 import com.yys.fund.utils.ResultUtil;
-import com.yys.fund.utils.StringISNULLUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -52,6 +50,10 @@ public class FundTypeController {
     @ResponseBody
     public ResultUtil addFundType(HttpServletRequest request, @RequestBody FFundType fundType) {
         try {
+            DbUser dbUser=(DbUser)request.getSession().getAttribute("dbUser");
+            if(dbUser==null){
+                return ResultUtil.error("添加失败,未登录!");
+            }
             //判断名称是否重复
             List<FFundType> list = fundTypeService.findFundTypeByNameAndNumber(fundType);
             if (list != null && list.size() > 0) {
@@ -77,7 +79,10 @@ public class FundTypeController {
     @ResponseBody
     public ResultUtil updateFundType(HttpServletRequest request, @RequestBody FFundType fundType) {
         try {
-
+            DbUser dbUser=(DbUser)request.getSession().getAttribute("dbUser");
+            if(dbUser==null){
+                return ResultUtil.error("添加失败,未登录!");
+            }
             //判断名称是否重复
             List<FFundType> list = fundTypeService.findFundTypeByNameAndNumber(fundType);
             if (list != null && list.size() > 0) {
@@ -103,6 +108,10 @@ public class FundTypeController {
     @ResponseBody
     public ResultUtil deleteFundType(HttpServletRequest request, @RequestBody FFundType fundType) {
         try {
+            DbUser dbUser=(DbUser)request.getSession().getAttribute("dbUser");
+            if(dbUser==null){
+                return ResultUtil.error("删除失败,未登录!");
+            }
             fundType.setDeleteStatus(1);
             fundTypeService.deleteFundType(fundType);
             return ResultUtil.success("删除成功!");
@@ -123,6 +132,10 @@ public class FundTypeController {
     @ResponseBody
     public ResultUtil findFundTypeList(HttpServletRequest request, @RequestBody Map map) {
         try {
+            DbUser dbUser=(DbUser)request.getSession().getAttribute("dbUser");
+            if(dbUser==null){
+                return ResultUtil.error("查询失败,未登录!");
+            }
             ResultUtil resultUtil = new ResultUtil();
 
             resultUtil.setData(fundTypeService.findFundTypeList(map));

@@ -57,6 +57,10 @@ public class FundInfoController {
     @ResponseBody
     public ResultUtil addFundInfo(HttpServletRequest request, @RequestBody FFundInfo fFundInfo) {
         try {
+            DbUser dbUser=(DbUser)request.getSession().getAttribute("dbUser");
+            if(dbUser==null){
+                return ResultUtil.error("添加失败,未登录!");
+            }
             fundInfoService.addFundInfo(fFundInfo);
             return ResultUtil.success("添加成功!");
         } catch (Exception e) {
@@ -95,6 +99,10 @@ public class FundInfoController {
     @ResponseBody
     public ResultUtil updateFundInfo(HttpServletRequest request, @RequestBody FFundInfo fFundInfo) {
         try {
+            DbUser dbUser=(DbUser)request.getSession().getAttribute("dbUser");
+            if(dbUser==null){
+                return ResultUtil.error("更新失败,未登录!");
+            }
             fundInfoService.updateFundInfo(fFundInfo);
             return ResultUtil.success("更新成功!");
         } catch (Exception e) {
@@ -115,6 +123,10 @@ public class FundInfoController {
     @ResponseBody
     public ResultUtil deleteFundInfo(HttpServletRequest request, @RequestBody FFundInfo fundInfo) {
         try {
+            DbUser dbUser=(DbUser)request.getSession().getAttribute("dbUser");
+            if(dbUser==null){
+                return ResultUtil.error("删除失败,未登录!");
+            }
             fundInfo.setDeleteStatus(1);
             fundInfoService.deleteFundInfo(fundInfo);
             return ResultUtil.success("删除成功!");
@@ -135,6 +147,10 @@ public class FundInfoController {
     @ResponseBody
     public ResultUtil findFundInfoList(HttpServletRequest request, @RequestBody Map map) {
         try {
+            DbUser dbUser=(DbUser)request.getSession().getAttribute("dbUser");
+            if(dbUser==null){
+                return ResultUtil.error("查询失败,未登录!");
+            }
             ResultUtil resultUtil = new ResultUtil();
 
             resultUtil.setData(fundInfoService.findFundInfoList(map));

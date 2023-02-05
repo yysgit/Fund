@@ -66,12 +66,62 @@
                 </el-table-column>
                 <el-table-column
                         sortable
+                        prop="purchaseAmount"
+                        label="买入金额">
+                    <template slot-scope="scope">
+                        <span >{{scope.row.purchaseAmount}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        sortable
                         prop="purchaseShare"
                         label="买入份额">
                     <template slot-scope="scope">
                         <span >{{scope.row.purchaseShare}}</span>
                     </template>
                 </el-table-column>
+                <el-table-column
+                        sortable
+                        prop="purchaseNetWorth"
+                        label="买入净值">
+                    <template slot-scope="scope">
+                        <span >{{scope.row.purchaseNetWorth}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        sortable
+                        prop="todayNetWorth"
+                        label="今日净值">
+                    <template slot-scope="scope">
+                        <span >{{scope.row.todayNetWorth}}</span>
+                    </template>
+                </el-table-column>
+
+                <el-table-column
+                        sortable
+                        prop="yield"
+                        label="收益率">
+                    <template slot-scope="scope">
+                        <span >{{scope.row.yield}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        sortable
+                        prop="incomeAmount"
+                        label="收益金额">
+                    <template slot-scope="scope">
+                        <span >{{scope.row.incomeAmount}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        sortable
+                        prop="todayTime"
+                        label="今日时间">
+                    <template slot-scope="scope">
+                        <span >{{scope.row.todayTime}}</span>
+                    </template>
+                </el-table-column>
+
             </el-table>
         </el-tab-pane>
 

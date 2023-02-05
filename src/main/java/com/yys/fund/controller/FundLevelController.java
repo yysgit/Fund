@@ -1,7 +1,7 @@
 package com.yys.fund.controller;
 
 import com.yys.fund.constant.ExceptionConstant;
-import com.yys.fund.entity.FFundLevel;
+import com.yys.fund.entity.DbUser;
 import com.yys.fund.service.FFundLevelService;
 import com.yys.fund.utils.ResultUtil;
 import org.slf4j.Logger;
@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -48,6 +47,11 @@ public class FundLevelController {
     @ResponseBody
     public ResultUtil findFundLevelList(HttpServletRequest request, @RequestBody Map map) {
         try {
+
+            DbUser dbUser=(DbUser)request.getSession().getAttribute("dbUser");
+            if(dbUser==null){
+                return ResultUtil.error("查询失败,未登录!");
+            }
             ResultUtil resultUtil = new ResultUtil();
 
             resultUtil.setData(fundLevelService.findFundLevelList(map));

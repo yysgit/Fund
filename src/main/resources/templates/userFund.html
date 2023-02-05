@@ -46,7 +46,7 @@
                 <el-table-column
                         sortable
                         prop="fundInfoNameNumber"
-                        label="自定义编号"
+                        label="编号"
                         width="90"
                         align="center">
                     <template slot-scope="scope">
@@ -56,23 +56,14 @@
                         </el-input>
                     </template>
                 </el-table-column>
-                <el-table-column
-                        sortable
-                        prop="fundTypeNumber"
-                        label="编号"
-                        width="90"
-                        align="center">
-                    <template slot-scope="scope">
-                        <span>{{scope.row.fundTypeNumber}}</span>
-                    </template>
-                </el-table-column>
+
                 <el-table-column
                         sortable
                         prop="fundTypeName"
                         width="120"
                         label="类型">
                     <template slot-scope="scope">
-                        <span>{{scope.row.fundTypeName}}</span>
+                        <span>{{scope.row.fundTypeNumber+'.'+scope.row.fundTypeName}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column

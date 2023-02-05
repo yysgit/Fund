@@ -156,6 +156,10 @@ public class UserController {
     @ResponseBody
     public ResultUtil deleteUser(HttpServletRequest request, Integer adminUserId) {
         try {
+            DbUser dbUser=(DbUser)request.getSession().getAttribute("dbUser");
+            if(dbUser==null){
+                return ResultUtil.error("删除失败,未登录!");
+            }
             DbUser adminUser = new DbUser();
             adminUser.setId(adminUserId);
             adminUser.setDeleteStatus(1);

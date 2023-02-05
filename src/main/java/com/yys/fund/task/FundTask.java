@@ -5,6 +5,7 @@ import com.yys.fund.entity.FFundNetWorth;
 import com.yys.fund.mapper.FFundInfoMapper;
 import com.yys.fund.mapper.FFundLevelMapper;
 import com.yys.fund.mapper.FFundNetWorthMapper;
+import com.yys.fund.mapper.UFundTransactionMapper;
 import com.yys.fund.utils.SendRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -24,12 +25,17 @@ public class FundTask {
     @Autowired
     private FFundNetWorthMapper fundNetWorthMapper;
 
+    @Autowired
+    private UFundTransactionMapper fundTransactionMapper;
 
+
+
+    /**
+     * 时时更新每个基金当天
+     */
 //        @Scheduled(cron = " 0 54 2 * * *")
     @Scheduled(cron = " 0 */5 7-23 * * mon,tue,wed,thu,fri")
     public void task1() {
-
-
         for (int i = 0; i < 1000; i++) {
             Map map = new HashMap();
             map.put("page", i * 100);
@@ -69,6 +75,10 @@ public class FundTask {
                         fundNetWorthMapper.updateFundNetWorthTemp(fundNetWorth);
                     }
 
+                    //更新用户买入信息
+                    fundTransactionMapper.updateFundTransactionPurchaseForTemp(fundNetWorth);
+
+
                     try {
                         Thread.sleep(500);
                     } catch (Exception e) {
@@ -81,9 +91,11 @@ public class FundTask {
         }
     }
 
-
-//    @Scheduled(cron = " 0 1 0 * * tue,wed,thu,fri,Sat")
-    @Scheduled(cron = " 0 */5 7-23 * * mon,tue,wed,thu,fri")
+    /**
+     * 更新每天基金的真实基金净值
+     */
+    @Scheduled(cron = " 0 1 0 * * tue,wed,thu,fri,Sat")
+//    @Scheduled(cron = " 0 */5 7-23 * * mon,tue,wed,thu,fri")
     public void task2() {
         for (int i = 0; i < 1000; i++) {
             Map map = new HashMap();
@@ -202,6 +214,18 @@ public class FundTask {
         mapFundLevel.put("level20", d);
         return mapFundLevel;
     }
+
+
+    /**
+     * 更新每天的买入净值信息
+     */
+    @Scheduled(cron = " 0 */3 * * * *")
+    public void task3(){
+        fundTransactionMapper.updateFundTransactionPurchaseForTask();
+    }
+
+
+
 
 
 }

@@ -76,6 +76,10 @@ public class FundLevelMoneyController {
     @ResponseBody
     public ResultUtil updateFundType(HttpServletRequest request, @RequestBody Map fundType) {
         try {
+            DbUser dbUser=(DbUser)request.getSession().getAttribute("dbUser");
+            if(dbUser==null){
+                return ResultUtil.error("更新失败,未登录!");
+            }
             fundLevelMoneyService.updateFundLevelMoney(fundType);
             return ResultUtil.success("更新成功!");
         } catch (Exception e) {
