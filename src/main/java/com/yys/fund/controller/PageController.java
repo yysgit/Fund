@@ -10,4 +10,13 @@ public class PageController {
     public String druid(){
         return "redirect:/druid/index.html";
     }
+
+    @RequestMapping("/index.html")
+    public String index(){
+        return "index.html";
+    }
+    @RequestMapping("/index2.html")
+    public String index2(){
+        return "index.html";
+    }
 }

@@ -36,7 +36,11 @@
                                 type="primary"
                                 @click="handleFundSell(scope.$index, scope.row)">卖出
                         </el-button>
-
+                        <el-button
+                                size="mini"
+                                type="danger"
+                                @click="handleDelete(scope.$index, scope.row)">删除
+                        </el-button>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -262,7 +266,7 @@
 
             handleDelete(index, row) {
                 let that = this;
-                axios.post('/fund/fundType/deleteFundInfo', {id: row.id})
+                axios.post('/fund/userFundTransaction/deleteUserFundTransaction', {id: row.id})
                     .then(function (res) {
                         that.$message.success(res.data.msg);
                         that.page.pageCurrent = 1;

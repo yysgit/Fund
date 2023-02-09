@@ -9,4 +9,6 @@ public interface UFundTransactionService {
     Integer findFundTransactionPurchaseCount(Map map);
 
     Integer addUserFundTtransactionPurchase(Map map);
+    int deleteUserFundTransaction(Map map);
+
 }

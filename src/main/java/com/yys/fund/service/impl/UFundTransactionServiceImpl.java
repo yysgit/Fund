@@ -34,4 +34,9 @@ public class UFundTransactionServiceImpl implements UFundTransactionService {
     public Integer addUserFundTtransactionPurchase(Map map) {
         return fundTransactionMapper.addUserFundTtransactionPurchase(map);
     }
+
+    @Override
+    public int deleteUserFundTransaction(Map map) {
+        return fundTransactionMapper.deleteUserFundTransaction(map);
+    }
 }
