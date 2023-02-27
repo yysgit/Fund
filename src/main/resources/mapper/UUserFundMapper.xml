@@ -39,13 +39,11 @@
     </select>
 
     <!--    删除我的基金-->
-    <update id="deleteUserFund" parameterType="java.util.Map">
-        update u_user_fund
-        set update_time   = now()
-          , delete_status = #{deleteStatus}
+    <delete id="deleteUserFund" parameterType="java.util.Map">
+        delete from  u_user_fund
         where id = #{id}
           and user_id = #{userId}
-    </update>
+    </delete>
 
     <update id="updateUserFund" parameterType="java.util.Map">
         update u_user_fund

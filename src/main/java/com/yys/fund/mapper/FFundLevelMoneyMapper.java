@@ -36,4 +36,12 @@ public interface FFundLevelMoneyMapper {
      * @param map
      */
     List<Map> findFundLevelMoneyByFundInfoCode(Map map);
+
+    /**
+     * 删除用户基金等级金额
+     * @param map
+     * @return
+     */
+    int deleteLevelMoneyByFundInfoCode(Map map);
+
 }

@@ -61,6 +61,9 @@ public class FundInfoController {
             if(dbUser==null){
                 return ResultUtil.error("添加失败,未登录!");
             }
+
+            fFundInfo.setCreateUserId(dbUser.getId());
+            fFundInfo.setUpdateUserId(dbUser.getId());
             fundInfoService.addFundInfo(fFundInfo);
             return ResultUtil.success("添加成功!");
         } catch (Exception e) {

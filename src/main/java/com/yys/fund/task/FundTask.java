@@ -34,7 +34,8 @@ public class FundTask {
      * 时时更新每个基金当天
      */
 //        @Scheduled(cron = " 0 54 2 * * *")
-    @Scheduled(cron = " 0 */5 7-23 * * mon,tue,wed,thu,fri")
+//    @Scheduled(cron = " 0 */5 7-23 * * mon,tue,wed,thu,fri")
+    @Scheduled(cron = "* */2 * * * ?")
     public void task1() {
         for (int i = 0; i < 1000; i++) {
             Map map = new HashMap();
@@ -94,7 +95,7 @@ public class FundTask {
     /**
      * 更新每天基金的真实基金净值
      */
-    @Scheduled(cron = " 0 1 0 * * tue,wed,thu,fri,Sat")
+    @Scheduled(cron = "* */2 * * * ?")
 //    @Scheduled(cron = " 0 */5 7-23 * * mon,tue,wed,thu,fri")
     public void task2() {
         for (int i = 0; i < 1000; i++) {
@@ -109,20 +110,25 @@ public class FundTask {
                     Map fundDateNet = SendRequest.getFundDataListOne(String.valueOf(fundDataMySQL.get("fundCode")), new Date().getTime());
                     String fundDateNetMaxNetWorth = String.valueOf(fundDateNet.get("maxNetWorth"));
                     String fundDataMySQLMaxNetWorth = String.valueOf(fundDataMySQL.get("maxNetWorth"));
-                    //添加基金等级
-                    if (fundDataMySQL.get("fundLevelId") == null || "".equals(fundDataMySQL.get("fundLevelId"))) {
-                        Map mapFundLevel = getMapFundLevelForTask(Double.parseDouble(fundDataMySQL.get("maxNetWorth").toString()), String.valueOf(fundDataMySQL.get("fundCode")), Double.parseDouble(String.valueOf(fundDataMySQL.get("volatilityValue"))));
-                        fundLevelMapper.addFundLevel(mapFundLevel);
-                    }
+
                     //判断是否有最大净值
                     if (fundDateNet.get("maxNetWorth") != null && !fundDateNetMaxNetWorth.equals(fundDataMySQLMaxNetWorth)) {
                         fundDataMySQL.put("maxNetWorth", fundDateNet.get("maxNetWorth"));
                         fundDataMySQL.put("maxNetWorthDate", fundDateNet.get("maxNetWorthDate"));
+                        fundDataMySQL.put("fundName", fundDateNet.get("fundName"));
                         Map mapFundLevel = getMapFundLevelForTask(Double.parseDouble(fundDataMySQL.get("maxNetWorth").toString()), String.valueOf(fundDataMySQL.get("fundCode")), Double.parseDouble(String.valueOf(fundDataMySQL.get("volatilityValue"))));
                         //更新基金信息的最大值净值和最大净值日期
                         fundInfoMapper.updateFundInfoForNetWorth(fundDataMySQL);
-                        //更新基金等级
-                        fundLevelMapper.updateFundLevel(mapFundLevel);
+
+                        //添加基金等级
+                        if (fundDataMySQL.get("fundLevelId") == null || "".equals(fundDataMySQL.get("fundLevelId"))) {
+                            Map mapFundLevel2 = getMapFundLevelForTask(Double.parseDouble(fundDataMySQL.get("maxNetWorth").toString()), String.valueOf(fundDataMySQL.get("fundCode")), Double.parseDouble(String.valueOf(fundDataMySQL.get("volatilityValue"))));
+                            fundLevelMapper.addFundLevel(mapFundLevel2);
+                        }else{
+                            //更新基金等级
+                            fundLevelMapper.updateFundLevel(mapFundLevel);
+                        }
+
                     }
                     //更新历史净值
                     Integer fundNetWorthCount = fundNetWorthMapper.findFundNetWorthListCount(fundDataMySQL);
@@ -219,7 +225,7 @@ public class FundTask {
     /**
      * 更新每天的买入净值信息
      */
-    @Scheduled(cron = " 0 */3 * * * *")
+    @Scheduled(cron = "* */3 * * * ?")
     public void task3(){
         fundTransactionMapper.updateFundTransactionPurchaseForTask();
     }

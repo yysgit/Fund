@@ -243,7 +243,7 @@
 
             handleDelete(index, row) {
                 let that = this;
-                axios.post('/fund/userFund/deleteUserFund', {id: row.id})
+                axios.post('/fund/userFund/deleteUserFund', {id: row.id,fundInfoCode:row.fundCode})
                     .then(function (res) {
                         that.$message.success(res.data.msg);
                         that.page.pageCurrent = 1;

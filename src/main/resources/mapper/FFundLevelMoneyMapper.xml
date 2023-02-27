@@ -81,5 +81,12 @@
         money18, money19, money20
         from u_fund_level_money where fund_info_code=#{id}
     </select>
+    <!--    删除用户基金等级金额-->
+    <delete id="deleteLevelMoneyByFundInfoCode" parameterType="java.util.Map">
+        delete from u_fund_level_money
+        where fund_info_code = #{fundInfoCode}
+          and user_id = #{userId}
+    </delete>
+
 
 </mapper>

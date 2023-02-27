@@ -105,9 +105,18 @@
                         sortable
                         prop="yield"
                         label="收益率">
+
                     <template slot-scope="scope">
-                        <span >{{scope.row.yield}}</span>
+                       <span v-if="parseFloat(scope.row.yield)>0 "
+                             style="color: red">{{getYield(scope.row.yield)+'%'}}</span>
+                        <span v-else-if="parseFloat(scope.row.yield)<=0 "
+                              style="color: green">{{getYield(scope.row.yield)+'%'}}</span>
                     </template>
+
+
+<!--                    <template slot-scope="scope">-->
+<!--                        <span >{{scope.row.yield}}</span>-->
+<!--                    </template>-->
                 </el-table-column>
                 <el-table-column
                         sortable
@@ -204,6 +213,13 @@
             this.getFundTransactionTable();
         },
         methods: {
+            getYield(data){
+                if(data!=0 && data!='' && data!=null ){
+                    return Number(String(parseFloat(data)*100).replace(/^(.*\..{4}).*$/,"$1"));
+                }else{
+                    return 0;
+                }
+            },
             tableRowClassName({row, rowIndex}) {
                 if (rowIndex % 4 == 1) {
                     return 'warning-row';

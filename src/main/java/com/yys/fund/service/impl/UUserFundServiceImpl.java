@@ -1,5 +1,6 @@
 package com.yys.fund.service.impl;
 
+import com.yys.fund.mapper.FFundLevelMoneyMapper;
 import com.yys.fund.mapper.UUserFundMapper;
 import com.yys.fund.service.UUserFundService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,8 @@ import java.util.Map;
 public class UUserFundServiceImpl implements UUserFundService {
     @Autowired
     private UUserFundMapper userFundMapper;
+    @Autowired
+    private FFundLevelMoneyMapper fundLevelMoneyMapper;
 
     @Override
     public int addUserFund(Map map) {
@@ -33,6 +36,7 @@ public class UUserFundServiceImpl implements UUserFundService {
 
     @Override
     public int deleteUserFund(Map map) {
+        fundLevelMoneyMapper.deleteLevelMoneyByFundInfoCode(map);
         return userFundMapper.deleteUserFund(map);
     }
 
