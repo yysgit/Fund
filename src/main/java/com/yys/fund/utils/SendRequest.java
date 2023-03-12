@@ -148,7 +148,7 @@ public class SendRequest {
                 }
                 if (resultStr.indexOf("fS_name") != -1) {
                     String[] fundDataList = resultStr.split("=");
-                    resultMap.put("fundName", fundDataList[1]);
+                    resultMap.put("fundName", fundDataList[1].replaceAll("\"",""));
                 }
                 if (resultStr.indexOf("fS_code") != -1) {
                     String[] fundDataList = resultStr.split("=");

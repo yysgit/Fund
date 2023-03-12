@@ -4,6 +4,7 @@ import com.yys.fund.mapper.UFundTransactionMapper;
 import com.yys.fund.service.UFundTransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -36,7 +37,35 @@ public class UFundTransactionServiceImpl implements UFundTransactionService {
     }
 
     @Override
+    public List<Map> findFundTransactionSellList(Map map) {
+        return fundTransactionMapper.findFundTransactionSellList(map);
+    }
+
+    @Override
+    public Integer findFundTransactionSellCount(Map map) {
+        return fundTransactionMapper.findFundTransactionSellCount(map);
+    }
+
+    @Override
+    @Transactional
+    public Integer addUserFundTtransactionSell(Map map) {
+        Integer int1=  fundTransactionMapper.addUserFundTtransactionSell(map);
+        Integer int2= fundTransactionMapper.updateUserFundTtransactionPurchase(map);
+        return int1+int2;
+    }
+
+    @Override
     public int deleteUserFundTransaction(Map map) {
         return fundTransactionMapper.deleteUserFundTransaction(map);
     }
+
+    @Override
+    public int deleteUserFundTransactionSell(Map map) {
+        Integer int2= fundTransactionMapper.updateUserFundTtransactionPurchaseforDelete(map);
+        Integer int1=  fundTransactionMapper.deleteUserFundTransactionSell(map);
+        return int1+int2;
+    }
+
+
+
 }

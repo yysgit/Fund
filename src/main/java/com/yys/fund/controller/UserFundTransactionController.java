@@ -39,7 +39,7 @@ public class UserFundTransactionController {
 
 
     /**
-     * 基金信息管理页面
+     * 我的买入基金列表
      *
      * @param request
      * @return
@@ -61,10 +61,40 @@ public class UserFundTransactionController {
 
             return resultUtil;
         } catch (Exception e) {
-            logger.error("查询基金买卖错误: " + e.getMessage());
+            logger.error("查询基金买入错误: " + e.getMessage());
             return ResultUtil.error("查询失败!");
         }
     }
+
+
+    /**
+     * 我的卖出基金列表
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping("/findFundTransactionSellList")
+    @ResponseBody
+    public ResultUtil findFundTransactionSellList(HttpServletRequest request, @RequestBody Map map) {
+        try {
+            ResultUtil resultUtil = new ResultUtil();
+            DbUser dbUser = (DbUser) request.getSession().getAttribute("dbUser");
+            if (dbUser == null) {
+                return ResultUtil.error("查询失败,未登录!");
+            }
+            map.put("userId", dbUser.getId());
+            resultUtil.setData(fundTransactionService.findFundTransactionSellList(map));
+            resultUtil.setCount(fundTransactionService.findFundTransactionSellCount(map));
+            resultUtil.setMsg("查询成功!");
+            resultUtil.setCode(ExceptionConstant.SUCCESS_HTTPREUQEST);
+
+            return resultUtil;
+        } catch (Exception e) {
+            logger.error("查询基金卖出错误: " + e.getMessage());
+            return ResultUtil.error("查询失败!");
+        }
+    }
+
 
     /**
      * 添加买入基金
@@ -84,7 +114,32 @@ public class UserFundTransactionController {
             map.put("userId", dbUser.getId());
             //判断名称是否重复
             Integer num = fundTransactionService.addUserFundTtransactionPurchase(map);
-           return ResultUtil.success("添加成功!");
+            return ResultUtil.success("卖出成功!");
+        } catch (Exception e) {
+            logger.error("卖出基金错误: " + e.getMessage());
+            return ResultUtil.error("卖出失败!");
+        }
+    }
+
+    /**
+     * 添加卖出基金
+     *
+     * @param request
+     * @param map
+     * @return
+     */
+    @RequestMapping("/addUserFundTtransactionSell")
+    @ResponseBody
+    public ResultUtil addUserFundTtransactionSell(HttpServletRequest request, @RequestBody Map map) {
+        try {
+            DbUser dbUser = (DbUser) request.getSession().getAttribute("dbUser");
+            if (dbUser == null) {
+                return ResultUtil.error("查询失败,未登录!");
+            }
+            map.put("userId", dbUser.getId());
+            //判断名称是否重复
+            Integer num = fundTransactionService.addUserFundTtransactionSell(map);
+            return ResultUtil.success("添加成功!");
         } catch (Exception e) {
             logger.error("添加买入基金错误: " + e.getMessage());
             return ResultUtil.error("添加失败!");
@@ -92,9 +147,8 @@ public class UserFundTransactionController {
     }
 
 
-
     /**
-     * 删除基金信息
+     * 删除基金买入
      *
      * @param request
      * @param map
@@ -112,8 +166,34 @@ public class UserFundTransactionController {
             fundTransactionService.deleteUserFundTransaction(map);
             return ResultUtil.success("删除成功!");
         } catch (Exception e) {
-            logger.error("删除基金信息错误: " + e.getMessage());
+            logger.error("删除基金买入错误: " + e.getMessage());
+            return ResultUtil.error("删除失败!");
+        }
+    }
+
+    /**
+     * 删除基金卖出
+     *
+     * @param request
+     * @param map
+     * @return
+     */
+    @RequestMapping("/deleteUserFundTransactionSell")
+    @ResponseBody
+    public ResultUtil deleteUserFundTransactionSell(HttpServletRequest request, @RequestBody Map map) {
+        try {
+            DbUser dbUser = (DbUser) request.getSession().getAttribute("dbUser");
+            if (dbUser == null) {
+                return ResultUtil.error("删除失败,未登录!");
+            }
+            map.put("userId", dbUser.getId());
+            fundTransactionService.deleteUserFundTransactionSell(map);
+            return ResultUtil.success("删除成功!");
+        } catch (Exception e) {
+            logger.error("删除基金卖出错误: " + e.getMessage());
             return ResultUtil.error("删除失败!");
         }
     }
 }
+
+

@@ -285,7 +285,7 @@
 
             handleDelete(index, row) {
                 let that = this;
-                axios.post('/fund/fundType/deleteFundInfo', {id: row.id})
+                axios.post('/fund/fundInfo/deleteFundInfo', {id: row.id})
                     .then(function (res) {
                         that.$message.success(res.data.msg);
                         that.page.pageCurrent = 1;

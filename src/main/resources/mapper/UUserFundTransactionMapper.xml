@@ -22,20 +22,73 @@
                  left join f_fund_info ffi on ffi.fund_code = uftp.fund_info_code
                  left join u_user_fund uuf on uuf.fund_info_code = uftp.fund_info_code and uftp.user_id = uuf.user_id
         where uftp.user_id = #{userId}
-          and uftp.state = 0
+          and uftp.state = #{state}
         order by uftp.yield, uftp.purchase_time desc limit #{page}, #{limit};
     </select>
     <select id="findFundTransactionPurchaseCount" resultType="java.lang.Integer" parameterType="java.util.Map">
         select count(*)
         from u_fund_transaction_purchase uftp
         where uftp.user_id = #{userId}
-          and uftp.state = 0
+          and uftp.state = #{state}
     </select>
+
+
+    <!--查询分页信息列表-->
+    <select id="findFundTransactionSellList" resultType="java.util.Map" parameterType="java.util.Map">
+        select ufts.id,
+               ufts.fund_info_code       as fundInfoCode,
+               uuf.fund_info_name_number as fundInfoNameNumber,
+               ffi.fund_name             as fundName,
+               ufts.sell_time            as sellTime,
+               ufts.sell_amount          as sellAmount,
+               ufts.sell_commission      as sellCommission,
+               ufts.sell_share           as sellShare,
+               ufts.sell_net_worth       as sellNetWorth,
+               ufts.income_amount        as incomeAmount,
+               ufts.purchase_id          as purchaseId,
+               ufts.yield                as yield
+        from u_fund_transaction_sell ufts
+                 left join f_fund_info ffi on ffi.fund_code = ufts.fund_info_code
+                 left join u_user_fund uuf on uuf.fund_info_code = ufts.fund_info_code and ufts.user_id = uuf.user_id
+        where ufts.user_id = #{userId}
+        order by ufts.yield, ufts.sell_time desc limit #{page}, #{limit};
+    </select>
+    <select id="findFundTransactionSellCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+        select count(*)
+        from u_fund_transaction_sell ufts
+        where ufts.user_id = #{userId}
+    </select>
+
 
     <insert id="addUserFundTtransactionPurchase" parameterType="java.util.Map">
         insert into u_fund_transaction_purchase (user_id, fund_info_code, purchase_time, purchase_amount)
         values (#{userId}, #{fundCode}, #{purchaseTime}, #{purchaseAmount});
     </insert>
+
+    <insert id="addUserFundTtransactionSell" parameterType="java.util.Map">
+        insert into u_fund_transaction_sell (user_id, fund_info_code, sell_time, purchase_id, sell_share)
+        values (#{userId}, #{fundCode}, #{sellTime}, #{purchaseId}, #{sellShare});
+    </insert>
+
+    <!--更新用户买入净值信息-->
+    <update id="updateUserFundTtransactionPurchase">
+        UPDATE u_fund_transaction_purchase uftp
+        SET uftp.state=1,
+            uftp.sell_id =(select id
+                           from u_fund_transaction_sell ufts
+                           where ufts.purchase_id = #{purchaseId}
+            )
+        WHERE uftp.id = #{purchaseId}
+
+    </update>
+
+    <!--更新用户买入净值信息-->
+    <update id="updateUserFundTtransactionPurchaseforDelete">
+        UPDATE u_fund_transaction_purchase uftp
+        SET uftp.state=0,
+            uftp.sell_id =null
+        WHERE uftp.id = #{purchaseId}
+    </update>
 
 
     <!--更新用户买入净值信息-->
@@ -58,6 +111,34 @@
 
     </update>
 
+
+    <!--更新用户卖出净值信息-->
+    <update id="updateFundTransactionSellForTask">
+        UPDATE u_fund_transaction_sell ufts
+        SET ufts.sell_net_worth = (select ffnw.fund_net_worth
+                                   from f_fund_net_worth ffnw
+                                   where ufts.fund_info_code = ffnw.fund_info_code
+                                     and ufts.sell_time = ffnw.fund_day),
+            ufts.sell_amount    =(select ufts.sell_share * ffnw.fund_net_worth
+                                  from f_fund_net_worth ffnw
+                                  where ufts.fund_info_code = ffnw.fund_info_code
+                                    and ufts.sell_time = ffnw.fund_day),
+            ufts.income_amount=(select ufts.sell_amount - uftp.purchase_amount - ufts.sell_commission
+                                from u_fund_transaction_purchase uftp
+                                where uftp.id = ufts.purchase_id),
+            ufts.yield=(select ufts.income_amount/uftp.purchase_amount
+                        from u_fund_transaction_purchase uftp
+                        where uftp.id = ufts.purchase_id)
+
+        WHERE ufts.sell_amount is null
+          and EXISTS(select ffnw.fund_net_worth
+                     from f_fund_net_worth ffnw
+                     where ufts.fund_info_code = ffnw.fund_info_code
+                       and ufts.sell_time = ffnw.fund_day)
+
+    </update>
+
+
     <!--更新用户买入净值信息-->
     <update id="updateFundTransactionPurchaseForTemp">
         UPDATE u_fund_transaction_purchase uftp
@@ -74,7 +155,7 @@
                                    from f_fund_net_worth_temp ffnwt
                                    where uftp.fund_info_code = ffnwt.fund_info_code)
 
-        WHERE uftp.fund_info_code =#{fundInfoCode}
+        WHERE uftp.fund_info_code = #{fundInfoCode}
           and uftp.purchase_net_worth is not null
           and EXISTS(select ffnwt.fund_net_worth
                      from f_fund_net_worth_temp ffnwt
@@ -83,10 +164,19 @@
     </update>
 
 
-
-    <!--    删除我的基金-->
+    <!--    删除我的基金买入-->
     <delete id="deleteUserFundTransaction" parameterType="java.util.Map">
-        delete from u_fund_transaction_purchase
+        delete
+        from u_fund_transaction_purchase
+        where id = #{id}
+          and user_id = #{userId}
+    </delete>
+
+
+    <!--    删除我的基金卖出-->
+    <delete id="deleteUserFundTransactionSell" parameterType="java.util.Map">
+        delete
+        from u_fund_transaction_sell
         where id = #{id}
           and user_id = #{userId}
     </delete>

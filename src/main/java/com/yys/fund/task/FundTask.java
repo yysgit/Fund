@@ -35,7 +35,7 @@ public class FundTask {
      */
 //        @Scheduled(cron = " 0 54 2 * * *")
 //    @Scheduled(cron = " 0 */5 7-23 * * mon,tue,wed,thu,fri")
-    @Scheduled(cron = "* */2 * * * ?")
+    @Scheduled(cron = "* */4 * * * ?")
     public void task1() {
         for (int i = 0; i < 1000; i++) {
             Map map = new HashMap();
@@ -95,7 +95,7 @@ public class FundTask {
     /**
      * 更新每天基金的真实基金净值
      */
-    @Scheduled(cron = "* */2 * * * ?")
+    @Scheduled(cron = "* */4 * * * ?")
 //    @Scheduled(cron = " 0 */5 7-23 * * mon,tue,wed,thu,fri")
     public void task2() {
         for (int i = 0; i < 1000; i++) {
@@ -225,9 +225,10 @@ public class FundTask {
     /**
      * 更新每天的买入净值信息
      */
-    @Scheduled(cron = "* */3 * * * ?")
+    @Scheduled(cron = "* */2 * * * ?")
     public void task3(){
         fundTransactionMapper.updateFundTransactionPurchaseForTask();
+        fundTransactionMapper.updateFundTransactionSellForTask();
     }
 
 
