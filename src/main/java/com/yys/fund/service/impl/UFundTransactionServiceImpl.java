@@ -32,6 +32,16 @@ public class UFundTransactionServiceImpl implements UFundTransactionService {
     }
 
     @Override
+    public List<Map> findFundTransactionPurchaseListGroupBy(Map map) {
+        return fundTransactionMapper.findFundTransactionPurchaseListGroupBy(map);
+    }
+
+    @Override
+    public Integer findFundTransactionPurchaseCountGroupBy(Map map) {
+        return fundTransactionMapper.findFundTransactionPurchaseCountGroupBy(map);
+    }
+
+    @Override
     public Integer addUserFundTtransactionPurchase(Map map) {
         return fundTransactionMapper.addUserFundTtransactionPurchase(map);
     }

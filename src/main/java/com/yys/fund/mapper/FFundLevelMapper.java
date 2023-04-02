@@ -23,6 +23,9 @@ public interface FFundLevelMapper {
      */
     int updateFundLevel(Map map);
 
+
+    int deleteFundLevel(String fundInfoCode);
+
     /**
      * 查询分页基金等级列表
      * @return

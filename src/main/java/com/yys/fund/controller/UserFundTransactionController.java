@@ -3,6 +3,7 @@ package com.yys.fund.controller;
 import com.yys.fund.constant.ExceptionConstant;
 import com.yys.fund.entity.DbUser;
 import com.yys.fund.service.UFundTransactionService;
+import com.yys.fund.task.FundTask;
 import com.yys.fund.utils.ResultUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +29,8 @@ public class UserFundTransactionController {
 
     private static final Logger logger = LoggerFactory.getLogger(UserFundTransactionController.class);
 
-
+    @Autowired
+    private FundTask fundTask;
     @Autowired
     private UFundTransactionService fundTransactionService;
 
@@ -65,6 +67,35 @@ public class UserFundTransactionController {
             return ResultUtil.error("查询失败!");
         }
     }
+
+    /**
+     * 我的买入基金列表
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping("/findFundTransactionPurchaseListGroupBy")
+    @ResponseBody
+    public ResultUtil findFundTransactionPurchaseListGroupBy(HttpServletRequest request, @RequestBody Map map) {
+        try {
+            ResultUtil resultUtil = new ResultUtil();
+            DbUser dbUser = (DbUser) request.getSession().getAttribute("dbUser");
+            if (dbUser == null) {
+                return ResultUtil.error("查询失败,未登录!");
+            }
+            map.put("userId", dbUser.getId());
+            resultUtil.setData(fundTransactionService.findFundTransactionPurchaseListGroupBy(map));
+            resultUtil.setCount(fundTransactionService.findFundTransactionPurchaseCountGroupBy(map));
+            resultUtil.setMsg("查询成功!");
+            resultUtil.setCode(ExceptionConstant.SUCCESS_HTTPREUQEST);
+
+            return resultUtil;
+        } catch (Exception e) {
+            logger.error("查询基金买入错误: " + e.getMessage());
+            return ResultUtil.error("查询失败!");
+        }
+    }
+
 
 
     /**
@@ -114,10 +145,11 @@ public class UserFundTransactionController {
             map.put("userId", dbUser.getId());
             //判断名称是否重复
             Integer num = fundTransactionService.addUserFundTtransactionPurchase(map);
-            return ResultUtil.success("卖出成功!");
+            fundTask.taskForTransaction();
+            return ResultUtil.success("买入成功!");
         } catch (Exception e) {
-            logger.error("卖出基金错误: " + e.getMessage());
-            return ResultUtil.error("卖出失败!");
+            logger.error("买入基金错误: " + e.getMessage());
+            return ResultUtil.error("买入失败!");
         }
     }
 
@@ -134,14 +166,14 @@ public class UserFundTransactionController {
         try {
             DbUser dbUser = (DbUser) request.getSession().getAttribute("dbUser");
             if (dbUser == null) {
-                return ResultUtil.error("查询失败,未登录!");
+                return ResultUtil.error("卖出失败,未登录!");
             }
             map.put("userId", dbUser.getId());
-            //判断名称是否重复
             Integer num = fundTransactionService.addUserFundTtransactionSell(map);
-            return ResultUtil.success("添加成功!");
+            fundTask.taskForTransaction();
+            return ResultUtil.success("卖出成功!");
         } catch (Exception e) {
-            logger.error("添加买入基金错误: " + e.getMessage());
+            logger.error("添加卖出基金错误: " + e.getMessage());
             return ResultUtil.error("添加失败!");
         }
     }

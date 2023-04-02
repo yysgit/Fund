@@ -46,6 +46,11 @@
 
 
 
+    <delete id="deleteFundLevel" parameterType="java.lang.String">
+        delete from f_fund_level where fund_info_code = #{fundInfoCode}
+    </delete>
+
+
 
     <!--查询分页基金等级列表-->
     <select id="findFundLevelList" resultType="java.util.Map" parameterType="java.util.Map">

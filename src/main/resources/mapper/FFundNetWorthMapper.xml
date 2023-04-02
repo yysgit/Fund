@@ -69,20 +69,21 @@
         update f_fund_net_worth_temp
         set create_time      = now()
           , fund_net_worth = #{fundNetWorth}
+          , fund_day = #{fundDay}
           , level_number          = #{levelNumber}
           , level_front          = #{levelFront}
           , level_behind          = #{levelBehind}
         where fund_info_code = #{fundInfoCode}
     </update>
 
-    <!--    删除文章菜单-->
-    <update id="deleteFundNetWorth" parameterType="com.yys.fund.entity.FFundNetWorth">
-        update f_fund_net_worth
-        set update_time   = now()
-          , delete_status = #{deleteStatus}
-        where id = #{id}
-    </update>
 
+    <delete id="deleteFundNetWorth" parameterType="java.lang.String">
+        delete from f_fund_net_worth where fund_info_code = #{fundInfoCode}
+    </delete>
+
+    <delete id="deleteFundNetWorthTemp" parameterType="java.lang.String">
+        delete from f_fund_net_worth_temp where fund_info_code = #{fundInfoCode}
+    </delete>
 
     <!--通过基金类型名称 获取基金类型-->
     <select id="findFundNetWorthByNameAndNumber" resultType="com.yys.fund.entity.FFundNetWorth">

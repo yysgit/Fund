@@ -285,11 +285,11 @@
 
             handleDelete(index, row) {
                 let that = this;
-                axios.post('/fund/fundInfo/deleteFundInfo', {id: row.id})
+                axios.post('/fund/fundInfo/deleteFundInfo', {id: row.id,fundInfoCode: row.fundCode})
                     .then(function (res) {
                         that.$message.success(res.data.msg);
                         that.page.pageCurrent = 1;
-                        that.getFundTypeTable();
+                        that.getFundInfoTable();
                         that.dialogVisible = false;
                     })
                     .catch(function (error) {

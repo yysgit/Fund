@@ -8,6 +8,7 @@ import com.yys.fund.mapper.FFundNetWorthMapper;
 import com.yys.fund.mapper.UFundTransactionMapper;
 import com.yys.fund.utils.SendRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -229,10 +230,20 @@ public class FundTask {
     public void task3(){
         fundTransactionMapper.updateFundTransactionPurchaseForTask();
         fundTransactionMapper.updateFundTransactionSellForTask();
+        fundTransactionMapper.updateFundTransactionMinimumForTask();
     }
 
 
+    //更新任务
+    @Async
+    public void taskForInfo(){
+        this.task2();
+        this.task1();
 
+    }
 
-
+    @Async
+    public void taskForTransaction(){
+        this.task3();
+    }
 }

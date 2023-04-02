@@ -6,6 +6,7 @@ import com.yys.fund.entity.FFundInfo;
 import com.yys.fund.service.FFundInfoService;
 import com.yys.fund.service.FFundLevelMoneyService;
 import com.yys.fund.service.UUserFundService;
+import com.yys.fund.task.FundTask;
 import com.yys.fund.utils.ResultUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +41,10 @@ public class FundInfoController {
     @Autowired
     private FFundLevelMoneyService fundLevelMoneyService;
 
+    @Autowired
+    private FundTask fundTask;
+
+
     @RequestMapping("/fundInfo.html")
     public String fundHtml() {
         return "fundInfo";
@@ -65,6 +70,7 @@ public class FundInfoController {
             fFundInfo.setCreateUserId(dbUser.getId());
             fFundInfo.setUpdateUserId(dbUser.getId());
             fundInfoService.addFundInfo(fFundInfo);
+            fundTask.taskForInfo();
             return ResultUtil.success("添加成功!");
         } catch (Exception e) {
             logger.error("添加基金信息错误: " + e.getMessage());

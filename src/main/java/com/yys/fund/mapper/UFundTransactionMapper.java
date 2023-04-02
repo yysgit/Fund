@@ -12,6 +12,10 @@ public interface UFundTransactionMapper {
     List<Map> findFundTransactionPurchaseList(Map map);
     Integer findFundTransactionPurchaseCount(Map map);
 
+    List<Map> findFundTransactionPurchaseListGroupBy(Map map);
+    Integer findFundTransactionPurchaseCountGroupBy(Map map);
+
+
     List<Map> findFundTransactionSellList(Map map);
     Integer findFundTransactionSellCount(Map map);
 
@@ -25,6 +29,7 @@ public interface UFundTransactionMapper {
 
     Integer updateFundTransactionPurchaseForTask();
     Integer updateFundTransactionSellForTask();
+    Integer updateFundTransactionMinimumForTask();
 
     Integer updateFundTransactionPurchaseForTemp( FFundNetWorth fundNetWorth);
     int deleteUserFundTransaction(Map map);

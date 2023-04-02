@@ -46,10 +46,7 @@
 
     <!--更新管理员用户-->
     <update id="deleteUser" parameterType="com.yys.fund.entity.DbUser">
-        update db_user_user
-        set update_time   =now()
-          , delete_status = #{deleteStatus}
-        where id = #{id}
+        delete from  db_user_user where id = #{id}
     </update>
 
 

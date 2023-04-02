@@ -28,10 +28,13 @@ public interface FFundNetWorthMapper {
 
     /**
      * 删除基金类型
-     * @param fundNetWorth
+     * @param fundInfoCode
      * @return
      */
-    int deleteFundNetWorth(FFundNetWorth fundNetWorth);
+    int deleteFundNetWorth(String fundInfoCode);
+
+    int deleteFundNetWorthTemp(String fundInfoCode);
+
     /**
      * 查询所有的基金类型
      * @return

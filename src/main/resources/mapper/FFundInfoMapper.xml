@@ -65,10 +65,7 @@
 
     <!--    删除文章菜单-->
     <update id="deleteFundInfo" parameterType="com.yys.fund.entity.FFundInfo">
-        update f_fund_info
-        set update_time    = now()
-          , delete_status  = #{deleteStatus}
-        where id = #{id}
+        delete from f_fund_info where id = #{id}
     </update>
 
 
