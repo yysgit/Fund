@@ -20,6 +20,7 @@
     </insert>
 
 
+
     <!--查询分页类型列表-->
     <select id="findFundNetWorthList" resultType="com.yys.fund.entity.FFundNetWorth" parameterType="java.util.Map">
         select id,

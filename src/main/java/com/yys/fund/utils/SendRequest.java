@@ -205,16 +205,16 @@ public class SendRequest {
 
 
             Map fundInfoParam = null;
-            if (netWorthTime > today) {
-                fundInfoParam = new HashMap();
-                fundInfoParam.put("fundInfoCode", fundCode);
-                fundInfoParam.put("fundDay", simpleDateFormat.parse(resultDate.substring(0,10)).getTime());
-                fundInfoParam.put("fundNetWorth", jsonObject.get("gsz"));
-            }
-//            fundInfoParam = new HashMap();
-//            fundInfoParam.put("fundInfoCode", fundCode);
-//            fundInfoParam.put("fundDay", simpleDateFormat.parse(resultDate.substring(0,10)).getTime());
-//            fundInfoParam.put("fundNetWorth", jsonObject.get("gsz"));
+//            if (netWorthTime > today) {
+//                fundInfoParam = new HashMap();
+//                fundInfoParam.put("fundInfoCode", fundCode);
+//                fundInfoParam.put("fundDay", simpleDateFormat.parse(resultDate.substring(0,10)).getTime());
+//                fundInfoParam.put("fundNetWorth", jsonObject.get("gsz"));
+//            }
+            fundInfoParam = new HashMap();
+            fundInfoParam.put("fundInfoCode", fundCode);
+            fundInfoParam.put("fundDay", simpleDateFormat.parse(resultDate.substring(0,10)).getTime());
+            fundInfoParam.put("fundNetWorth", jsonObject.get("gsz"));
             return fundInfoParam;
         } catch (Exception e) {
             e.printStackTrace();

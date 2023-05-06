@@ -18,6 +18,7 @@ public interface FFundNetWorthMapper {
     int addFundNetWorth(FFundNetWorth fundNetWorth);
     int addFundNetWorthTemp(FFundNetWorth fundNetWorth);
 
+
     /**
      * 更新基金类型
      * @param fundNetWorth

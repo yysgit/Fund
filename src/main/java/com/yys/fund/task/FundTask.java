@@ -30,7 +30,6 @@ public class FundTask {
     private UFundTransactionMapper fundTransactionMapper;
 
 
-
     /**
      * 时时更新每个基金当天
      */
@@ -72,6 +71,7 @@ public class FundTask {
                     fundNetWorth.setLevelBehind(levelBehind);
 
                     if (fundDataMySQL.get("fundNetWorthTempId") == null || "".equals(fundDataMySQL.get("fundNetWorthTempId"))) {
+                        fundNetWorthMapper.deleteFundNetWorthTemp(fundNetWorth.getFundInfoCode());
                         fundNetWorthMapper.addFundNetWorthTemp(fundNetWorth);
                     } else {
                         fundNetWorthMapper.updateFundNetWorthTemp(fundNetWorth);
@@ -125,7 +125,7 @@ public class FundTask {
                         if (fundDataMySQL.get("fundLevelId") == null || "".equals(fundDataMySQL.get("fundLevelId"))) {
                             Map mapFundLevel2 = getMapFundLevelForTask(Double.parseDouble(fundDataMySQL.get("maxNetWorth").toString()), String.valueOf(fundDataMySQL.get("fundCode")), Double.parseDouble(String.valueOf(fundDataMySQL.get("volatilityValue"))));
                             fundLevelMapper.addFundLevel(mapFundLevel2);
-                        }else{
+                        } else {
                             //更新基金等级
                             fundLevelMapper.updateFundLevel(mapFundLevel);
                         }
@@ -227,7 +227,7 @@ public class FundTask {
      * 更新每天的买入净值信息
      */
     @Scheduled(cron = "* */2 * * * ?")
-    public void task3(){
+    public void task3() {
         fundTransactionMapper.updateFundTransactionPurchaseForTask();
         fundTransactionMapper.updateFundTransactionSellForTask();
         fundTransactionMapper.updateFundTransactionMinimumForTask();
@@ -236,14 +236,14 @@ public class FundTask {
 
     //更新任务
     @Async
-    public void taskForInfo(){
+    public void taskForInfo() {
         this.task2();
         this.task1();
 
     }
 
     @Async
-    public void taskForTransaction(){
+    public void taskForTransaction() {
         this.task3();
     }
 }

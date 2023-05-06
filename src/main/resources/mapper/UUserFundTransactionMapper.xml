@@ -23,7 +23,7 @@
                  left join u_user_fund uuf on uuf.fund_info_code = uftp.fund_info_code and uftp.user_id = uuf.user_id
         where uftp.user_id = #{userId}
           and uftp.state = #{state}
-        order by uftp.purchase_time desc, uftp.yield  desc limit #{page}, #{limit};
+        order by uftp.fund_info_code, uftp.purchase_time desc, uftp.yield  desc limit #{page}, #{limit};
     </select>
     <select id="findFundTransactionPurchaseCount" resultType="java.lang.Integer" parameterType="java.util.Map">
         select count(*)
@@ -84,7 +84,7 @@
                  left join f_fund_info ffi on ffi.fund_code = ufts.fund_info_code
                  left join u_user_fund uuf on uuf.fund_info_code = ufts.fund_info_code and ufts.user_id = uuf.user_id
         where ufts.user_id = #{userId}
-        order by ufts.yield, ufts.sell_time desc limit #{page}, #{limit};
+        order by ufts.fund_info_code, ufts.yield, ufts.sell_time desc limit #{page}, #{limit};
     </select>
     <select id="findFundTransactionSellCount" resultType="java.lang.Integer" parameterType="java.util.Map">
         select count(*)

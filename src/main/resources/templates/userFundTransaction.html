@@ -518,8 +518,9 @@
                 axios.post('/fund/userFundTransaction/addUserFundTtransactionSell', this.fundDataForm)
                     .then(function (res) {
                         that.$message.success(res.data.msg);
-                        that.getFundTransactionTable();
+                        that.getFundTransactionTable1();
                         that.getFundTransactionTable2();
+                        that.getFundTransactionTable3();
                         that.dialogVisible = false;
                     })
                     .catch(function (error) {
