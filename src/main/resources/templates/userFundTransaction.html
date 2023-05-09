@@ -103,6 +103,15 @@
 
                 <el-table-column
                         sortable
+                        prop="todayNetWorth"
+                        label="基金等级">
+                    <template slot-scope="scope">
+                        <span >{{scope.row.levelNumber}}</span>
+                    </template>
+                </el-table-column>
+
+                <el-table-column
+                        sortable
                         prop="yield"
                         label="收益率">
 
@@ -112,11 +121,6 @@
                         <span v-else-if="parseFloat(scope.row.yield)<=0 "
                               style="color: green">{{getYield(scope.row.yield)+'%'}}</span>
                     </template>
-
-
-                    <!--                    <template slot-scope="scope">-->
-                    <!--                        <span >{{scope.row.yield}}</span>-->
-                    <!--                    </template>-->
                 </el-table-column>
                 <el-table-column
                         sortable

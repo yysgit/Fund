@@ -70,6 +70,7 @@
         from f_fund_level ffl
             left join f_fund_info  ffi on ffi.fund_code=ffl.fund_info_code
             left join f_fund_net_worth_temp  ffnwt on ffnwt.fund_info_code=ffl.fund_info_code
+        order by ffi.sorting
             limit #{page} , #{limit};
     </select>
     <select id="findFundLevelListCount" resultType="java.lang.Integer" parameterType="java.util.Map">

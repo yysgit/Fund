@@ -48,14 +48,17 @@
                uftp.yield                as yield,
                uftp.income_amount        as incomeAmount,
                uftp.today_time           as todayTime,
-               uftp.today_net_worth      as todayNetWorth
+               uftp.today_net_worth      as todayNetWorth,
+               ffnwt.level_number as levelNumber
         from u_fund_transaction_purchase uftp
                  left join f_fund_info ffi on ffi.fund_code = uftp.fund_info_code
                  left join u_user_fund uuf on uuf.fund_info_code = uftp.fund_info_code and uftp.user_id = uuf.user_id
+                 left join f_fund_net_worth_temp ffnwt on uftp.fund_info_code = ffnwt.fund_info_code
+
         where uftp.user_id = #{userId}
           and uftp.state = #{state}
         and uftp.minimum_new_worth =1
-        order by uftp.purchase_time desc, uftp.yield  desc limit #{page}, #{limit};
+        order by ffi.sorting , uftp.purchase_time desc, uftp.yield  desc limit #{page}, #{limit};
     </select>
     <select id="findFundTransactionPurchaseCountGroupBy" resultType="java.lang.Integer" parameterType="java.util.Map">
         select count(*)
@@ -173,13 +176,10 @@
 
 
     <update id="updateFundTransactionMinimumForTask">
-
-
-
         UPDATE u_fund_transaction_purchase uftp
         SET uftp.minimum_new_worth = 1
         WHERE  uftp.id in(select ffnwt.id
-                          from (select min(uftp1.purchase_net_worth),any_value(uftp1.id) as id
+                          from (select min(uftp1.purchase_net_worth),uftp1.id as id
                                 from u_fund_transaction_purchase uftp1
                                 where uftp1.state = 0
                                 group by uftp1.fund_info_code) ffnwt

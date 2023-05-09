@@ -6,6 +6,7 @@ import com.yys.fund.entity.FFundInfo;
 import com.yys.fund.service.FFundInfoService;
 import com.yys.fund.service.FFundLevelMoneyService;
 import com.yys.fund.service.UUserFundService;
+import com.yys.fund.service.impl.FundLevelServiceImpl;
 import com.yys.fund.task.FundTask;
 import com.yys.fund.utils.ResultUtil;
 import org.slf4j.Logger;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -40,6 +42,8 @@ public class FundInfoController {
 
     @Autowired
     private FFundLevelMoneyService fundLevelMoneyService;
+    @Autowired
+    private FundLevelServiceImpl fundLevelService;
 
     @Autowired
     private FundTask fundTask;
@@ -112,6 +116,17 @@ public class FundInfoController {
             if(dbUser==null){
                 return ResultUtil.error("更新失败,未登录!");
             }
+
+            //更新利率等级
+            double dnew= fFundInfo.getVolatilityValue();
+            double dold= 0.05;
+            if(dnew-dold!=0){
+                Map mapFundLevel2 = getMapFundLevelForTask(Double.parseDouble(fFundInfo.getMaxNetWorth().toString()), String.valueOf(fFundInfo.getFundCode()), Double.parseDouble(String.valueOf(fFundInfo.getVolatilityValue())));
+                fundLevelService.updateFundLevel(mapFundLevel2);
+            }
+
+
+
             fundInfoService.updateFundInfo(fFundInfo);
             return ResultUtil.success("更新成功!");
         } catch (Exception e) {
@@ -120,7 +135,52 @@ public class FundInfoController {
         }
     }
 
-
+    private Map getMapFundLevelForTask(double maxNetWorth, String fundCode, double volatilityValue) {
+        //更新等级
+        Map mapFundLevel = new HashMap();
+        mapFundLevel.put("fundInfoCode", fundCode);
+        double d = maxNetWorth * (1 - volatilityValue);
+        mapFundLevel.put("level1", d);
+        d = d * (1 - volatilityValue);
+        mapFundLevel.put("level2", d);
+        d = d * (1 - volatilityValue);
+        mapFundLevel.put("level3", d);
+        d = d * (1 - volatilityValue);
+        mapFundLevel.put("level4", d);
+        d = d * (1 - volatilityValue);
+        mapFundLevel.put("level5", d);
+        d = d * (1 - volatilityValue);
+        mapFundLevel.put("level6", d);
+        d = d * (1 - volatilityValue);
+        mapFundLevel.put("level7", d);
+        d = d * (1 - volatilityValue);
+        mapFundLevel.put("level8", d);
+        d = d * (1 - volatilityValue);
+        mapFundLevel.put("level9", d);
+        d = d * (1 - volatilityValue);
+        mapFundLevel.put("level10", d);
+        d = d * (1 - volatilityValue);
+        mapFundLevel.put("level11", d);
+        d = d * (1 - volatilityValue);
+        mapFundLevel.put("level12", d);
+        d = d * (1 - volatilityValue);
+        mapFundLevel.put("level13", d);
+        d = d * (1 - volatilityValue);
+        mapFundLevel.put("level14", d);
+        d = d * (1 - volatilityValue);
+        mapFundLevel.put("level15", d);
+        d = d * (1 - volatilityValue);
+        mapFundLevel.put("level16", d);
+        d = d * (1 - volatilityValue);
+        mapFundLevel.put("level17", d);
+        d = d * (1 - volatilityValue);
+        mapFundLevel.put("level18", d);
+        d = d * (1 - volatilityValue);
+        mapFundLevel.put("level19", d);
+        d = d * (1 - volatilityValue);
+        mapFundLevel.put("level20", d);
+        return mapFundLevel;
+    }
     /**
      * 删除基金信息
      *

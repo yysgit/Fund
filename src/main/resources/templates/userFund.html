@@ -85,6 +85,29 @@
                         <span>{{scope.row.fundCode}}</span>
                     </template>
                 </el-table-column>
+
+                <el-table-column
+                        sortable
+                        prop="todayNetWorth"
+                        label="基金等级">
+                    <template slot-scope="scope">
+                        <span >{{scope.row.levelNumber}}</span>
+                    </template>
+                </el-table-column>
+
+                <el-table-column
+                        sortable
+                        prop="yield"
+                        label="收益率">
+
+                    <template slot-scope="scope">
+                       <span v-if="parseFloat(scope.row.yield)>0 "
+                             style="color: red">{{getYield(scope.row.yield)+'%'}}</span>
+                        <span v-else-if="parseFloat(scope.row.yield)<=0 "
+                              style="color: green">{{getYield(scope.row.yield)+'%'}}</span>
+                    </template>
+                </el-table-column>
+
                 <el-table-column
                         sortable
                         prop="volatilityValue"
@@ -313,6 +336,13 @@
             dateFormat(){
                 var dT=new Date();//row 表示一行数据, dateTime 表示要格式化的字段名称
                 return dT.getFullYear()+"-"+(dT.getMonth()+1)+"-"+dT.getDate();
+            },
+            getYield(data){
+                if(data!=0 && data!='' && data!=null ){
+                    return Number(String(parseFloat(data)*100).replace(/^(.*\..{4}).*$/,"$1"));
+                }else{
+                    return 0;
+                }
             },
         }
     })

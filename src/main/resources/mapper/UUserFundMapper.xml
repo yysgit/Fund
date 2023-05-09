@@ -21,15 +21,24 @@
                fft.fund_type_number      AS fundTypeNumber,
                ffi.sorting,
                ffnwt.id                  AS fundNetWorthTempId,
-               ffi.volatility_value      AS volatilityValue
+               ffi.volatility_value      AS volatilityValue,
+               ffnwt.level_number as levelNumber,
+               uftp.yield                as yield
+
+
         from u_user_fund uuf
                  left join db_user dbu on dbu.id = uuf.user_id
                  left join f_fund_info ffi on ffi.fund_code = uuf.fund_info_code
                  left join f_fund_type fft on ffi.fund_type_id = fft.id
                  left join f_fund_net_worth_temp ffnwt on uuf.fund_info_code = ffnwt.fund_info_code
+                 left join u_fund_transaction_purchase uftp on  uuf.fund_info_code = uftp.fund_info_code
+                                                                    and uftp.user_id = #{userId}
+                                                                    and uftp.state = 0
+                                                                    and uftp.minimum_new_worth =1
+
         where uuf.delete_status = 0
           and uuf.user_id = #{userId}
-        order by  uuf.fund_info_name_number , ffi.sorting, ffi.create_time limit #{page}, #{limit};
+        order by ffi.sorting,  uuf.fund_info_name_number , ffi.sorting, ffi.create_time limit #{page}, #{limit};
     </select>
     <select id="findUserFundListCount" resultType="java.lang.Integer" parameterType="java.util.Map">
         select count(*)
