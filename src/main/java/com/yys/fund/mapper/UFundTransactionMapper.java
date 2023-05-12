@@ -30,6 +30,7 @@ public interface UFundTransactionMapper {
     Integer updateFundTransactionPurchaseForTask();
     Integer updateFundTransactionSellForTask();
     Integer updateFundTransactionMinimumForTask();
+    Integer updateFundTransactionMinimumInitialForTask();
 
     Integer updateFundTransactionPurchaseForTemp( FFundNetWorth fundNetWorth);
     int deleteUserFundTransaction(Map map);

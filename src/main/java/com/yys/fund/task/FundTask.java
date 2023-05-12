@@ -33,9 +33,9 @@ public class FundTask {
     /**
      * 时时更新每个基金当天
      */
+    //    @Scheduled(cron = "* */4 * * * ?")
 //        @Scheduled(cron = " 0 54 2 * * *")
-//    @Scheduled(cron = " 0 */5 7-23 * * mon,tue,wed,thu,fri")
-    @Scheduled(cron = "* */4 * * * ?")
+    @Scheduled(cron = " 0 */5 8-23 * * mon,tue,wed,thu,fri")
     public void task1() {
         for (int i = 0; i < 1000; i++) {
             Map map = new HashMap();
@@ -94,10 +94,11 @@ public class FundTask {
     }
 
     /**
-     * 更新每天基金的真实基金净值
+     * 更新每天基金的真实基金净值  每天凌晨1点执行一次：0 0 1 * * ?
      */
-    @Scheduled(cron = "* */4 * * * ?")
-//    @Scheduled(cron = " 0 */5 7-23 * * mon,tue,wed,thu,fri")
+//    @Scheduled(cron = "* */4 * * * ?")
+    @Scheduled(cron = " 0 */10 1-2 * * mon,tue,wed,thu,fri,sat")
+//    @Scheduled(cron = " 0 */5 8-23 * * mon,tue,wed,thu,fri,sat")
     public void task2() {
         for (int i = 0; i < 1000; i++) {
             Map map = new HashMap();
@@ -230,6 +231,7 @@ public class FundTask {
     public void task3() {
         fundTransactionMapper.updateFundTransactionPurchaseForTask();
         fundTransactionMapper.updateFundTransactionSellForTask();
+        fundTransactionMapper.updateFundTransactionMinimumInitialForTask();
         fundTransactionMapper.updateFundTransactionMinimumForTask();
     }
 
@@ -239,7 +241,6 @@ public class FundTask {
     public void taskForInfo() {
         this.task2();
         this.task1();
-
     }
 
     @Async

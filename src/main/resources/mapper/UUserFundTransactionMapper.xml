@@ -174,16 +174,40 @@
 
     </update>
 
+    <update id="updateFundTransactionMinimumInitialForTask">
+    UPDATE u_fund_transaction_purchase uftp
+    SET uftp.minimum_new_worth = 0
+    where 1=1
+    </update>
 
     <update id="updateFundTransactionMinimumForTask">
         UPDATE u_fund_transaction_purchase uftp
         SET uftp.minimum_new_worth = 1
-        WHERE  uftp.id in(select ffnwt.id
-                          from (select min(uftp1.purchase_net_worth),uftp1.id as id
-                                from u_fund_transaction_purchase uftp1
-                                where uftp1.state = 0
-                                group by uftp1.fund_info_code) ffnwt
-        )
+        WHERE
+            EXISTS (
+                    SELECT
+                        ffnwt.fund_info_code,
+                        ffnwt.purchase_net_worth,
+                        ffnwt.user_id
+                    FROM
+                        (
+                            SELECT
+                                min(uftp1.purchase_net_worth) purchase_net_worth,
+                                uftp1.fund_info_code AS fund_info_code,
+                                uftp1.user_id
+                            FROM
+                                u_fund_transaction_purchase uftp1
+                            WHERE
+                                uftp1.state = 0
+                            GROUP BY
+                                uftp1.fund_info_code,
+                                user_id
+                        ) ffnwt
+                    WHERE
+                        uftp.fund_info_code = ffnwt.fund_info_code
+                      AND uftp.purchase_net_worth= ffnwt.purchase_net_worth
+                      AND uftp.user_id= ffnwt.user_id
+                )
     </update>
 
 
