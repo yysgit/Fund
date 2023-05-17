@@ -91,7 +91,7 @@
 
                 <el-table-column
                         sortable
-                        prop="todayNetWorth"
+                        prop="levelNumber"
                         label="基金等级">
                     <template slot-scope="scope">
                         <span >{{scope.row.levelNumber}}</span>
@@ -249,8 +249,23 @@
             handleAddUserFundTransactionClick(index, row) {
                 this.fundDataForm.fundCode = row.fundCode;
                 this.fundDataForm.purchaseTime = this.dateFormat();
-                this.fundDataForm.purchaseAmount = '';
-                this.dialogVisible = true;
+
+
+                let that = this;
+                axios.post('/fund/fundLevelMoney/findFundLevelMoneyByFundInfoCode', this.fundDataForm)
+                    .then(function (res) {
+                        console.log(res.data.data[0]);
+                        console.log(row.levelNumber);
+                        console.log(res.data.data[0]['money'+row.levelNumber]);
+                        that.fundDataForm.purchaseAmount = res.data.data[0]['money'+row.levelNumber];
+                        that.dialogVisible = true;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+
+
+
             },
             addUserFundTransaction() {
                 let that = this;

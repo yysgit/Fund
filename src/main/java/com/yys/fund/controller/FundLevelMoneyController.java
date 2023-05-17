@@ -65,6 +65,35 @@ public class FundLevelMoneyController {
         }
     }
 
+
+    /**
+     *  通过基金代码查询基金金额等级
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping("/findFundLevelMoneyByFundInfoCode")
+    @ResponseBody
+    public ResultUtil findFundLevelMoneyByFundInfoCode(HttpServletRequest request, @RequestBody Map map) {
+        try {
+            ResultUtil resultUtil = new ResultUtil();
+            DbUser dbUser = (DbUser) request.getSession().getAttribute("dbUser");
+            if (dbUser == null) {
+                return ResultUtil.error("查询失败,未登录!");
+            }
+            map.put("userId", dbUser.getId());
+            resultUtil.setData(fundLevelMoneyService.findFundLevelMoneyByFundInfoCode(map));
+            resultUtil.setMsg("查询成功!");
+            resultUtil.setCode(ExceptionConstant.SUCCESS_HTTPREUQEST);
+
+            return resultUtil;
+        } catch (Exception e) {
+            logger.error("查询基金金额等级错误: " + e.getMessage());
+            return ResultUtil.error("查询失败!");
+        }
+    }
+
+
     /**
      * 更新文章菜单
      *
