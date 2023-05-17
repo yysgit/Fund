@@ -30,7 +30,10 @@
                 <el-table-column
                         prop="fundName"
                         label="基金名称"
-                        width="150">
+                        width="230">
+                    <template slot-scope="scope">
+                        <span>{{scope.row.fundName|ellipsis}}</span>
+                    </template>
                 </el-table-column>
                 <el-table-column
                         prop="fundInfoCode"
@@ -423,6 +426,15 @@
         },
         created() {
             this.getFundLevelMoneyTable();
+        },
+        filters: {
+            ellipsis(value) {
+                if (!value) return "";
+                if (value.length > 15) {
+                    return value.slice(0, 15) + "...";
+                }
+                return value;
+            }
         },
         methods: {
             doubleClickCell(row, column, cell, event) {

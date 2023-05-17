@@ -83,12 +83,13 @@
                 </el-table-column>
                 <el-table-column
                         sortable
+                        width="230"
                         prop="fundName"
                         label="基金名称">
                     <template slot-scope="scope">
-                        <span v-if=" !scope.row.edit">{{scope.row.fundName}}</span>
+                        <span v-if=" !scope.row.edit">{{scope.row.fundName|ellipsis}}</span>
                         <el-input v-else="scope.row.edit" v-model="scope.row.fundName"
-                                  @blur="levelChange(scope.row)">{{scope.row.fundName}}
+                                  @blur="levelChange(scope.row)">{{scope.row.fundName|ellipsis}}
                         </el-input>
                     </template>
                 </el-table-column>
@@ -221,6 +222,15 @@
             //查询所有基金类型
             this.getFundTypeAll();
             this.getFundInfoTable();
+        },
+        filters: {
+            ellipsis(value) {
+                if (!value) return "";
+                if (value.length > 15) {
+                    return value.slice(0, 15) + "...";
+                }
+                return value;
+            }
         },
         methods: {
             tableRowClassName({row, rowIndex}) {

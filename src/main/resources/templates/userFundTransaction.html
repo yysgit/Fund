@@ -23,6 +23,17 @@
 <div id="app">
     <el-tabs v-model="activeName"  @tab-click="handleClick">
         <el-tab-pane label="买入信息" name="first">
+            <el-form :inline="true" :model="fundSearch3" class="demo-form-inline">
+                <el-form-item label="基金编号">
+                    <el-input v-model="fundSearch3.fundCode" placeholder="基金编号"></el-input>
+                </el-form-item>
+                <el-form-item label="基金名称">
+                    <el-input v-model="fundSearch3.fundName" placeholder="基金名称"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="onSubmit3">查询</el-button>
+                </el-form-item>
+            </el-form>
             <el-table
                     :row-class-name="tableRowClassName"
                     border
@@ -54,11 +65,22 @@
                 </el-table-column>
                 <el-table-column
                         sortable
-                        prop="fundName"
-                        label="名称"
+                        prop="fundInfoNameNumber"
+                        label="编号"
+                        width="90"
                         align="center">
                     <template slot-scope="scope">
-                        <span>{{scope.row.fundName}}</span>
+                        <span >{{scope.row.fundInfoNameNumber}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        sortable
+                        prop="fundName"
+                        label="名称"
+                        width="230"
+                        align="center">
+                    <template slot-scope="scope">
+                        <span>{{scope.row.fundName|ellipsis}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -150,10 +172,18 @@
                 </el-pagination>
             </div>
         </el-tab-pane>
-
-
-
         <el-tab-pane label="卖出信息" name="second">
+            <el-form :inline="true" :model="fundSearch2" class="demo-form-inline">
+                <el-form-item label="基金编号">
+                    <el-input v-model="fundSearch2.fundCode" placeholder="基金编号"></el-input>
+                </el-form-item>
+                <el-form-item label="基金名称">
+                    <el-input v-model="fundSearch2.fundName" placeholder="基金名称"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="onSubmit2">查询</el-button>
+                </el-form-item>
+            </el-form>
             <el-table
                     :row-class-name="tableRowClassName"
                     border
@@ -180,16 +210,27 @@
                 </el-table-column>
                 <el-table-column
                         sortable
-                        prop="fundName"
-                        label="名称"
+                        prop="fundInfoNameNumber"
+                        label="编号"
+                        width="90"
                         align="center">
                     <template slot-scope="scope">
-                        <span>{{scope.row.fundName}}</span>
+                        <span >{{scope.row.fundInfoNameNumber}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column
                         sortable
-                        prop="purchaseTime"
+                        prop="fundName"
+                        label="名称"
+                        width="230"
+                        align="center">
+                    <template slot-scope="scope">
+                        <span>{{scope.row.fundName|ellipsis}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        sortable
+                        prop="sellTime"
                         :formatter="dateFormatter3"
                         label="卖出时间">
 
@@ -259,14 +300,33 @@
             </div>
         </el-tab-pane>
         <el-tab-pane label="买入信息" name="three">
+
+            <el-form :inline="true" :model="fundSearch1" class="demo-form-inline">
+                <el-form-item label="基金编号">
+                    <el-input v-model="fundSearch1.fundCode" placeholder="基金编号"></el-input>
+                </el-form-item>
+                <el-form-item label="基金名称">
+                    <el-input v-model="fundSearch1.fundName" placeholder="基金名称"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="onSubmit1">查询</el-button>
+                </el-form-item>
+            </el-form>
+
+
             <el-table
                     :row-class-name="tableRowClassName"
                     border
                     :data="tableData1"
                     @cell-dblclick="doubleClickCell"
                     style="width: 100%">
-                <el-table-column fixed="left" label="操作" width="160">
+                <el-table-column fixed="left" label="操作" width="240">
                     <template slot-scope="scope">
+                        <el-button
+                                size="mini"
+                                type="primary"
+                                @click="handleAddUserFundTransactionClick(scope.$index, scope.row)">买入
+                        </el-button>
                         <el-button
                                 size="mini"
                                 type="primary"
@@ -290,11 +350,22 @@
                 </el-table-column>
                 <el-table-column
                         sortable
-                        prop="fundName"
-                        label="名称"
+                        prop="fundInfoNameNumber"
+                        label="编号"
+                        width="90"
                         align="center">
                     <template slot-scope="scope">
-                        <span>{{scope.row.fundName}}</span>
+                        <span >{{scope.row.fundInfoNameNumber}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        sortable
+                        prop="fundName"
+                        label="名称"
+                        width="230"
+                        align="center">
+                    <template slot-scope="scope">
+                        <span>{{scope.row.fundName|ellipsis}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -413,6 +484,43 @@
             <el-button type="primary" @click="addUserFundTransactionSell">确 定</el-button>
         </span>
     </el-dialog>
+
+
+
+    <el-dialog
+            title="买入信息"
+            :visible.sync="dialogVisiblePurchase"
+            width="60%">
+        <el-form ref="form" :model="fundDataFormPurchase" label-width="180px">
+            <el-form-item label="基金编号">
+                <el-input v-model="fundDataFormPurchase.fundCode"></el-input>
+            </el-form-item>
+            <el-form-item label="基金名称">
+                <el-input v-model="fundDataFormPurchase.fundName"></el-input>
+            </el-form-item>
+            <el-form-item label="选择日期">
+                <el-date-picker
+                        v-model="fundDataFormPurchase.purchaseTime"
+                        type="date"
+                        value-format="yyyy-MM-dd"
+                        placeholder="选择日期">
+                </el-date-picker>
+            </el-form-item>
+
+
+            <el-form-item label="金额">
+                <el-input v-model="fundDataFormPurchase.purchaseAmount"></el-input>
+            </el-form-item>
+        </el-form>
+
+
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="dialogVisiblePurchase = false">取 消</el-button>
+            <el-button type="primary" @click="addUserFundTransactionPurchase">确 定</el-button>
+        </span>
+    </el-dialog>
+
+
 </div>
 </body>
 <!-- import Vue before Element -->
@@ -429,6 +537,26 @@
                 tableData1: [],
                 tableData2: [],
                 tableData3: [],
+                fundSearch1:{
+                    fundCode:'',
+                    fundName:'',
+                },
+                fundSearch2:{
+                    fundCode:'',
+                    fundName:'',
+                },
+                fundSearch3:{
+                    fundCode:'',
+                    fundName:'',
+                },
+
+                fundDataFormPurchase: {
+                    fundCode: '',
+                    fundName: '',
+                    purchaseTime: '',
+                    purchaseAmount: '',
+                },
+
                 fundDataForm: {
                     fundCode: '',
                     sellTime: '',
@@ -451,6 +579,7 @@
                     pageTotal: 0
                 },
                 dialogVisible: false,
+                dialogVisiblePurchase: false,
                 fundTypeAll: [],
 
 
@@ -458,15 +587,44 @@
         },
         created() {
             //查询所有基金类型
-            this.getFundTransactionTable1();
-            this.getFundTransactionTable2();
-            this.getFundTransactionTable3();
+            this.getFundTransactionTable1(this.fundSearch1);
+            this.getFundTransactionTable2(this.fundSearch2);
+            this.getFundTransactionTable3(this.fundSearch3);
+        },
+        filters: {
+            ellipsis(value) {
+                if (!value) return "";
+                if (value.length > 15) {
+                    return value.slice(0, 15) + "...";
+                }
+                return value;
+            }
         },
         methods: {
+            addUserFundTransactionPurchase() {
+                let that = this;
+                axios.post('/fund/userFundTransaction/addUserFundTtransactionPurchase', this.fundDataFormPurchase)
+                    .then(function (res) {
+                        that.$message.success(res.data.msg);
+                        that.getFundTransactionTable1(that.fundSearch1);
+                        that.dialogVisiblePurchase = false;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            },
+            handleAddUserFundTransactionClick(index, row) {
+                this.fundDataFormPurchase.fundCode = row.fundInfoCode;
+                this.fundDataFormPurchase.fundName = row.fundName;
+                this.fundDataFormPurchase.purchaseTime =this.dateFormatter(row,0);
+                this.fundDataFormPurchase.purchaseAmount = '';
+                this.dialogVisiblePurchase = true;
+            },
+
             handleClick(){
-                this.getFundTransactionTable1();
-                this.getFundTransactionTable2();
-                this.getFundTransactionTable3();
+                this.getFundTransactionTable1(this.fundSearch1);
+                this.getFundTransactionTable2(this.fundSearch2);
+                this.getFundTransactionTable3(this.fundSearch3);
             },
             getYield(data){
                 if(data!=0 && data!='' && data!=null ){
@@ -498,15 +656,15 @@
             //分页改变时
             changePage1(page) {
                 this.page1.pageCurrent = page;
-                this.getFundTransactionTable1();
+                this.getFundTransactionTable1(this.fundSearch1);
             },
             changePage2(page) {
                 this.page2.pageCurrent = page;
-                this.getFundTransactionTable2();
+                this.getFundTransactionTable2(this.fundSearch2);
             },
             changePage3(page) {
                 this.page3.pageCurrent = page;
-                this.getFundTransactionTable3();
+                this.getFundTransactionTable3(this.fundSearch3);
             },
 
             handleAddUserFundTransactionSellClick(index, row) {
@@ -522,9 +680,9 @@
                 axios.post('/fund/userFundTransaction/addUserFundTtransactionSell', this.fundDataForm)
                     .then(function (res) {
                         that.$message.success(res.data.msg);
-                        that.getFundTransactionTable1();
-                        that.getFundTransactionTable2();
-                        that.getFundTransactionTable3();
+                        that.getFundTransactionTable1(that.fundSearch1);
+                        that.getFundTransactionTable2(that.fundSearch2);
+                        that.getFundTransactionTable3(that.fundSearch3);
                         that.dialogVisible = false;
                     })
                     .catch(function (error) {
@@ -539,7 +697,7 @@
                     .then(function (res) {
                         that.$message.success(res.data.msg);
                         that.page2.pageCurrent = 1;
-                        that.getFundTransactionTable2();
+                        that.getFundTransactionTable2(this.fundSearch2);
                         that.dialogVisible = false;
                     })
                     .catch(function (error) {
@@ -553,8 +711,8 @@
                         that.$message.success(res.data.msg);
                         that.page1.pageCurrent = 1;
                         that.page3.pageCurrent = 1;
-                        that.getFundTransactionTable1();
-                        that.getFundTransactionTable3();
+                        that.getFundTransactionTable1(this.fundSearch1);
+                        that.getFundTransactionTable3(this.fundSearch3);
                         that.dialogVisible = false;
                     })
                     .catch(function (error) {
@@ -584,11 +742,13 @@
             },
 
             //基金信息
-            getFundTransactionTable2() {
+            getFundTransactionTable2(fundSearch2) {
                 let that = this;
                 let fromData = {
                     page: (that.page2.pageCurrent - 1) * 10,
                     limit: that.page2.pageSize,
+                    fundCode:fundSearch2.fundCode,
+                    fundName:fundSearch2.fundName,
                 }
                 axios.post('/fund/userFundTransaction/findFundTransactionSellList', fromData)
                     .then(function (res) {
@@ -602,12 +762,14 @@
             },
 
             //基金信息
-            getFundTransactionTable1() {
+            getFundTransactionTable1(fundSearch1) {
                 let that = this;
                 let fromData = {
                     page: (that.page1.pageCurrent - 1) * 10,
                     limit: that.page1.pageSize,
                     state: 0,
+                    fundCode:fundSearch1.fundCode,
+                    fundName:fundSearch1.fundName,
                 }
                 axios.post('/fund/userFundTransaction/findFundTransactionPurchaseList', fromData)
                     .then(function (res) {
@@ -621,12 +783,14 @@
             },
 
             //基金信息
-            getFundTransactionTable3() {
+            getFundTransactionTable3(fundSearch3) {
                 let that = this;
                 let fromData = {
                     page: (that.page3.pageCurrent - 1) * 10,
                     limit: that.page3.pageSize,
                     state: 0,
+                    fundCode:fundSearch3.fundCode,
+                    fundName:fundSearch3.fundName,
                 }
                 axios.post('/fund/userFundTransaction/findFundTransactionPurchaseListGroupBy', fromData)
                     .then(function (res) {
@@ -638,6 +802,19 @@
                         console.log(error);
                     });
             },
+
+
+
+            onSubmit1(){
+                this.getFundTransactionTable1(this.fundSearch1);
+            },
+            onSubmit2(){
+                this.getFundTransactionTable2(this.fundSearch2);
+            },
+            onSubmit3(){
+                this.getFundTransactionTable3(this.fundSearch3);
+            },
+
 
             //百分比
             formatPercentage(row, column) {
@@ -662,7 +839,11 @@
 
             // 日期格式化
             dateFormatter3(row, column) {
-                return row.sellTime.substring(0, 10);
+                if(row.sellTime!=null && row.sellTime!=''){
+                    return row.sellTime.substring(0, 10);
+                }else{
+                    return null;
+                }
             },
 
             dateFormat(){

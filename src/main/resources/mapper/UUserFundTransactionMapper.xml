@@ -17,19 +17,33 @@
                uftp.yield                as yield,
                uftp.income_amount        as incomeAmount,
                uftp.today_time           as todayTime,
-               uftp.today_net_worth      as todayNetWorth
+               uftp.today_net_worth      as todayNetWorth,
+               uuf.fund_info_name_number as fundInfoNameNumber
         from u_fund_transaction_purchase uftp
                  left join f_fund_info ffi on ffi.fund_code = uftp.fund_info_code
                  left join u_user_fund uuf on uuf.fund_info_code = uftp.fund_info_code and uftp.user_id = uuf.user_id
         where uftp.user_id = #{userId}
           and uftp.state = #{state}
+        <if test="fundCode!=null and fundCode!='' ">
+            and uftp.fund_info_code = #{fundCode}
+        </if>
+        <if test="fundName!=null and fundName!='' ">
+            and ffi.fund_name  LIKE concat(concat("%",#{fundName}),"%"))
+        </if>
         order by uftp.fund_info_code, uftp.purchase_time desc, uftp.yield  desc limit #{page}, #{limit};
     </select>
     <select id="findFundTransactionPurchaseCount" resultType="java.lang.Integer" parameterType="java.util.Map">
         select count(*)
         from u_fund_transaction_purchase uftp
+            left join f_fund_info ffi on ffi.fund_code = uftp.fund_info_code
         where uftp.user_id = #{userId}
           and uftp.state = #{state}
+        <if test="fundCode!=null and fundCode!='' ">
+            and uftp.fund_info_code = #{fundCode}
+        </if>
+        <if test="fundName!=null and fundName!='' ">
+            and ffi.fund_name  LIKE concat(concat("%",#{fundName}),"%"))
+        </if>
     </select>
 
 
@@ -49,7 +63,8 @@
                uftp.income_amount        as incomeAmount,
                uftp.today_time           as todayTime,
                uftp.today_net_worth      as todayNetWorth,
-               ffnwt.level_number as levelNumber
+               ffnwt.level_number as levelNumber,
+               uuf.fund_info_name_number as fundInfoNameNumber
         from u_fund_transaction_purchase uftp
                  left join f_fund_info ffi on ffi.fund_code = uftp.fund_info_code
                  left join u_user_fund uuf on uuf.fund_info_code = uftp.fund_info_code and uftp.user_id = uuf.user_id
@@ -58,14 +73,28 @@
         where uftp.user_id = #{userId}
           and uftp.state = #{state}
         and uftp.minimum_new_worth =1
+        <if test="fundCode!=null and fundCode!='' ">
+            and uftp.fund_info_code = #{fundCode}
+        </if>
+        <if test="fundName!=null and fundName!='' ">
+            and ffi.fund_name  LIKE concat(concat("%",#{fundName}),"%"))
+        </if>
+
         order by ffi.sorting , uftp.purchase_time desc, uftp.yield  desc limit #{page}, #{limit};
     </select>
     <select id="findFundTransactionPurchaseCountGroupBy" resultType="java.lang.Integer" parameterType="java.util.Map">
         select count(*)
         from u_fund_transaction_purchase uftp
+            left join f_fund_info ffi on ffi.fund_code = uftp.fund_info_code
         where uftp.user_id = #{userId}
           and uftp.state = #{state}
           and uftp.minimum_new_worth =1
+        <if test="fundCode!=null and fundCode!='' ">
+            and uftp.fund_info_code = #{fundCode}
+        </if>
+        <if test="fundName!=null and fundName!='' ">
+            and ffi.fund_name  LIKE concat(concat("%",#{fundName}),"%"))
+        </if>
     </select>
 
 
@@ -82,17 +111,31 @@
                ufts.sell_net_worth       as sellNetWorth,
                ufts.income_amount        as incomeAmount,
                ufts.purchase_id          as purchaseId,
-               ufts.yield                as yield
+               ufts.yield                as yield,
+               uuf.fund_info_name_number as fundInfoNameNumber
         from u_fund_transaction_sell ufts
                  left join f_fund_info ffi on ffi.fund_code = ufts.fund_info_code
                  left join u_user_fund uuf on uuf.fund_info_code = ufts.fund_info_code and ufts.user_id = uuf.user_id
         where ufts.user_id = #{userId}
+        <if test="fundCode!=null and fundCode!='' ">
+            and ufts.fund_info_code = #{fundCode}
+        </if>
+        <if test="fundName!=null and fundName!='' ">
+            and ffi.fund_name  LIKE concat(concat("%",#{fundName}),"%"))
+        </if>
         order by ufts.fund_info_code, ufts.yield, ufts.sell_time desc limit #{page}, #{limit};
     </select>
     <select id="findFundTransactionSellCount" resultType="java.lang.Integer" parameterType="java.util.Map">
         select count(*)
         from u_fund_transaction_sell ufts
+            left join f_fund_info ffi on ffi.fund_code = ufts.fund_info_code
         where ufts.user_id = #{userId}
+        <if test="fundCode!=null and fundCode!='' ">
+            and ufts.fund_info_code = #{fundCode}
+        </if>
+        <if test="fundName!=null and fundName!='' ">
+            and ffi.fund_name  LIKE concat(concat("%",#{fundName}),"%"))
+        </if>
     </select>
 
 

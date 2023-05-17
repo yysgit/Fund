@@ -43,6 +43,18 @@
                         </el-button>
                     </template>
                 </el-table-column>
+
+
+                <el-table-column
+                        sortable
+                        prop="fundTypeName"
+                        width="120"
+                        label="类型">
+                    <template slot-scope="scope">
+                        <span>{{scope.row.fundTypeNumber+'.'+scope.row.fundTypeName}}</span>
+                    </template>
+                </el-table-column>
+
                 <el-table-column
                         sortable
                         prop="fundInfoNameNumber"
@@ -59,20 +71,11 @@
 
                 <el-table-column
                         sortable
-                        prop="fundTypeName"
-                        width="120"
-                        label="类型">
-                    <template slot-scope="scope">
-                        <span>{{scope.row.fundTypeNumber+'.'+scope.row.fundTypeName}}</span>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                        sortable
                         prop="fundName"
                         width="230"
                         label="基金名称">
                     <template slot-scope="scope">
-                        <span>{{scope.row.fundName}}</span>
+                        <span>{{scope.row.fundName|ellipsis}}</span>
 
                     </template>
                 </el-table-column>
@@ -207,6 +210,15 @@
             //查询所有基金类型
             this.getFundTypeAll();
             this.getUserFundInfoTable();
+        },
+        filters: {
+            ellipsis(value) {
+                if (!value) return "";
+                if (value.length > 15) {
+                    return value.slice(0, 15) + "...";
+                }
+                return value;
+            }
         },
         methods: {
             tableRowClassName({row, rowIndex}) {
