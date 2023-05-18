@@ -6,94 +6,95 @@
     <!--查询分页信息列表-->
     <select id="findFundTransactionPurchaseList" resultType="java.util.Map" parameterType="java.util.Map">
         select uftp.id,
-               uftp.fund_info_code       as fundInfoCode,
-               uuf.fund_info_name_number as fundInfoNameNumber,
-               ffi.fund_name             as fundName,
-               uftp.purchase_time        as purchaseTime,
-               uftp.purchase_commission  as purchaseCommission,
-               uftp.purchase_share       as purchaseShare,
-               uftp.purchase_net_worth   as purchaseNetWorth,
-               uftp.purchase_amount      as purchaseAmount,
-               uftp.yield                as yield,
-               uftp.income_amount        as incomeAmount,
-               uftp.today_time           as todayTime,
-               uftp.today_net_worth      as todayNetWorth,
-               uuf.fund_info_name_number as fundInfoNameNumber
+        uftp.fund_info_code as fundInfoCode,
+        uuf.fund_info_name_number as fundInfoNameNumber,
+        ffi.fund_name as fundName,
+        uftp.purchase_time as purchaseTime,
+        uftp.purchase_commission as purchaseCommission,
+        uftp.purchase_share as purchaseShare,
+        uftp.purchase_net_worth as purchaseNetWorth,
+        uftp.purchase_amount as purchaseAmount,
+        uftp.yield as yield,
+        uftp.income_amount as incomeAmount,
+        uftp.today_time as todayTime,
+        uftp.today_net_worth as todayNetWorth,
+        ffnwt.level_number as levelNumber,
+        uuf.fund_info_name_number as fundInfoNameNumber
         from u_fund_transaction_purchase uftp
-                 left join f_fund_info ffi on ffi.fund_code = uftp.fund_info_code
-                 left join u_user_fund uuf on uuf.fund_info_code = uftp.fund_info_code and uftp.user_id = uuf.user_id
+        left join f_fund_info ffi on ffi.fund_code = uftp.fund_info_code
+        left join u_user_fund uuf on uuf.fund_info_code = uftp.fund_info_code and uftp.user_id = uuf.user_id
+        left join f_fund_net_worth_temp ffnwt on uftp.fund_info_code = ffnwt.fund_info_code
         where uftp.user_id = #{userId}
-          and uftp.state = #{state}
+        and uftp.state = #{state}
         <if test="fundCode!=null and fundCode!='' ">
             and uftp.fund_info_code = #{fundCode}
         </if>
         <if test="fundName!=null and fundName!='' ">
-            and ffi.fund_name  LIKE concat(concat("%",#{fundName}),"%"))
+            and ffi.fund_name LIKE concat(concat("%",#{fundName}),"%"))
         </if>
-        order by uftp.fund_info_code, uftp.purchase_time desc, uftp.yield  desc limit #{page}, #{limit};
+        order by uftp.fund_info_code, uftp.purchase_time desc, uftp.yield desc limit #{page}, #{limit};
     </select>
     <select id="findFundTransactionPurchaseCount" resultType="java.lang.Integer" parameterType="java.util.Map">
         select count(*)
         from u_fund_transaction_purchase uftp
-            left join f_fund_info ffi on ffi.fund_code = uftp.fund_info_code
+        left join f_fund_info ffi on ffi.fund_code = uftp.fund_info_code
         where uftp.user_id = #{userId}
-          and uftp.state = #{state}
+        and uftp.state = #{state}
         <if test="fundCode!=null and fundCode!='' ">
             and uftp.fund_info_code = #{fundCode}
         </if>
         <if test="fundName!=null and fundName!='' ">
-            and ffi.fund_name  LIKE concat(concat("%",#{fundName}),"%"))
+            and ffi.fund_name LIKE concat(concat("%",#{fundName}),"%"))
         </if>
     </select>
-
 
 
     <!--查询分页信息列表-->
     <select id="findFundTransactionPurchaseListGroupBy" resultType="java.util.Map" parameterType="java.util.Map">
         select uftp.id,
-               uftp.fund_info_code       as fundInfoCode,
-               uuf.fund_info_name_number as fundInfoNameNumber,
-               ffi.fund_name             as fundName,
-               uftp.purchase_time        as purchaseTime,
-               uftp.purchase_commission  as purchaseCommission,
-               uftp.purchase_share       as purchaseShare,
-               uftp.purchase_net_worth   as purchaseNetWorth,
-               uftp.purchase_amount      as purchaseAmount,
-               uftp.yield                as yield,
-               uftp.income_amount        as incomeAmount,
-               uftp.today_time           as todayTime,
-               uftp.today_net_worth      as todayNetWorth,
-               ffnwt.level_number as levelNumber,
-               uuf.fund_info_name_number as fundInfoNameNumber
+        uftp.fund_info_code as fundInfoCode,
+        uuf.fund_info_name_number as fundInfoNameNumber,
+        ffi.fund_name as fundName,
+        uftp.purchase_time as purchaseTime,
+        uftp.purchase_commission as purchaseCommission,
+        uftp.purchase_share as purchaseShare,
+        uftp.purchase_net_worth as purchaseNetWorth,
+        uftp.purchase_amount as purchaseAmount,
+        uftp.yield as yield,
+        uftp.income_amount as incomeAmount,
+        uftp.today_time as todayTime,
+        uftp.today_net_worth as todayNetWorth,
+        ffnwt.level_number as levelNumber,
+        uuf.fund_info_name_number as fundInfoNameNumber
         from u_fund_transaction_purchase uftp
-                 left join f_fund_info ffi on ffi.fund_code = uftp.fund_info_code
-                 left join u_user_fund uuf on uuf.fund_info_code = uftp.fund_info_code and uftp.user_id = uuf.user_id
-                 left join f_fund_net_worth_temp ffnwt on uftp.fund_info_code = ffnwt.fund_info_code
+        left join f_fund_info ffi on ffi.fund_code = uftp.fund_info_code
+        left join u_user_fund uuf on uuf.fund_info_code = uftp.fund_info_code and uftp.user_id = uuf.user_id
+        left join f_fund_net_worth_temp ffnwt on uftp.fund_info_code = ffnwt.fund_info_code
 
         where uftp.user_id = #{userId}
-          and uftp.state = #{state}
+        and uftp.state = #{state}
         and uftp.minimum_new_worth =1
         <if test="fundCode!=null and fundCode!='' ">
             and uftp.fund_info_code = #{fundCode}
         </if>
         <if test="fundName!=null and fundName!='' ">
-            and ffi.fund_name  LIKE concat(concat("%",#{fundName}),"%"))
+            and ffi.fund_name LIKE concat(concat("%",#{fundName}),"%"))
         </if>
 
-        order by ffi.sorting , uftp.purchase_time desc, uftp.yield  desc limit #{page}, #{limit};
+        order by ffi.sorting , uftp.purchase_time desc, uftp.yield desc limit #{page}, #{limit};
     </select>
     <select id="findFundTransactionPurchaseCountGroupBy" resultType="java.lang.Integer" parameterType="java.util.Map">
         select count(*)
         from u_fund_transaction_purchase uftp
-            left join f_fund_info ffi on ffi.fund_code = uftp.fund_info_code
+        left join f_fund_info ffi on ffi.fund_code = uftp.fund_info_code
         where uftp.user_id = #{userId}
-          and uftp.state = #{state}
-          and uftp.minimum_new_worth =1
+        and uftp.state = #{state}
+        and uftp.minimum_new_worth =1
         <if test="fundCode!=null and fundCode!='' ">
             and uftp.fund_info_code = #{fundCode}
         </if>
         <if test="fundName!=null and fundName!='' ">
-            and ffi.fund_name  LIKE concat(concat("%",#{fundName}),"%"))
+            and ffi.fund_name LIKE concat(concat("%",#{fundName}),"%"))
         </if>
     </select>
 
@@ -101,40 +102,40 @@
     <!--查询分页信息列表-->
     <select id="findFundTransactionSellList" resultType="java.util.Map" parameterType="java.util.Map">
         select ufts.id,
-               ufts.fund_info_code       as fundInfoCode,
-               uuf.fund_info_name_number as fundInfoNameNumber,
-               ffi.fund_name             as fundName,
-               ufts.sell_time            as sellTime,
-               ufts.sell_amount          as sellAmount,
-               ufts.sell_commission      as sellCommission,
-               ufts.sell_share           as sellShare,
-               ufts.sell_net_worth       as sellNetWorth,
-               ufts.income_amount        as incomeAmount,
-               ufts.purchase_id          as purchaseId,
-               ufts.yield                as yield,
-               uuf.fund_info_name_number as fundInfoNameNumber
+        ufts.fund_info_code as fundInfoCode,
+        uuf.fund_info_name_number as fundInfoNameNumber,
+        ffi.fund_name as fundName,
+        ufts.sell_time as sellTime,
+        ufts.sell_amount as sellAmount,
+        ufts.sell_commission as sellCommission,
+        ufts.sell_share as sellShare,
+        ufts.sell_net_worth as sellNetWorth,
+        ufts.income_amount as incomeAmount,
+        ufts.purchase_id as purchaseId,
+        ufts.yield as yield,
+        uuf.fund_info_name_number as fundInfoNameNumber
         from u_fund_transaction_sell ufts
-                 left join f_fund_info ffi on ffi.fund_code = ufts.fund_info_code
-                 left join u_user_fund uuf on uuf.fund_info_code = ufts.fund_info_code and ufts.user_id = uuf.user_id
+        left join f_fund_info ffi on ffi.fund_code = ufts.fund_info_code
+        left join u_user_fund uuf on uuf.fund_info_code = ufts.fund_info_code and ufts.user_id = uuf.user_id
         where ufts.user_id = #{userId}
         <if test="fundCode!=null and fundCode!='' ">
             and ufts.fund_info_code = #{fundCode}
         </if>
         <if test="fundName!=null and fundName!='' ">
-            and ffi.fund_name  LIKE concat(concat("%",#{fundName}),"%"))
+            and ffi.fund_name LIKE concat(concat("%",#{fundName}),"%"))
         </if>
         order by ufts.fund_info_code, ufts.yield, ufts.sell_time desc limit #{page}, #{limit};
     </select>
     <select id="findFundTransactionSellCount" resultType="java.lang.Integer" parameterType="java.util.Map">
         select count(*)
         from u_fund_transaction_sell ufts
-            left join f_fund_info ffi on ffi.fund_code = ufts.fund_info_code
+        left join f_fund_info ffi on ffi.fund_code = ufts.fund_info_code
         where ufts.user_id = #{userId}
         <if test="fundCode!=null and fundCode!='' ">
             and ufts.fund_info_code = #{fundCode}
         </if>
         <if test="fundName!=null and fundName!='' ">
-            and ffi.fund_name  LIKE concat(concat("%",#{fundName}),"%"))
+            and ffi.fund_name LIKE concat(concat("%",#{fundName}),"%"))
         </if>
     </select>
 
@@ -205,7 +206,7 @@
             ufts.income_amount=(select ufts.sell_amount - uftp.purchase_amount - ufts.sell_commission
                                 from u_fund_transaction_purchase uftp
                                 where uftp.id = ufts.purchase_id),
-            ufts.yield=(select ufts.income_amount/uftp.purchase_amount
+            ufts.yield=(select ufts.income_amount / uftp.purchase_amount
                         from u_fund_transaction_purchase uftp
                         where uftp.id = ufts.purchase_id)
 
@@ -218,41 +219,32 @@
     </update>
 
     <update id="updateFundTransactionMinimumInitialForTask">
-    UPDATE u_fund_transaction_purchase uftp
-    SET uftp.minimum_new_worth = 0
-    where 1=1
+        UPDATE u_fund_transaction_purchase uftp
+        SET uftp.minimum_new_worth = 0
+        where 1 = 1
     </update>
 
     <update id="updateFundTransactionMinimumForTask">
         UPDATE u_fund_transaction_purchase uftp
         SET uftp.minimum_new_worth = 1
-        WHERE
-            EXISTS (
-                    SELECT
-                        ffnwt.fund_info_code,
-                        ffnwt.purchase_net_worth,
-                        ffnwt.user_id
-                    FROM
-                        (
-                            SELECT
-                                min(uftp1.purchase_net_worth) purchase_net_worth,
-                                uftp1.fund_info_code AS fund_info_code,
-                                uftp1.user_id
-                            FROM
-                                u_fund_transaction_purchase uftp1
-                            WHERE
-                                uftp1.state = 0
-                            GROUP BY
-                                uftp1.fund_info_code,
-                                user_id
-                        ) ffnwt
-                    WHERE
-                        uftp.fund_info_code = ffnwt.fund_info_code
-                      AND uftp.purchase_net_worth= ffnwt.purchase_net_worth
-                      AND uftp.user_id= ffnwt.user_id
-                )
+        WHERE EXISTS(
+                      SELECT ffnwt.fund_info_code,
+                             ffnwt.purchase_net_worth,
+                             ffnwt.user_id
+                      FROM (
+                               SELECT min(uftp1.purchase_net_worth) purchase_net_worth,
+                                      uftp1.fund_info_code AS       fund_info_code,
+                                      uftp1.user_id
+                               FROM u_fund_transaction_purchase uftp1
+                               WHERE uftp1.state = 0
+                               GROUP BY uftp1.fund_info_code,
+                                        user_id
+                           ) ffnwt
+                      WHERE uftp.fund_info_code = ffnwt.fund_info_code
+                        AND uftp.purchase_net_worth = ffnwt.purchase_net_worth
+                        AND uftp.user_id = ffnwt.user_id
+                  )
     </update>
-
 
 
     <!--更新用户买入净值信息-->

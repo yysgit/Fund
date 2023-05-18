@@ -254,9 +254,6 @@
                 let that = this;
                 axios.post('/fund/fundLevelMoney/findFundLevelMoneyByFundInfoCode', this.fundDataForm)
                     .then(function (res) {
-                        console.log(res.data.data[0]);
-                        console.log(row.levelNumber);
-                        console.log(res.data.data[0]['money'+row.levelNumber]);
                         that.fundDataForm.purchaseAmount = res.data.data[0]['money'+row.levelNumber];
                         that.dialogVisible = true;
                     })
