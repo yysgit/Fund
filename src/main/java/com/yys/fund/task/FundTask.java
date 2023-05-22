@@ -35,7 +35,7 @@ public class FundTask {
      */
     //    @Scheduled(cron = "* */4 * * * ?")
 //        @Scheduled(cron = " 0 54 2 * * *")
-    @Scheduled(cron = " 0 */5 8-23 * * mon,tue,wed,thu,fri")
+    @Scheduled(cron = " 0 */5 8-23 * * mon,tue,wed,thu,fri,sat")
     public void task1() {
         for (int i = 0; i < 1000; i++) {
             Map map = new HashMap();

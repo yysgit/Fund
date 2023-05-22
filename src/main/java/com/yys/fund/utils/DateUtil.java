@@ -11,8 +11,8 @@ import java.util.Date;
 
 /**
  * 时间处理类
- * @author Mr Du
  *
+ * @author Mr Du
  */
 public class DateUtil {
     private static Logger LOGGER = LoggerFactory.getLogger(DateUtil.class);
@@ -47,15 +47,15 @@ public class DateUtil {
      */
     public static final String DateFormat6 = "yyyyMMdd HH:mm";
 
-    
+
     /**
      * Format String : yyyy年MM月dd日
      */
     public static final String DateFormat7 = "yyyy年MM月dd日";
-    
+
     /**
      * 获取当前时间
-     * 
+     *
      * @return Date对象
      */
     public static Date getDate() {
@@ -65,7 +65,7 @@ public class DateUtil {
 
     /**
      * 返回当前时间
-     * 
+     *
      * @param format 时间格式
      * @return string 当前时间指定格式字符串
      */
@@ -75,8 +75,8 @@ public class DateUtil {
 
     /**
      * 按照固定格式化
-     * 
-     * @param date Date
+     *
+     * @param date   Date
      * @param method 时间格式
      * @return 制定的时间格式
      */
@@ -93,7 +93,7 @@ public class DateUtil {
 
     /**
      * 获取前几天或者后天时间
-     * 
+     *
      * @param date Date
      * @param days 天数
      * @return Date时间
@@ -107,9 +107,9 @@ public class DateUtil {
 
     /**
      * 获取前几天或者后天时间
-     * 
+     *
      * @param dateStr 'yyyyMMdd'
-     * @param days 天数
+     * @param days    天数
      * @return Date时间
      */
     public static Date getDate(String dateStr, int days) {
@@ -118,9 +118,9 @@ public class DateUtil {
 
     /**
      * 传入String类型时间返回Date
-     * 
+     *
      * @param stringDate 时间
-     * @param method 格式
+     * @param method     格式
      * @return 返回Date
      */
     public static Date getDate(String stringDate, String method) {
@@ -137,9 +137,9 @@ public class DateUtil {
 
     /**
      * 获取两时间差的天数
-     * 
+     *
      * @param beginDate 开始日期
-     * @param endDate 结束日期
+     * @param endDate   结束日期
      * @return 天数
      */
     public static int getDayCount(Date beginDate, Date endDate) {
@@ -155,7 +155,7 @@ public class DateUtil {
 
     /**
      * 当前日期的前一个月
-     * 
+     *
      * @param data
      * @return
      */
@@ -170,7 +170,7 @@ public class DateUtil {
 
     /**
      * 当前日期的后一个月
-     * 
+     *
      * @param data
      * @return
      */
@@ -182,14 +182,14 @@ public class DateUtil {
         date = calendar.getTime();
         return DateUtil.getStringDate(date, DateUtil.DateFormat2);
     }
-    
+
     /**
      * 传入LONG 返回 时分秒
+     *
      * @param diff
      * @return
      */
-    public static String LongToString(long diff)
-    {
+    public static String LongToString(long diff) {
         String showtime = "";
         long oneSecond = 1000;
         long oneMinute = oneSecond * 60;
@@ -204,24 +204,27 @@ public class DateUtil {
         if (seconds > 0) showtime += seconds + "秒";
         return showtime;
     }
+
     /**
      * 数据库时间格式化
+     *
      * @param date
      * @return
      */
-   public static String DateFormat(String date) throws ParseException {
-       SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-       Date d = formatter.parse(date);
-       SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-       String sDate=sdf.format(date);
-       return  sDate;
-   }
+    public static String DateFormat(String date) throws ParseException {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        Date d = formatter.parse(date);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String sDate = sdf.format(date);
+        return sDate;
+    }
+
     /**
+     * @return java.lang.String
      * @Author zhangxiaofeng
      * @Description //TODO 获取当前时间的0点
-     * @Date  2019/7/16 17:27
+     * @Date 2019/7/16 17:27
      * @Param []
-     * @return java.lang.String
      **/
     public static String getTimesmorning() {
         Calendar cal = Calendar.getInstance();
@@ -230,12 +233,13 @@ public class DateUtil {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return formatter.format(beginOfDate);
     }
+
     /**
+     * @return java.lang.String
      * @Author zhangxiaofeng
      * @Description //TODO 获取当前时间的24点
-     * @Date  2019/7/16 17:27
+     * @Date 2019/7/16 17:27
      * @Param []
-     * @return java.lang.String
      **/
     public static String getTimesNight() {
         Calendar cal = Calendar.getInstance();
@@ -248,26 +252,28 @@ public class DateUtil {
     /**
      * 判断选择的日期本月的第几天
      */
-    public static int getWeeksByChooseDay(){
+    public static int getWeeksByChooseDay() {
         Calendar cal = Calendar.getInstance();
-        return cal.get( Calendar.DAY_OF_MONTH);
+        return cal.get(Calendar.DAY_OF_MONTH);
     }
+
     /**
      * 获取当前年份
      */
-    public static Integer getCurrentYear(){
+    public static Integer getCurrentYear() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
         Date date = new Date();
-        return Integer.valueOf( sdf.format(date));
+        return Integer.valueOf(sdf.format(date));
     }
 
     /**
      * 获取当前月份
      */
-    public static Integer getCurrentMonth(){
+    public static Integer getCurrentMonth() {
         Calendar cal = Calendar.getInstance();
         return cal.get(Calendar.MONTH) + 1;
     }
+
     /**
      * 获取过去第几天的日期
      *
@@ -283,11 +289,91 @@ public class DateUtil {
         return result;
     }
 
+    /**
+     * 获取本周第一天
+     *
+     * @return
+     */
+    public static String getWeekFirstDate() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        Date today = calendar.getTime();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        String result = format.format(today);
+        return result;
+    }
+
+
+    /**
+     * 获取本月第一天
+     *
+     * @return
+     */
+    public static String getMoonFirstDate() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        calendar.set(Calendar.HOUR, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        Date today = calendar.getTime();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        String result = format.format(today);
+        return result;
+    }
+
+    /**
+     * 获取上月第一天
+     *
+     * @return
+     */
+    public static String getLastMoonFirstDate() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MONTH, -1);
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        Date today = calendar.getTime();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        String result = format.format(today);
+        return result;
+    }
+
+
+    /**
+     * 获取本年第一天
+     *
+     * @return
+     */
+    public static String getYearFirstDate() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, getSysYear());
+        calendar.set(Calendar.MONTH, Calendar.JANUARY);
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        Date today = calendar.getTime();
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        String result = format.format(today);
+        return result;
+    }
+
+    /**
+     * 获取本年年份
+     *
+     * @return
+     */
+    public static int getSysYear() {
+        Calendar date = Calendar.getInstance();
+        return date.get(Calendar.YEAR);
+    }
+
+
+
+
+
+
     public static void main(String[] args) {
-        System.out.println(getPastDate(0));
         System.out.println(getPastDate(1));
-        System.out.println(getPastDate(2));
-        System.out.println(getPastDate(3));
-        System.out.println(getPastDate(4));
+        System.out.println(getWeekFirstDate());
+        System.out.println(getMoonFirstDate());
+        System.out.println(getLastMoonFirstDate());
+        System.out.println(getYearFirstDate());
     }
 }

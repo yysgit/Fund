@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -42,6 +43,71 @@ public class UserFundController {
     }
 
 
+    @RequestMapping("/userFundStatistics.html")
+    public String userFundStatistics() {
+        return "userFundStatistics";
+    }
+
+
+
+    @RequestMapping("/fundUserFundIncomeStatistics")
+    @ResponseBody
+    public ResultUtil fundUserFundIncomeStatistics(HttpServletRequest request) {
+        try {
+            ResultUtil resultUtil = new ResultUtil();
+
+            DbUser dbUser = (DbUser) request.getSession().getAttribute("dbUser");
+            if (dbUser == null) {
+                return ResultUtil.error("查询失败,未登录!");
+            }
+            Map map=new HashMap();
+            map.put("userId", dbUser.getId());
+            map.put("income_1", DateUtil.getPastDate(1));
+            map.put("income_2", DateUtil.getWeekFirstDate());
+            map.put("income_3", DateUtil.getMoonFirstDate());
+            map.put("income_4", DateUtil.getLastMoonFirstDate());
+            map.put("income_5", DateUtil.getYearFirstDate());
+            resultUtil.setData(userFundService.fundUserFundIncomeStatistics(map));
+            resultUtil.setMsg("查询成功!");
+            resultUtil.setCode(ExceptionConstant.SUCCESS_HTTPREUQEST);
+
+            return resultUtil;
+        } catch (Exception e) {
+            logger.error("查询基金信息错误: " + e.getMessage());
+            return ResultUtil.error("查询失败!");
+        }
+    }
+
+
+
+
+    @RequestMapping("/fundUserFundTradeStatistics")
+    @ResponseBody
+    public ResultUtil fundUserFundTradeStatistics(HttpServletRequest request) {
+        try {
+            ResultUtil resultUtil = new ResultUtil();
+
+            DbUser dbUser = (DbUser) request.getSession().getAttribute("dbUser");
+            if (dbUser == null) {
+                return ResultUtil.error("查询失败,未登录!");
+            }
+            Map map=new HashMap();
+            map.put("userId", dbUser.getId());
+            map.put("trade_1", DateUtil.getPastDate(1));
+            map.put("trade_2", DateUtil.getWeekFirstDate());
+            map.put("trade_3", DateUtil.getMoonFirstDate());
+            map.put("trade_4", DateUtil.getLastMoonFirstDate());
+            map.put("trade_5", DateUtil.getYearFirstDate());
+            resultUtil.setData(userFundService.fundUserFundTradeStatistics(map));
+            resultUtil.setMsg("查询成功!");
+            resultUtil.setCode(ExceptionConstant.SUCCESS_HTTPREUQEST);
+
+            return resultUtil;
+        } catch (Exception e) {
+            logger.error("查询基金信息错误: " + e.getMessage());
+            return ResultUtil.error("查询失败!");
+        }
+    }
     /**
      * 基金信息管理页面
      *

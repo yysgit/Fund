@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="https://jscdn.com.cn/highcharts/images/favicon.ico">
+    <!-- import CSS -->
+    <link rel="stylesheet" href="/static/elementUI/index.css">
+    <style>
+        body {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        .el-select {
+            width: 100%;
+        }
+
+        .el-table .warning-row {
+            background: oldlace;
+        }
+
+        .el-table .success-row {
+            background: #f0f9eb;
+        }
+
+        .content-con {
+            width: 90%;
+            height: 110px;
+            position: relative;
+            box-sizing: border-box;
+            background: #fff;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #515a6e;
+            -webkit-transition: all .2s ease-in-out;
+            transition: all .2s ease-in-out;
+            margin-left: 10px;
+        }
+
+        .content-con .left-area {
+            float: left;
+            height: 100%;
+            display: table;
+            text-align: center;
+            border-top-left-radius: 4px;
+            border-bottom-left-radius: 4px;
+        }
+
+        .content-con .left-area i {
+            display: table-cell;
+            vertical-align: middle;
+            speak: none;
+            font-style: normal;
+            font-weight: 400;
+            font-variant: normal;
+            text-transform: none;
+            text-rendering: auto;
+            line-height: 1;
+            -webkit-font-smoothing: antialiased;
+        }
+
+
+        .content-con .right-area {
+            float: left;
+            height: 100%;
+            display: table;
+            text-align: center;
+        }
+
+        .count-style {
+            font-size: 26px;
+        }
+
+        .content-outer {
+            margin: 0;
+            padding: 0;
+            height: 62px;
+            line-height: 93px;
+        }
+
+        .echarts_item {
+            height: 200px;
+            background-color: white;
+            margin-left: 10px;
+            margin-top: 20px;
+            border-radius: 4px;
+            padding: 16px;
+            margin-right: 10px;
+        }
+
+    </style>
+</head>
+<body style="    background-color: #d1d1da;">
+<div id="app" style="height: 100%;padding: 10px;">
+
+    <div style=" margin-top: 10px;">
+        <el-row>
+            <el-col :span="4">
+                <div class="content-con">
+                    <div class="left-area" style="background: rgb(45, 140, 240); width: 24%;"><i
+                            class="el-icon-s-home"
+                            style="font-size: 36px; color: rgb(255, 255, 255);"></i></div>
+                    <div class="right-area" style="width: 76%;">
+                        <div>
+                            <div class="count-to-wrapper"><p class="content-outer"><span
+                                    class="count-to-count-text count-style" id="count_to_1">0</span><i
+                                    class="count-to-unit-text"></i></p></div>
+                            <p>昨天收入</p></div>
+                    </div>
+                </div>
+            </el-col>
+            <el-col :span="4">
+                <div class="content-con">
+                    <div class="left-area" style="background: rgb(25, 190, 107); width: 24%;"><i
+                            class="el-icon-s-ticket"
+                            style="font-size: 36px; color: rgb(255, 255, 255);"></i></div>
+                    <div class="right-area" style="width: 76%;">
+                        <div>
+                            <div class="count-to-wrapper"><p class="content-outer"><span
+                                    class="count-to-count-text count-style" id="count_to_2">0</span><i
+                                    class="count-to-unit-text"></i></p></div>
+                            <p>本周收入</p></div>
+                    </div>
+                </div>
+            </el-col>
+            <el-col :span="4">
+                <div class="content-con">
+                    <div class="left-area" style="background: rgb(255, 153, 0); width: 24%;"><i
+                            class="el-icon-s-finance"
+                            style="font-size: 36px; color: rgb(255, 255, 255);"></i></div>
+                    <div class="right-area" style="width: 76%;">
+                        <div>
+                            <div class="count-to-wrapper"><p class="content-outer"><span
+                                    class="count-to-count-text count-style" id="count_to_3">0</span><i
+                                    class="count-to-unit-text"></i></p></div>
+                            <p>本月收入</p></div>
+                    </div>
+                </div>
+            </el-col>
+            <el-col :span="4">
+                <div class="content-con">
+                    <div class="left-area" style="background: rgb(237, 63, 20); width: 24%;"><i
+                            class="el-icon-s-platform"
+                            style="font-size: 36px; color: rgb(255, 255, 255);"></i></div>
+                    <div class="right-area" style="width: 76%;">
+                        <div>
+                            <div class="count-to-wrapper"><p class="content-outer"><span
+                                    class="count-to-count-text count-style" id="count_to_4">0</span><i
+                                    class="count-to-unit-text"></i></p></div>
+                            <p>上月收入</p></div>
+                    </div>
+                </div>
+            </el-col>
+            <el-col :span="4">
+                <div class="content-con">
+                    <div class="left-area" style="background: rgb(228, 108, 187); width: 24%;"><i
+                            class="el-icon-s-marketing"
+                            style="font-size: 36px; color: rgb(255, 255, 255);"></i></div>
+                    <div class="right-area" style="width: 76%;">
+                        <div>
+                            <div class="count-to-wrapper"><p class="content-outer"><span
+                                    class="count-to-count-text count-style" id="count_to_5">0</span><i
+                                    class="count-to-unit-text"></i></p></div>
+                            <p>今年收入</p></div>
+                    </div>
+                </div>
+            </el-col>
+            <el-col :span="4">
+                <div class="content-con">
+                    <div class="left-area" style="background: rgb(154, 102, 228); width: 24%;"><i
+                            class="el-icon-s-shop"
+                            style="font-size: 36px; color: rgb(255, 255, 255);"></i></div>
+                    <div class="right-area" style="width: 76%;">
+                        <div>
+                            <div class="count-to-wrapper"><p class="content-outer"><span
+                                    class="count-to-count-text count-style" id="count_to_6">0</span><i
+                                    class="count-to-unit-text"></i></p></div>
+                            <p>全部收入</p></div>
+                    </div>
+                </div>
+            </el-col>
+
+        </el-row>
+
+
+    </div>
+
+    <div>
+        <el-row>
+            <el-col :span="8">
+                <div class="echarts_item">
+                    <div id="container1" style="height: 100%"></div>
+                </div>
+
+            </el-col>
+            <el-col :span="8">
+                <div class="echarts_item">
+                    <div id="container2" style="height: 100%"></div>
+                </div>
+            </el-col>
+            <el-col :span="8">
+                <div class="echarts_item">
+                    <div id="container3" style="height: 100%"></div>
+                </div>
+            </el-col>
+            <el-col :span="8">
+                <div class="echarts_item">
+                    <div id="container4" style="height: 100%"></div>
+                </div>
+
+            </el-col>
+            <el-col :span="8">
+                <div class="echarts_item">
+                    <div id="container5" style="height: 100%"></div>
+                </div>
+            </el-col>
+            <el-col :span="8">
+                <div class="echarts_item">
+                    <div id="container6" style="height: 100%"></div>
+                </div>
+            </el-col>
+        </el-row>
+
+    </div>
+
+</div>
+
+
+</body>
+<!-- import Vue before Element -->
+<script src="/static/js/vue.js"></script>
+<script src="/static/js/axios.min.js"></script>
+<!-- import JavaScript -->
+
+<script src="/static/countUp/countUp.min.js"></script>
+<script src="/static/echarts/echarts.min.js"></script>
+<script src="/static/elementUI/index.js"></script>
+
+
+<script>
+
+
+    Vue.prototype.$echarts = echarts;
+
+    new Vue({
+        el: '#app',
+        data: function () {
+            return {}
+        },
+        created() {
+
+
+            //收入统计
+            this.fundIncomeStatistics();
+            //买卖统计
+            this.fundTradeStatistics();
+
+        },
+
+        methods: {
+            //收入统计
+            fundIncomeStatistics() {
+
+                let that = this;
+                axios.post('/fund/userFund/fundUserFundIncomeStatistics')
+                    .then(function (res) {
+                        that.getCountUp('count_to_1', (res.data.data[0]['income_1']==null ? 0:res.data.data[0]['income_1']));
+                        that.getCountUp('count_to_2', (res.data.data[0]['income_2']==null ? 0:res.data.data[0]['income_2']));
+                        that.getCountUp('count_to_3', (res.data.data[0]['income_3']==null ? 0:res.data.data[0]['income_3']));
+                        that.getCountUp('count_to_4', (res.data.data[0]['income_4']==null ? 0:res.data.data[0]['income_4']));
+                        that.getCountUp('count_to_5', (res.data.data[0]['income_5']==null ? 0:res.data.data[0]['income_5']));
+                        that.getCountUp('count_to_6', (res.data.data[0]['income_6']==null ? 0:res.data.data[0]['income_6']));
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+
+            },
+            //买卖统计
+            fundTradeStatistics() {
+                this.$nextTick(() => {
+
+
+                    let that = this;
+                    axios.post('/fund/userFund/fundUserFundTradeStatistics')
+                        .then(function (res) {
+                            let tradeData = res.data.data[0];
+                            console.log(tradeData['purchase_1']);
+                            console.log(tradeData['purchase_1']==null);
+                            console.log(tradeData['purchase_1']==null?0:tradeData['purchase_1']);
+
+                            let dataItem1 = [
+                                {
+                                    name: '买入:' + (tradeData['purchase_1']==null?0:tradeData['purchase_1']) + '元',
+                                    value: '' + (tradeData['purchase_1']==null?0:tradeData['purchase_1']),
+                                    label: {
+                                        color: '#2d8cf0',
+                                    }
+                                }, {
+                                    name: '卖出:' +( tradeData['sell_1']==null?0:tradeData['sell_1']) + '元',
+                                    value: '' +  (tradeData['sell_1']==null?0:tradeData['sell_1']) ,
+                                    label: {
+                                        color: '#ff0000',
+                                    }
+                                }
+                            ]
+                            that.pieEcharts('container1', dataItem1, '昨天买卖',['#2d8cf0','#ff0000']);
+                            let dataItem2 = [
+                                {
+                                    name: '买入:' + (tradeData['purchase_2']==null?0:tradeData['purchase_2']) + '元',
+                                    value: '' + (tradeData['purchase_2']==null?0:tradeData['purchase_2']),
+                                    label: {
+                                        color: '#19be6b',
+                                    }
+                                }, {
+                                    name: '卖出:' + (tradeData['sell_2']==null?0:tradeData['sell_2']) + '元',
+                                    value: '' +(tradeData['sell_2']==null?0:tradeData['sell_2']),
+                                    label: {
+                                        color: '#ff0000',
+                                    }
+                                }
+                            ]
+                            that.pieEcharts('container2', dataItem2, '本周买卖',['#19be6b','#ff0000']);
+                            let dataItem3 = [
+                                {
+                                    name: '买入:' + (tradeData['purchase_3']==null?0:tradeData['purchase_3'] )+ '元',
+                                    value: '' + (tradeData['purchase_3']==null?0:tradeData['purchase_3']),
+                                    label: {
+                                        color: '#ff9900',
+                                    }
+                                }, {
+                                    name: '卖出:' + (tradeData['sell_3']==null?0:tradeData['sell_3']) + '元',
+                                    value: '' + (tradeData['sell_3']==null?0:tradeData['sell_3']),
+                                    label: {
+                                        color: '#ff0000',
+                                    }
+                                }]
+                            that.pieEcharts('container3', dataItem3, '本月买卖',['#ff9900','#ff0000']);
+                            let dataItem4 = [
+                                {
+                                    name: '买入:' +(tradeData['purchase_4']==null?0:tradeData['purchase_4']) + '元',
+                                    value: '' + (tradeData['purchase_4']==null?0:tradeData['purchase_4']),
+                                    label: {
+                                        color: '#008000',
+                                    }
+                                }, {
+                                    name: '卖出:' + (tradeData['sell_4']==null?0:tradeData['sell_4']) + '元',
+                                    value: '' + (tradeData['sell_4']==null?0:tradeData['sell_4']),
+                                    label: {
+                                        color: '#ff0000',
+                                    }
+                                }]
+                            that.pieEcharts('container4', dataItem4, '上月买卖',['#008000','#ff0000']);
+                            let dataItem5 = [
+                                {
+                                    name: '买入:' + (tradeData['purchase_5']==null?0:tradeData['purchase_5'] )+ '元',
+                                    value: '' + (tradeData['purchase_5']==null?0:tradeData['purchase_5']),
+                                    label: {
+                                        color: '#e46cbb',
+                                    }
+                                }, {
+                                    name: '卖出:' + (tradeData['sell_5']==null?0:tradeData['sell_5'])+ '元',
+                                    value: '' + (tradeData['sell_5']==null?0:tradeData['sell_5']),
+                                    label: {
+                                        color: '#ff0000',
+                                    }
+                                }]
+                            that.pieEcharts('container5', dataItem5, '今年买卖',['#e46cbb','#ff0000']);
+                            let dataItem6 = [
+                                {
+                                    name: '买入:' + (tradeData['purchase_6']==null?0:tradeData['purchase_6']) + '元',
+                                    value: '' + (tradeData['purchase_6']==null?0:tradeData['purchase_6']),
+                                    label: {
+                                        color: '#9a66e4',
+                                    }
+                                }, {
+                                    name: '卖出:' + (tradeData['sell_6']==null?0:tradeData['sell_6']) + '元',
+                                    value: '' + (tradeData['sell_6']==null?0:tradeData['sell_6']),
+                                    label: {
+                                        color: '#ff0000',
+                                    }
+                                }]
+                            that.pieEcharts('container6', dataItem6, '全部买卖',['#9a66e4','#ff0000']);
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                })
+            },
+            //饼图
+            pieEcharts(container, value, title,color) {
+                let legend = value.map(_ => _.name)
+                let dom = document.getElementById(container);
+                let myChart = this.$echarts.init(dom, 'tdTheme', {
+                    renderer: 'canvas',
+                    useDirtyRect: false
+                });
+                let option;
+                option = {
+                    title: {
+                        text: title,
+                        textStyle: { // 标题文字样式设置
+                            color: '#516b91',  // 标题颜色
+                        },
+                        left: 'center'
+                    },
+
+                    tooltip: {
+                        trigger: 'item',
+                        formatter: '{b} : {c} ({d}%)'
+                    },
+                    legend: {
+                        orient: 'vertical',
+                        left: 'left',
+                        data: legend
+                    },
+                    color:color ,
+                    series: [
+                        {
+                            type: 'pie',
+                            radius: '55%',
+                            center: ['50%', '60%'],
+                            data: value,
+                            itemStyle: {
+                                emphasis: {
+                                    shadowBlur: 10,
+                                    shadowOffsetX: 0,
+                                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                }
+                            }
+                        }
+                    ]
+                };
+                if (option && typeof option === 'object') {
+                    myChart.setOption(option);
+                }
+                window.addEventListener('resize', myChart.resize);
+            },
+
+            //数字
+            getCountUp(count_to, endVal) {
+                this.$nextTick(() => {
+                    let options = {
+                        useEasing: true,  // 过渡动画效果，默认ture
+                        useGrouping: true,  // 千分位效果，例：1000->1,000。默认true
+                        separator: ',',   // 使用千分位时分割符号
+                        decimal: '.',   // 小数位分割符号
+                        prefix: '',    // 前置符号
+                        suffix: ''    // 后置符号，可汉字
+                    }
+                    // target,startVal,endVal,decimals,duration,options
+                    // dom节点, 初始值,  结束值, 小数位数, 过渡几秒 , 初始参数
+                    let num = new CountUp(count_to, 0, endVal, 2, 5, options);
+                    num.start();
+                })
+            },
+        },
+
+    })
+
+
+</script>
+</html>

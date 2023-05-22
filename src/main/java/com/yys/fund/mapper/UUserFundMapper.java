@@ -35,10 +35,17 @@ public interface UUserFundMapper {
      * 查询所有的基金信息
      * @return
      */
-
-
     List<Map> findUserFundList(Map map);
     Integer findUserFundListCount(Map map);
+
+
+    /**
+     * 查询用户统计
+     * @param map
+     * @return
+     */
+    List<Map> fundUserFundIncomeStatistics(Map map);
+    List<Map> fundUserFundTradeStatistics(Map map);
 
 
     /**

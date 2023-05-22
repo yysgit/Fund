@@ -8,6 +8,213 @@
         values (#{userId}, #{fundInfoNameNumber}, #{fundInfoCode}, now());
     </insert>
 
+
+    <select id="fundUserFundIncomeStatistics" resultType="java.util.Map" parameterType="java.util.Map">
+        select (
+                   SELECT sum(amont.incomeAmount)
+                   FROM (
+                            SELECT sum(income_amount) AS incomeAmount,
+                                   sell_time
+                            FROM u_fund_transaction_sell
+                            where user_id = #{userId}
+                            GROUP BY sell_time
+                        ) amont
+                   where sell_time >= #{income_1}
+               ) AS income_1,
+
+
+               (
+                   SELECT sum(amont.incomeAmount)
+                   FROM (
+                            SELECT sum(income_amount) AS incomeAmount,
+                                   sell_time
+                            FROM u_fund_transaction_sell
+                            where user_id = #{userId}
+                            GROUP BY sell_time
+                        ) amont
+                   where sell_time >= #{income_2}
+               ) AS income_2,
+
+               (
+                   SELECT sum(amont.incomeAmount)
+                   FROM (
+                            SELECT sum(income_amount) AS incomeAmount,
+                                   sell_time
+                            FROM u_fund_transaction_sell
+                            where user_id = #{userId}
+                            GROUP BY sell_time
+                        ) amont
+                   where sell_time >= #{income_3}
+               ) AS income_3,
+
+               (
+                   SELECT sum(amont.incomeAmount)
+                   FROM (
+                            SELECT sum(income_amount) AS incomeAmount,
+                                   sell_time
+                            FROM u_fund_transaction_sell
+                            where user_id = #{userId}
+                            GROUP BY sell_time
+                        ) amont
+                   where #{income_3} > sell_time
+                     and sell_time >= #{income_4}
+               ) AS income_4,
+
+
+               (
+                   SELECT sum(amont.incomeAmount)
+                   FROM (
+                            SELECT sum(income_amount) AS incomeAmount,
+                                   sell_time
+                            FROM u_fund_transaction_sell
+                            where user_id = #{userId}
+                            GROUP BY sell_time
+                        ) amont
+                   where sell_time >= #{income_5}
+               ) AS income_5,
+               (
+                   SELECT sum(amont.incomeAmount)
+                   FROM (
+                            SELECT sum(income_amount) AS incomeAmount,
+                                   sell_time
+                            FROM u_fund_transaction_sell
+                            where user_id = #{userId}
+                            GROUP BY sell_time
+                        ) amont
+               ) AS income_6
+        from db_user
+        where id = #{userId}
+    </select>
+    <select id="fundUserFundTradeStatistics" resultType="java.util.Map" parameterType="java.util.Map">
+        select (
+                   SELECT sum(amont.sellAmount)
+                   FROM (
+                            SELECT sum(sell_amount-income_amount) AS sellAmount,
+                                   sell_time
+                            FROM u_fund_transaction_sell
+                            where user_id = #{userId}
+                            GROUP BY sell_time
+                        ) amont
+                   where sell_time >= #{trade_1}
+               ) AS sell_1,
+               ( SELECT sum(amont.purchaseAmount)
+                FROM (
+                         SELECT sum(purchase_amount) AS purchaseAmount,
+                                purchase_time
+                         FROM u_fund_transaction_purchase
+                         where user_id = #{userId}
+                         GROUP BY purchase_time
+                     ) amont
+                where purchase_time >= #{trade_1}
+                    ) AS purchase_1,
+
+     (   SELECT sum(amont.sellAmount)
+        FROM (
+                 SELECT sum(sell_amount-income_amount) AS sellAmount,
+                        sell_time
+                 FROM u_fund_transaction_sell
+                 where user_id = #{userId}
+                 GROUP BY sell_time
+             ) amont
+        where sell_time >= #{trade_2}
+            ) AS sell_2,
+        (SELECT sum(amont.purchaseAmount)
+        FROM (
+                 SELECT sum(purchase_amount) AS purchaseAmount,
+                        purchase_time
+                 FROM u_fund_transaction_purchase
+                 where user_id = #{userId}
+                 GROUP BY purchase_time
+             ) amont
+        where purchase_time >= #{trade_2}
+            ) AS purchase_2,
+
+        (SELECT sum(amont.sellAmount)
+        FROM (
+                 SELECT sum(sell_amount-income_amount) AS sellAmount,
+                        sell_time
+                 FROM u_fund_transaction_sell
+                 where user_id = #{userId}
+                 GROUP BY sell_time
+             ) amont
+        where sell_time >= #{trade_3}
+            ) AS sell_3,
+       ( SELECT sum(amont.purchaseAmount)
+        FROM (
+                 SELECT sum(purchase_amount) AS purchaseAmount,
+                        purchase_time
+                 FROM u_fund_transaction_purchase
+                 where user_id = #{userId}
+                 GROUP BY purchase_time
+             ) amont
+        where purchase_time >= #{trade_3}
+            ) AS purchase_3,
+
+
+
+       ( SELECT sum(amont.sellAmount)
+        FROM (
+                 SELECT sum(sell_amount-income_amount) AS sellAmount,
+                        sell_time
+                 FROM u_fund_transaction_sell
+                 where user_id = #{userId}
+                 GROUP BY sell_time
+             ) amont
+        where #{trade_3} > sell_time   and  sell_time >= #{trade_4}
+            ) AS sell_4,
+      (  SELECT sum(amont.purchaseAmount)
+        FROM (
+                 SELECT sum(purchase_amount) AS purchaseAmount,
+                        purchase_time
+                 FROM u_fund_transaction_purchase
+                 where user_id = #{userId}
+                 GROUP BY purchase_time
+             ) amont
+        where #{trade_3} >= purchase_time and purchase_time>= #{trade_4}
+            ) AS purchase_4,
+
+        (SELECT sum(amont.sellAmount)
+        FROM (
+                 SELECT sum(sell_amount-income_amount) AS sellAmount,
+                        sell_time
+                 FROM u_fund_transaction_sell
+                 where user_id = #{userId}
+                 GROUP BY sell_time
+             ) amont
+        where sell_time >= #{trade_5}
+            ) AS sell_5,
+      (  SELECT sum(amont.purchaseAmount)
+        FROM (
+                 SELECT sum(purchase_amount) AS purchaseAmount,
+                        purchase_time
+                 FROM u_fund_transaction_purchase
+                 where user_id = #{userId}
+                 GROUP BY purchase_time
+             ) amont
+        where purchase_time >= #{trade_5}
+            ) AS purchase_5,
+    (    SELECT sum(amont.sellAmount)
+        FROM (
+                 SELECT sum(sell_amount-income_amount) AS sellAmount,
+                        sell_time
+                 FROM u_fund_transaction_sell
+                 where user_id = #{userId}
+                 GROUP BY sell_time
+             ) amont
+            ) AS sell_6,
+       ( SELECT sum(amont.purchaseAmount)
+        FROM (
+                 SELECT sum(purchase_amount) AS purchaseAmount,
+                        purchase_time
+                 FROM u_fund_transaction_purchase
+                 where user_id = #{userId}
+                 GROUP BY purchase_time
+             ) amont
+            ) AS purchase_6
+        from db_user
+        where id = #{userId}
+    </select>
+
     <select id="findUserFundList" resultType="java.util.Map" parameterType="java.util.Map">
         select uuf.id,
                uuf.fund_info_name_number AS fundInfoNameNumber,
@@ -22,7 +229,7 @@
                ffi.sorting,
                ffnwt.id                  AS fundNetWorthTempId,
                ffi.volatility_value      AS volatilityValue,
-               ffnwt.level_number as levelNumber,
+               ffnwt.level_number        as levelNumber,
                uftp.yield                as yield
 
 
@@ -31,14 +238,14 @@
                  left join f_fund_info ffi on ffi.fund_code = uuf.fund_info_code
                  left join f_fund_type fft on ffi.fund_type_id = fft.id
                  left join f_fund_net_worth_temp ffnwt on uuf.fund_info_code = ffnwt.fund_info_code
-                 left join u_fund_transaction_purchase uftp on  uuf.fund_info_code = uftp.fund_info_code
-                                                                    and uftp.user_id = #{userId}
-                                                                    and uftp.state = 0
-                                                                    and uftp.minimum_new_worth =1
+                 left join u_fund_transaction_purchase uftp on uuf.fund_info_code = uftp.fund_info_code
+            and uftp.user_id = #{userId}
+            and uftp.state = 0
+            and uftp.minimum_new_worth = 1
 
         where uuf.delete_status = 0
           and uuf.user_id = #{userId}
-        order by ffi.sorting,  uuf.fund_info_name_number , ffi.sorting, ffi.create_time limit #{page}, #{limit};
+        order by ffi.sorting, uuf.fund_info_name_number, ffi.sorting, ffi.create_time limit #{page}, #{limit};
     </select>
     <select id="findUserFundListCount" resultType="java.lang.Integer" parameterType="java.util.Map">
         select count(*)
@@ -49,14 +256,15 @@
 
     <!--    删除我的基金-->
     <delete id="deleteUserFund" parameterType="java.util.Map">
-        delete from  u_user_fund
+        delete
+        from u_user_fund
         where id = #{id}
           and user_id = #{userId}
     </delete>
 
     <update id="updateUserFund" parameterType="java.util.Map">
         update u_user_fund
-        set update_time   = now()
+        set update_time           = now()
           , fund_info_name_number = #{fundInfoNameNumber}
         where id = #{id}
           and user_id = #{userId}
