@@ -62,6 +62,12 @@
         where fund_code = #{fundCode}
     </update>
 
+    <update id="updateFundInfoForBonusNetWorth" parameterType="java.util.Map">
+        update f_fund_info
+        set bonus_net_worth = #{bonusNetWorth}
+        where fund_code = #{fundCode}
+    </update>
+
 
     <!--    删除文章菜单-->
     <update id="deleteFundInfo" parameterType="com.yys.fund.entity.FFundInfo">

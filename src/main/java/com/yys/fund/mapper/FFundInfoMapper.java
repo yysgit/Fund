@@ -25,6 +25,7 @@ public interface FFundInfoMapper {
      */
     int updateFundInfo(FFundInfo fundInfo);
     int updateFundInfoForNetWorth(Map map);
+    int updateFundInfoForBonusNetWorth(Map map);
 
     /**
      * 删除基金信息

@@ -1,12 +1,6 @@
 package com.yys.fund.entity;
 
-import com.baomidou.mybatisplus.enums.IdType;
 import java.util.Date;
-import com.baomidou.mybatisplus.annotations.TableId;
-import com.baomidou.mybatisplus.annotations.TableField;
-import com.baomidou.mybatisplus.activerecord.Model;
-import com.baomidou.mybatisplus.annotations.TableName;
-import java.io.Serializable;
 
 /**
  * <p>
@@ -49,6 +43,7 @@ public class FFundInfo {
      * 最大净值
      */
 	private Double maxNetWorth;
+	private Double bonusNetWorth;
 	private Double volatilityValue;
     /**
      * 最大净值日期
@@ -67,6 +62,14 @@ public class FFundInfo {
      * 主键ID
      */
 	private Integer id;
+
+	public Double getBonusNetWorth() {
+		return bonusNetWorth;
+	}
+
+	public void setBonusNetWorth(Double bonusNetWorth) {
+		this.bonusNetWorth = bonusNetWorth;
+	}
 
 	public Integer getUpdateUserId() {
 		return updateUserId;

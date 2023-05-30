@@ -22,7 +22,7 @@
 </head>
 <body>
 <div id="app">
-    <el-tabs v-model="activeName"  @tab-click="handleClick">
+    <el-tabs v-model="activeName" @tab-click="handleClick">
         <el-tab-pane label="买入信息" name="first">
             <el-form :inline="true" :model="fundSearch" class="demo-form-inline">
                 <el-form-item label="基金编号">
@@ -76,7 +76,7 @@
                         width="90"
                         align="center">
                     <template slot-scope="scope">
-                        <span >{{scope.row.fundInfoNameNumber}}</span>
+                        <span>{{scope.row.fundInfoNameNumber}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -101,7 +101,7 @@
                         prop="purchaseAmount"
                         label="买入金额">
                     <template slot-scope="scope">
-                        <span >{{scope.row.purchaseAmount}}</span>
+                        <span>{{scope.row.purchaseAmount}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -109,7 +109,7 @@
                         prop="purchaseShare"
                         label="买入份额">
                     <template slot-scope="scope">
-                        <span >{{scope.row.purchaseShare}}</span>
+                        <span>{{scope.row.purchaseShare}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -117,7 +117,7 @@
                         prop="purchaseNetWorth"
                         label="买入净值">
                     <template slot-scope="scope">
-                        <span >{{scope.row.purchaseNetWorth}}</span>
+                        <span>{{scope.row.purchaseNetWorth}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -125,7 +125,7 @@
                         prop="todayNetWorth"
                         label="今日净值">
                     <template slot-scope="scope">
-                        <span >{{scope.row.todayNetWorth}}</span>
+                        <span>{{scope.row.todayNetWorth}}</span>
                     </template>
                 </el-table-column>
 
@@ -134,7 +134,7 @@
                         prop="levelNumber"
                         label="基金等级">
                     <template slot-scope="scope">
-                        <span >{{scope.row.levelNumber}}</span>
+                        <span>{{scope.row.levelNumber}}</span>
                     </template>
                 </el-table-column>
 
@@ -145,9 +145,9 @@
 
                     <template slot-scope="scope">
                        <span v-if="parseFloat(scope.row.yield)>0 "
-                             style="color: red">{{getYield(scope.row.yield)+'%'}}</span>
+                             style="color: red">{{getYield(scope.row.yield) + '%'}}</span>
                         <span v-else-if="parseFloat(scope.row.yield)<=0 "
-                              style="color: green">{{getYield(scope.row.yield)+'%'}}</span>
+                              style="color: green">{{getYield(scope.row.yield) + '%'}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -155,7 +155,7 @@
                         prop="incomeAmount"
                         label="收益金额">
                     <template slot-scope="scope">
-                        <span >{{scope.row.incomeAmount}}</span>
+                        <span>{{scope.row.incomeAmount}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -221,7 +221,7 @@
                         width="90"
                         align="center">
                     <template slot-scope="scope">
-                        <span >{{scope.row.fundInfoNameNumber}}</span>
+                        <span>{{scope.row.fundInfoNameNumber}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -246,7 +246,7 @@
                         prop="sellAmount"
                         label="卖出金额">
                     <template slot-scope="scope">
-                        <span >{{scope.row.sellAmount}}</span>
+                        <span>{{scope.row.sellAmount}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -254,7 +254,7 @@
                         prop="sellShare"
                         label="卖出份额">
                     <template slot-scope="scope">
-                        <span >{{scope.row.sellShare}}</span>
+                        <span>{{scope.row.sellShare}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -262,7 +262,7 @@
                         prop="sellNetWorth"
                         label="卖出净值">
                     <template slot-scope="scope">
-                        <span >{{scope.row.sellNetWorth}}</span>
+                        <span>{{scope.row.sellNetWorth}}</span>
                     </template>
                 </el-table-column>
 
@@ -273,9 +273,9 @@
 
                     <template slot-scope="scope">
                        <span v-if="parseFloat(scope.row.yield)>0 "
-                             style="color: red">{{getYield(scope.row.yield)+'%'}}</span>
+                             style="color: red">{{getYield(scope.row.yield) + '%'}}</span>
                         <span v-else-if="parseFloat(scope.row.yield)<=0 "
-                              style="color: green">{{getYield(scope.row.yield)+'%'}}</span>
+                              style="color: green">{{getYield(scope.row.yield) + '%'}}</span>
                     </template>
 
 
@@ -288,7 +288,7 @@
                         prop="incomeAmount"
                         label="收益金额">
                     <template slot-scope="scope">
-                        <span >{{scope.row.incomeAmount}}</span>
+                        <span>{{scope.row.incomeAmount}}</span>
                     </template>
                 </el-table-column>
 
@@ -313,6 +313,12 @@
                 </el-form-item>
                 <el-form-item label="基金名称">
                     <el-input v-model="fundSearch.fundName" placeholder="基金名称" clearable></el-input>
+                </el-form-item>
+                <el-form-item label="排序">
+                    <el-select v-model="fundSearch.sort" placeholder="排序">
+                        <el-option label="最高收益" value="sort_2"></el-option>
+                        <el-option label="最新时间" value="sort_1"></el-option>
+                    </el-select>
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary" @click="onSubmit1">查询</el-button>
@@ -361,7 +367,7 @@
                         width="90"
                         align="center">
                     <template slot-scope="scope">
-                        <span >{{scope.row.fundInfoNameNumber}}</span>
+                        <span>{{scope.row.fundInfoNameNumber}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -386,7 +392,7 @@
                         prop="purchaseAmount"
                         label="买入金额">
                     <template slot-scope="scope">
-                        <span >{{scope.row.purchaseAmount}}</span>
+                        <span>{{scope.row.purchaseAmount}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -394,7 +400,7 @@
                         prop="purchaseShare"
                         label="买入份额">
                     <template slot-scope="scope">
-                        <span >{{scope.row.purchaseShare}}</span>
+                        <span>{{scope.row.purchaseShare}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -402,7 +408,7 @@
                         prop="purchaseNetWorth"
                         label="买入净值">
                     <template slot-scope="scope">
-                        <span >{{scope.row.purchaseNetWorth}}</span>
+                        <span>{{scope.row.purchaseNetWorth}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -410,7 +416,7 @@
                         prop="todayNetWorth"
                         label="今日净值">
                     <template slot-scope="scope">
-                        <span >{{scope.row.todayNetWorth}}</span>
+                        <span>{{scope.row.todayNetWorth}}</span>
                     </template>
                 </el-table-column>
 
@@ -421,9 +427,9 @@
 
                     <template slot-scope="scope">
                        <span v-if="parseFloat(scope.row.yield)>0 "
-                             style="color: red">{{getYield(scope.row.yield)+'%'}}</span>
+                             style="color: red">{{getYield(scope.row.yield) + '%'}}</span>
                         <span v-else-if="parseFloat(scope.row.yield)<=0 "
-                              style="color: green">{{getYield(scope.row.yield)+'%'}}</span>
+                              style="color: green">{{getYield(scope.row.yield) + '%'}}</span>
                     </template>
 
 
@@ -436,7 +442,7 @@
                         prop="incomeAmount"
                         label="收益金额">
                     <template slot-scope="scope">
-                        <span >{{scope.row.incomeAmount}}</span>
+                        <span>{{scope.row.incomeAmount}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -471,10 +477,10 @@
             </el-form-item>
             <el-form-item label="选择日期">
                 <el-date-picker clearable
-                        v-model="fundDataForm.sellTime"
-                        type="date"
-                        value-format="yyyy-MM-dd"
-                        placeholder="选择日期">
+                                v-model="fundDataForm.sellTime"
+                                type="date"
+                                value-format="yyyy-MM-dd"
+                                placeholder="选择日期">
                 </el-date-picker>
             </el-form-item>
 
@@ -492,7 +498,6 @@
     </el-dialog>
 
 
-
     <el-dialog
             title="买入信息"
             :visible.sync="dialogVisiblePurchase"
@@ -506,10 +511,10 @@
             </el-form-item>
             <el-form-item label="选择日期">
                 <el-date-picker clearable
-                        v-model="fundDataFormPurchase.purchaseTime"
-                        type="date"
-                        value-format="yyyy-MM-dd"
-                        placeholder="选择日期">
+                                v-model="fundDataFormPurchase.purchaseTime"
+                                type="date"
+                                value-format="yyyy-MM-dd"
+                                placeholder="选择日期">
                 </el-date-picker>
             </el-form-item>
 
@@ -543,9 +548,10 @@
                 tableData1: [],
                 tableData2: [],
                 tableData3: [],
-                fundSearch:{
-                    fundCode:'',
-                    fundName:'',
+                fundSearch: {
+                    fundCode: '',
+                    fundName: '',
+                    sort: 'sort_2',
                 },
                 fundDataFormPurchase: {
                     fundCode: '',
@@ -562,17 +568,17 @@
                 },
                 page1: {
                     pageCurrent: 1,
-                    pageSize: 300,
+                    pageSize: 200,
                     pageTotal: 0
                 },
                 page2: {
                     pageCurrent: 1,
-                    pageSize: 300,
+                    pageSize: 100,
                     pageTotal: 0
                 },
                 page3: {
                     pageCurrent: 1,
-                    pageSize: 300,
+                    pageSize: 100,
                     pageTotal: 0
                 },
                 dialogVisible: false,
@@ -584,8 +590,6 @@
         },
         created() {
             //查询所有基金类型
-            this.getFundTransactionTable1(this.fundSearch);
-            this.getFundTransactionTable2(this.fundSearch);
             this.getFundTransactionTable3(this.fundSearch);
         },
         filters: {
@@ -614,12 +618,12 @@
             handleAddUserFundTransactionClick3(index, row) {
                 this.fundDataFormPurchase.fundCode = row.fundInfoCode;
                 this.fundDataFormPurchase.fundName = row.fundName;
-                this.fundDataFormPurchase.purchaseTime =this.dateFormat();
+                this.fundDataFormPurchase.purchaseTime = this.dateFormat();
 
                 let that = this;
                 axios.post('/fund/fundLevelMoney/findFundLevelMoneyByFundInfoCode', this.fundDataFormPurchase)
                     .then(function (res) {
-                        that.fundDataFormPurchase.purchaseAmount = res.data.data[0]['money'+row.levelNumber];
+                        that.fundDataFormPurchase.purchaseAmount = res.data.data[0]['money' + row.levelNumber];
                         that.dialogVisiblePurchase = true;
                     })
                     .catch(function (error) {
@@ -630,14 +634,14 @@
             handleAddUserFundTransactionClick1(index, row) {
                 this.fundDataFormPurchase.fundCode = row.fundInfoCode;
                 this.fundDataFormPurchase.fundName = row.fundName;
-                this.fundDataFormPurchase.purchaseTime =this.dateFormatter(row,0);
+                this.fundDataFormPurchase.purchaseTime = this.dateFormatter(row, 0);
                 // this.fundDataFormPurchase.purchaseAmount = '';
 
 
                 let that = this;
                 axios.post('/fund/fundLevelMoney/findFundLevelMoneyByFundInfoCode', this.fundDataFormPurchase)
                     .then(function (res) {
-                        that.fundDataFormPurchase.purchaseAmount = res.data.data[0]['money'+row.levelNumber];
+                        that.fundDataFormPurchase.purchaseAmount = res.data.data[0]['money' + row.levelNumber];
                         that.dialogVisiblePurchase = true;
                     })
                     .catch(function (error) {
@@ -645,15 +649,20 @@
                     });
             },
 
-            handleClick(){
-                this.getFundTransactionTable1(this.fundSearch);
-                this.getFundTransactionTable2(this.fundSearch);
-                this.getFundTransactionTable3(this.fundSearch);
+            handleClick(tab, event) {
+                console.log(tab.index);
+                if (tab.index == 0) {
+                    this.getFundTransactionTable3(this.fundSearch);
+                } else if (tab.index == 1) {
+                    this.getFundTransactionTable2(this.fundSearch);
+                } else if (tab.index == 2) {
+                    this.getFundTransactionTable1(this.fundSearch);
+                }
             },
-            getYield(data){
-                if(data!=0 && data!='' && data!=null ){
-                    return Number(String(parseFloat(data)*100).replace(/^(.*\..{4}).*$/,"$1"));
-                }else{
+            getYield(data) {
+                if (data != 0 && data != '' && data != null) {
+                    return Number(String(parseFloat(data) * 100).replace(/^(.*\..{4}).*$/, "$1"));
+                } else {
                     return 0;
                 }
             },
@@ -717,7 +726,10 @@
 
             handleSellDelete(index, row) {
                 let that = this;
-                axios.post('/fund/userFundTransaction/deleteUserFundTransactionSell', {id: row.id,purchaseId: row.purchaseId})
+                axios.post('/fund/userFundTransaction/deleteUserFundTransactionSell', {
+                    id: row.id,
+                    purchaseId: row.purchaseId
+                })
                     .then(function (res) {
                         that.$message.success(res.data.msg);
                         that.page2.pageCurrent = 1;
@@ -771,8 +783,8 @@
                 let fromData = {
                     page: (that.page2.pageCurrent - 1) * 10,
                     limit: that.page2.pageSize,
-                    fundCode:fundSearch.fundCode,
-                    fundName:fundSearch.fundName,
+                    fundCode: fundSearch.fundCode,
+                    fundName: fundSearch.fundName,
                 }
                 axios.post('/fund/userFundTransaction/findFundTransactionSellList', fromData)
                     .then(function (res) {
@@ -792,8 +804,9 @@
                     page: (that.page1.pageCurrent - 1) * 10,
                     limit: that.page1.pageSize,
                     state: 0,
-                    fundCode:fundSearch.fundCode,
-                    fundName:fundSearch.fundName,
+                    fundCode: fundSearch.fundCode,
+                    fundName: fundSearch.fundName,
+                    sort: fundSearch.sort,
                 }
                 axios.post('/fund/userFundTransaction/findFundTransactionPurchaseList', fromData)
                     .then(function (res) {
@@ -813,8 +826,8 @@
                     page: (that.page3.pageCurrent - 1) * 10,
                     limit: that.page3.pageSize,
                     state: 0,
-                    fundCode:fundSearch.fundCode,
-                    fundName:fundSearch.fundName,
+                    fundCode: fundSearch.fundCode,
+                    fundName: fundSearch.fundName,
                 }
                 axios.post('/fund/userFundTransaction/findFundTransactionPurchaseListGroupBy', fromData)
                     .then(function (res) {
@@ -828,14 +841,13 @@
             },
 
 
-
-            onSubmit1(){
+            onSubmit1() {
                 this.getFundTransactionTable1(this.fundSearch);
             },
-            onSubmit2(){
+            onSubmit2() {
                 this.getFundTransactionTable2(this.fundSearch);
             },
-            onSubmit3(){
+            onSubmit3() {
                 this.getFundTransactionTable3(this.fundSearch);
             },
 
@@ -853,9 +865,9 @@
             },
             // 日期格式化
             dateFormatter2(row, column) {
-                if(row.todayTime!=null && row.todayTime!=''){
+                if (row.todayTime != null && row.todayTime != '') {
                     return row.todayTime.substring(0, 10);
-                }else{
+                } else {
                     return null;
                 }
 
@@ -863,16 +875,16 @@
 
             // 日期格式化
             dateFormatter3(row, column) {
-                if(row.sellTime!=null && row.sellTime!=''){
+                if (row.sellTime != null && row.sellTime != '') {
                     return row.sellTime.substring(0, 10);
-                }else{
+                } else {
                     return null;
                 }
             },
 
-            dateFormat(){
-                var dT=new Date();//row 表示一行数据, dateTime 表示要格式化的字段名称
-                return dT.getFullYear()+"-"+(dT.getMonth()+1)+"-"+dT.getDate();
+            dateFormat() {
+                var dT = new Date();//row 表示一行数据, dateTime 表示要格式化的字段名称
+                return dT.getFullYear() + "-" + (dT.getMonth() + 1) + "-" + dT.getDate();
             },
         }
     })

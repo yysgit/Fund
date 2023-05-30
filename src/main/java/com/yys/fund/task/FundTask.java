@@ -2,6 +2,7 @@ package com.yys.fund.task;
 
 import com.alibaba.fastjson.JSONArray;
 import com.yys.fund.entity.FFundNetWorth;
+import com.yys.fund.entity.FFundNetWorthTemp;
 import com.yys.fund.mapper.FFundInfoMapper;
 import com.yys.fund.mapper.FFundLevelMapper;
 import com.yys.fund.mapper.FFundNetWorthMapper;
@@ -49,7 +50,7 @@ public class FundTask {
                     if (fundDateNet == null) {
                         continue;
                     }
-                    FFundNetWorth fundNetWorth = new FFundNetWorth();
+                    FFundNetWorthTemp fundNetWorth = new FFundNetWorthTemp();
                     fundNetWorth.setFundInfoCode(String.valueOf(fundDataMySQL.get("fundCode")));
                     fundNetWorth.setFundNetWorth(Double.valueOf(String.valueOf(fundDateNet.get("fundNetWorth"))));
                     fundNetWorth.setFundDay(new Date(Long.parseLong(String.valueOf(fundDateNet.get("fundDay")))));
@@ -69,6 +70,7 @@ public class FundTask {
                     fundNetWorth.setLevelNumber(levelNumber);
                     fundNetWorth.setLevelFront(levelFront);
                     fundNetWorth.setLevelBehind(levelBehind);
+                    fundNetWorth.setRiseFall(Double.parseDouble(fundDateNet.get("riseFall").toString()));
 
                     if (fundDataMySQL.get("fundNetWorthTempId") == null || "".equals(fundDataMySQL.get("fundNetWorthTempId"))) {
                         fundNetWorthMapper.deleteFundNetWorthTemp(fundNetWorth.getFundInfoCode());
@@ -98,7 +100,7 @@ public class FundTask {
      */
 //    @Scheduled(cron = "* */4 * * * ?")
     @Scheduled(cron = " 0 */10 1-2 * * mon,tue,wed,thu,fri,sat")
-//    @Scheduled(cron = " 0 */5 8-23 * * mon,tue,wed,thu,fri,sat")
+//    @Scheduled(cron = " 0 */3 8-23 * * mon,tue,wed,thu,fri,sat")
     public void task2() {
         for (int i = 0; i < 1000; i++) {
             Map map = new HashMap();
@@ -108,10 +110,16 @@ public class FundTask {
             if (resultMap != null && resultMap.size() > 0) {
                 for (int j = 0; j < resultMap.size(); j++) {
                     Map fundDataMySQL = resultMap.get(j);
+
                     //查询基金信息
                     Map fundDateNet = SendRequest.getFundDataListOne(String.valueOf(fundDataMySQL.get("fundCode")), new Date().getTime());
                     String fundDateNetMaxNetWorth = String.valueOf(fundDateNet.get("maxNetWorth"));
                     String fundDataMySQLMaxNetWorth = String.valueOf(fundDataMySQL.get("maxNetWorth"));
+                    //更新分红
+                    Map bonusNetWorthMap=new HashMap();
+                    bonusNetWorthMap.put("bonusNetWorth",fundDateNet.get("bonusNetWorth"));
+                    bonusNetWorthMap.put("fundCode",fundDataMySQL.get("fundCode"));
+                    fundInfoMapper.updateFundInfoForBonusNetWorth(bonusNetWorthMap);
 
                     //判断是否有最大净值
                     if (fundDateNet.get("maxNetWorth") != null && !fundDateNetMaxNetWorth.equals(fundDataMySQLMaxNetWorth)) {
@@ -161,6 +169,7 @@ public class FundTask {
                         fundNetWorth.setLevelBehind(levelBehind);
                         fundNetWorthMapper.addFundNetWorth(fundNetWorth);
                     }
+
                     try {
                         Thread.sleep(2000);
                     } catch (Exception e) {
@@ -233,6 +242,7 @@ public class FundTask {
         fundTransactionMapper.updateFundTransactionSellForTask();
         fundTransactionMapper.updateFundTransactionMinimumInitialForTask();
         fundTransactionMapper.updateFundTransactionMinimumForTask();
+        fundTransactionMapper.updateFundTransactionTotalAmountForTask();
     }
 
 

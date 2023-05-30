@@ -7,8 +7,8 @@
     <link rel="stylesheet" href="/static/elementUI/index.css">
     <style>
 
-        .el-select,.el-date-editor{
-            width: 100%!important;
+        .el-select, .el-date-editor {
+            width: 100% !important;
         }
 
         .el-table .click-row {
@@ -56,7 +56,7 @@
                         width="120"
                         label="类型">
                     <template slot-scope="scope">
-                        <span>{{scope.row.fundTypeNumber+'.'+scope.row.fundTypeName}}</span>
+                        <span>{{scope.row.fundTypeNumber + '.' + scope.row.fundTypeName}}</span>
                     </template>
                 </el-table-column>
 
@@ -99,7 +99,7 @@
                         prop="levelNumber"
                         label="基金等级">
                     <template slot-scope="scope">
-                        <span >{{scope.row.levelNumber}}</span>
+                        <span>{{scope.row.levelNumber}}</span>
                     </template>
                 </el-table-column>
 
@@ -110,11 +110,41 @@
 
                     <template slot-scope="scope">
                        <span v-if="parseFloat(scope.row.yield)>0 "
-                             style="color: red">{{getYield(scope.row.yield)+'%'}}</span>
+                             style="color: red">{{getYield(scope.row.yield) + '%'}}</span>
                         <span v-else-if="parseFloat(scope.row.yield)<=0 "
-                              style="color: green">{{getYield(scope.row.yield)+'%'}}</span>
+                              style="color: green">{{getYield(scope.row.yield) + '%'}}</span>
                     </template>
                 </el-table-column>
+
+
+                <el-table-column
+                        sortable
+                        prop="riseFall"
+                        label="涨跌">
+
+                    <template slot-scope="scope">
+                       <span v-if="parseFloat(scope.row.riseFall)>0 "
+                             style="color: red">{{scope.row.riseFall + '%'}}</span>
+                        <span v-else-if="parseFloat(scope.row.riseFall)<=0 "
+                              style="color: green">{{scope.row.riseFall + '%'}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        sortable
+                        prop="totalAmount"
+                        label="总金额">
+                    <template slot-scope="scope">
+                        <span>{{scope.row.totalAmount}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        sortable
+                        label="盈利">
+                    <template slot-scope="scope">
+                        <span>{{(parseFloat(scope.row.totalAmount)*parseFloat(scope.row.riseFall)/100).toFixed(2)}}</span>
+                    </template>
+                </el-table-column>
+
 
                 <el-table-column
                         sortable
@@ -261,13 +291,12 @@
                 let that = this;
                 axios.post('/fund/fundLevelMoney/findFundLevelMoneyByFundInfoCode', this.fundDataForm)
                     .then(function (res) {
-                        that.fundDataForm.purchaseAmount = res.data.data[0]['money'+row.levelNumber];
+                        that.fundDataForm.purchaseAmount = res.data.data[0]['money' + row.levelNumber];
                         that.dialogVisible = true;
                     })
                     .catch(function (error) {
                         console.log(error);
                     });
-
 
 
             },
@@ -297,7 +326,7 @@
 
             handleDelete(index, row) {
                 let that = this;
-                axios.post('/fund/userFund/deleteUserFund', {id: row.id,fundInfoCode:row.fundCode})
+                axios.post('/fund/userFund/deleteUserFund', {id: row.id, fundInfoCode: row.fundCode})
                     .then(function (res) {
                         that.$message.success(res.data.msg);
                         that.page.pageCurrent = 1;
@@ -364,14 +393,14 @@
             dateFormatter(row, column) {
                 return row.maxNetWorthDate.substring(0, 10);
             },
-            dateFormat(){
-                var dT=new Date();//row 表示一行数据, dateTime 表示要格式化的字段名称
-                return dT.getFullYear()+"-"+(dT.getMonth()+1)+"-"+dT.getDate();
+            dateFormat() {
+                var dT = new Date();//row 表示一行数据, dateTime 表示要格式化的字段名称
+                return dT.getFullYear() + "-" + (dT.getMonth() + 1) + "-" + dT.getDate();
             },
-            getYield(data){
-                if(data!=0 && data!='' && data!=null ){
-                    return Number(String(parseFloat(data)*100).replace(/^(.*\..{4}).*$/,"$1"));
-                }else{
+            getYield(data) {
+                if (data != 0 && data != '' && data != null) {
+                    return Number(String(parseFloat(data) * 100).replace(/^(.*\..{4}).*$/, "$1"));
+                } else {
                     return 0;
                 }
             },

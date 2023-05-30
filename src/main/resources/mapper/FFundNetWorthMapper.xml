@@ -12,7 +12,7 @@
     </insert>
 
     <!--添加文章菜单-->
-    <insert id="addFundNetWorthTemp" parameterType="com.yys.fund.entity.FFundNetWorth">
+    <insert id="addFundNetWorthTemp" parameterType="com.yys.fund.entity.FFundNetWorthTemp">
         insert into f_fund_net_worth_temp (fund_info_code, fund_day, fund_net_worth,
                                       level_number, level_front, level_behind, create_time)
         values (#{fundInfoCode}, #{fundDay}, #{fundNetWorth},
@@ -66,7 +66,7 @@
     </update>
 
     <!--更新菜单-->
-    <update id="updateFundNetWorthTemp" parameterType="com.yys.fund.entity.FFundNetWorth">
+    <update id="updateFundNetWorthTemp" parameterType="com.yys.fund.entity.FFundNetWorthTemp">
         update f_fund_net_worth_temp
         set create_time      = now()
           , fund_net_worth = #{fundNetWorth}
@@ -74,6 +74,7 @@
           , level_number          = #{levelNumber}
           , level_front          = #{levelFront}
           , level_behind          = #{levelBehind}
+          , rise_fall          = #{riseFall}
         where fund_info_code = #{fundInfoCode}
     </update>
 

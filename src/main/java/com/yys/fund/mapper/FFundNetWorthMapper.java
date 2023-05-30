@@ -1,6 +1,7 @@
 package com.yys.fund.mapper;
 
 import com.yys.fund.entity.FFundNetWorth;
+import com.yys.fund.entity.FFundNetWorthTemp;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -16,7 +17,7 @@ public interface FFundNetWorthMapper {
      * @return
      */
     int addFundNetWorth(FFundNetWorth fundNetWorth);
-    int addFundNetWorthTemp(FFundNetWorth fundNetWorth);
+    int addFundNetWorthTemp(FFundNetWorthTemp fundNetWorth);
 
 
     /**
@@ -25,7 +26,7 @@ public interface FFundNetWorthMapper {
      * @return
      */
     int updateFundNetWorth(FFundNetWorth fundNetWorth);
-    int updateFundNetWorthTemp(FFundNetWorth fundNetWorth);
+    int updateFundNetWorthTemp(FFundNetWorthTemp fundNetWorth);
 
     /**
      * 删除基金类型

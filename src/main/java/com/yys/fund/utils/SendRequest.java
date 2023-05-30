@@ -136,19 +136,36 @@ public class SendRequest {
             String result = SendRequest.sendGet("https://fund.eastmoney.com/pingzhongdata/" + fundCode + ".js?v=" + timestamp, "");
             String[] resultList = result.split(";");
             Map resultMap = new HashMap();
+
+            JSONArray fundDataStrAC = null;
+            JSONArray fundDataStr = null;
             for (String resultStr : resultList) {
-                if (resultStr.indexOf("Data_netWorthTrend") != -1) {
+
+                //累计净值
+                if (resultStr.indexOf("Data_ACWorthTrend") != -1) {
                     String[] fundDataList = resultStr.split("=");
-                    resultMap.put("fundDataStr", JSON.parseArray(fundDataList[1]));
-                    Map map = getMaxNetWorth((JSONArray) resultMap.get("fundDataStr"));
-                    //最大净值和日期:
+                    resultMap.put("fundDataStrAC", JSON.parseArray(fundDataList[1]));
+                    fundDataStrAC = JSON.parseArray(fundDataList[1]);
+                    Map map = getMaxNetWorthAC((JSONArray) resultMap.get("fundDataStrAC"));
+                    //AC最大净值和日期:
                     resultMap.put("maxNetWorth", map.get("maxNetWorth"));
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
                     resultMap.put("maxNetWorthDate", simpleDateFormat.format(new Date(Long.parseLong(String.valueOf(map.get("maxNetWorthDate"))))));
                 }
+                //单位净值
+                if (resultStr.indexOf("Data_netWorthTrend") != -1) {
+                    String[] fundDataList = resultStr.split("=");
+                    resultMap.put("fundDataStr", JSON.parseArray(fundDataList[1]));
+                    fundDataStr = JSON.parseArray(fundDataList[1]);
+                    //Map map = getMaxNetWorth((JSONArray) resultMap.get("fundDataStr"));
+                    //最大净值和日期:
+                    //resultMap.put("maxNetWorth", map.get("maxNetWorth"));
+                    //SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    //resultMap.put("maxNetWorthDate", simpleDateFormat.format(new Date(Long.parseLong(String.valueOf(map.get("maxNetWorthDate"))))));
+                }
                 if (resultStr.indexOf("fS_name") != -1) {
                     String[] fundDataList = resultStr.split("=");
-                    resultMap.put("fundName", fundDataList[1].replaceAll("\"",""));
+                    resultMap.put("fundName", fundDataList[1].replaceAll("\"", ""));
                 }
                 if (resultStr.indexOf("fS_code") != -1) {
                     String[] fundDataList = resultStr.split("=");
@@ -157,6 +174,13 @@ public class SendRequest {
 
 
             }
+            //查询分红净值
+            double bonus = sub(fundDataStrAC.getJSONArray(fundDataStrAC.size() - 1).getDouble(1), fundDataStr.getJSONObject(fundDataStr.size() - 1).getDouble("y"));
+            //设置最大净值
+            resultMap.put("maxNetWorth", sub(Double.valueOf(String.valueOf(resultMap.get("maxNetWorth"))), bonus));
+            resultMap.put("bonusNetWorth", bonus);
+
+
             return resultMap;
         } catch (Exception e) {
             e.printStackTrace();
@@ -175,6 +199,27 @@ public class SendRequest {
             } else if ("".equals(maxNetWorth)) {
                 maxNetWorth = jsonObject.getString("y");
                 maxNetWorthDate = jsonObject.getString("x");
+            }
+        }
+        Map map = new HashMap();
+        map.put("maxNetWorth", maxNetWorth);
+        map.put("maxNetWorthDate", maxNetWorthDate);
+
+        return map;
+    }
+
+
+    private static Map getMaxNetWorthAC(JSONArray jsonArray) {
+        String maxNetWorth = "";
+        String maxNetWorthDate = "";
+        for (int i = 0; i < jsonArray.size(); i++) {
+            JSONArray jsonArray1 = jsonArray.getJSONArray(i);
+            if (!"".equals(maxNetWorth) && jsonArray1.getDouble(1)!=null && sub(Double.valueOf(maxNetWorth), jsonArray1.getDouble(1)) < 0) {
+                maxNetWorth = String.valueOf(jsonArray1.getDouble(1));
+                maxNetWorthDate = String.valueOf(jsonArray1.getString(0));
+            } else if ("".equals(maxNetWorth)) {
+                maxNetWorth = String.valueOf(jsonArray1.getDouble(1));
+                maxNetWorthDate = jsonArray1.getString(0);
             }
         }
         Map map = new HashMap();
@@ -213,8 +258,9 @@ public class SendRequest {
 //            }
             fundInfoParam = new HashMap();
             fundInfoParam.put("fundInfoCode", fundCode);
-            fundInfoParam.put("fundDay", simpleDateFormat.parse(resultDate.substring(0,10)).getTime());
+            fundInfoParam.put("fundDay", simpleDateFormat.parse(resultDate.substring(0, 10)).getTime());
             fundInfoParam.put("fundNetWorth", jsonObject.get("gsz"));
+            fundInfoParam.put("riseFall", jsonObject.get("gszzl"));
             return fundInfoParam;
         } catch (Exception e) {
             e.printStackTrace();

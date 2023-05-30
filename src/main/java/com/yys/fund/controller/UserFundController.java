@@ -126,18 +126,6 @@ public class UserFundController {
             }
             map.put("userId", dbUser.getId());
 
-            map.put("fundday1", DateUtil.getPastDate(0));
-            map.put("fundday2", DateUtil.getPastDate(1));
-            map.put("fundday3", DateUtil.getPastDate(2));
-            map.put("fundday4", DateUtil.getPastDate(3));
-            map.put("fundday5", DateUtil.getPastDate(4));
-            map.put("fundday6", DateUtil.getPastDate(5));
-            map.put("fundday7", DateUtil.getPastDate(6));
-            map.put("fundday8", DateUtil.getPastDate(7));
-            map.put("fundday9", DateUtil.getPastDate(8));
-            map.put("fundday10", DateUtil.getPastDate(9));
-
-
             resultUtil.setData(userFundService.findUserFundList(map));
             resultUtil.setCount(userFundService.findUserFundListCount(map));
             resultUtil.setMsg("查询成功!");

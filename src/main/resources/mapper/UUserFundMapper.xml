@@ -89,7 +89,7 @@
         select (
                    SELECT sum(amont.sellAmount)
                    FROM (
-                            SELECT sum(sell_amount-income_amount) AS sellAmount,
+                            SELECT sum(sell_amount - income_amount) AS sellAmount,
                                    sell_time
                             FROM u_fund_transaction_sell
                             where user_id = #{userId}
@@ -97,7 +97,7 @@
                         ) amont
                    where sell_time >= #{trade_1}
                ) AS sell_1,
-               ( SELECT sum(amont.purchaseAmount)
+               (SELECT sum(amont.purchaseAmount)
                 FROM (
                          SELECT sum(purchase_amount) AS purchaseAmount,
                                 purchase_time
@@ -106,111 +106,112 @@
                          GROUP BY purchase_time
                      ) amont
                 where purchase_time >= #{trade_1}
-                    ) AS purchase_1,
+               ) AS purchase_1,
 
-     (   SELECT sum(amont.sellAmount)
-        FROM (
-                 SELECT sum(sell_amount-income_amount) AS sellAmount,
-                        sell_time
-                 FROM u_fund_transaction_sell
-                 where user_id = #{userId}
-                 GROUP BY sell_time
-             ) amont
-        where sell_time >= #{trade_2}
-            ) AS sell_2,
-        (SELECT sum(amont.purchaseAmount)
-        FROM (
-                 SELECT sum(purchase_amount) AS purchaseAmount,
-                        purchase_time
-                 FROM u_fund_transaction_purchase
-                 where user_id = #{userId}
-                 GROUP BY purchase_time
-             ) amont
-        where purchase_time >= #{trade_2}
-            ) AS purchase_2,
+               (SELECT sum(amont.sellAmount)
+                FROM (
+                         SELECT sum(sell_amount - income_amount) AS sellAmount,
+                                sell_time
+                         FROM u_fund_transaction_sell
+                         where user_id = #{userId}
+                         GROUP BY sell_time
+                     ) amont
+                where sell_time >= #{trade_2}
+               ) AS sell_2,
+               (SELECT sum(amont.purchaseAmount)
+                FROM (
+                         SELECT sum(purchase_amount) AS purchaseAmount,
+                                purchase_time
+                         FROM u_fund_transaction_purchase
+                         where user_id = #{userId}
+                         GROUP BY purchase_time
+                     ) amont
+                where purchase_time >= #{trade_2}
+               ) AS purchase_2,
 
-        (SELECT sum(amont.sellAmount)
-        FROM (
-                 SELECT sum(sell_amount-income_amount) AS sellAmount,
-                        sell_time
-                 FROM u_fund_transaction_sell
-                 where user_id = #{userId}
-                 GROUP BY sell_time
-             ) amont
-        where sell_time >= #{trade_3}
-            ) AS sell_3,
-       ( SELECT sum(amont.purchaseAmount)
-        FROM (
-                 SELECT sum(purchase_amount) AS purchaseAmount,
-                        purchase_time
-                 FROM u_fund_transaction_purchase
-                 where user_id = #{userId}
-                 GROUP BY purchase_time
-             ) amont
-        where purchase_time >= #{trade_3}
-            ) AS purchase_3,
+               (SELECT sum(amont.sellAmount)
+                FROM (
+                         SELECT sum(sell_amount - income_amount) AS sellAmount,
+                                sell_time
+                         FROM u_fund_transaction_sell
+                         where user_id = #{userId}
+                         GROUP BY sell_time
+                     ) amont
+                where sell_time >= #{trade_3}
+               ) AS sell_3,
+               (SELECT sum(amont.purchaseAmount)
+                FROM (
+                         SELECT sum(purchase_amount) AS purchaseAmount,
+                                purchase_time
+                         FROM u_fund_transaction_purchase
+                         where user_id = #{userId}
+                         GROUP BY purchase_time
+                     ) amont
+                where purchase_time >= #{trade_3}
+               ) AS purchase_3,
 
 
+               (SELECT sum(amont.sellAmount)
+                FROM (
+                         SELECT sum(sell_amount - income_amount) AS sellAmount,
+                                sell_time
+                         FROM u_fund_transaction_sell
+                         where user_id = #{userId}
+                         GROUP BY sell_time
+                     ) amont
+                where #{trade_3} > sell_time
+                  and sell_time >= #{trade_4}
+               ) AS sell_4,
+               (SELECT sum(amont.purchaseAmount)
+                FROM (
+                         SELECT sum(purchase_amount) AS purchaseAmount,
+                                purchase_time
+                         FROM u_fund_transaction_purchase
+                         where user_id = #{userId}
+                         GROUP BY purchase_time
+                     ) amont
+                where #{trade_3} >= purchase_time
+                  and purchase_time >= #{trade_4}
+               ) AS purchase_4,
 
-       ( SELECT sum(amont.sellAmount)
-        FROM (
-                 SELECT sum(sell_amount-income_amount) AS sellAmount,
-                        sell_time
-                 FROM u_fund_transaction_sell
-                 where user_id = #{userId}
-                 GROUP BY sell_time
-             ) amont
-        where #{trade_3} > sell_time   and  sell_time >= #{trade_4}
-            ) AS sell_4,
-      (  SELECT sum(amont.purchaseAmount)
-        FROM (
-                 SELECT sum(purchase_amount) AS purchaseAmount,
-                        purchase_time
-                 FROM u_fund_transaction_purchase
-                 where user_id = #{userId}
-                 GROUP BY purchase_time
-             ) amont
-        where #{trade_3} >= purchase_time and purchase_time>= #{trade_4}
-            ) AS purchase_4,
-
-        (SELECT sum(amont.sellAmount)
-        FROM (
-                 SELECT sum(sell_amount-income_amount) AS sellAmount,
-                        sell_time
-                 FROM u_fund_transaction_sell
-                 where user_id = #{userId}
-                 GROUP BY sell_time
-             ) amont
-        where sell_time >= #{trade_5}
-            ) AS sell_5,
-      (  SELECT sum(amont.purchaseAmount)
-        FROM (
-                 SELECT sum(purchase_amount) AS purchaseAmount,
-                        purchase_time
-                 FROM u_fund_transaction_purchase
-                 where user_id = #{userId}
-                 GROUP BY purchase_time
-             ) amont
-        where purchase_time >= #{trade_5}
-            ) AS purchase_5,
-    (    SELECT sum(amont.sellAmount)
-        FROM (
-                 SELECT sum(sell_amount-income_amount) AS sellAmount,
-                        sell_time
-                 FROM u_fund_transaction_sell
-                 where user_id = #{userId}
-                 GROUP BY sell_time
-             ) amont
-            ) AS sell_6,
-       ( SELECT sum(amont.purchaseAmount)
-        FROM (
-                 SELECT sum(purchase_amount) AS purchaseAmount,
-                        purchase_time
-                 FROM u_fund_transaction_purchase
-                 where user_id = #{userId}
-                 GROUP BY purchase_time
-             ) amont
-            ) AS purchase_6
+               (SELECT sum(amont.sellAmount)
+                FROM (
+                         SELECT sum(sell_amount - income_amount) AS sellAmount,
+                                sell_time
+                         FROM u_fund_transaction_sell
+                         where user_id = #{userId}
+                         GROUP BY sell_time
+                     ) amont
+                where sell_time >= #{trade_5}
+               ) AS sell_5,
+               (SELECT sum(amont.purchaseAmount)
+                FROM (
+                         SELECT sum(purchase_amount) AS purchaseAmount,
+                                purchase_time
+                         FROM u_fund_transaction_purchase
+                         where user_id = #{userId}
+                         GROUP BY purchase_time
+                     ) amont
+                where purchase_time >= #{trade_5}
+               ) AS purchase_5,
+               (SELECT sum(amont.sellAmount)
+                FROM (
+                         SELECT sum(sell_amount - income_amount) AS sellAmount,
+                                sell_time
+                         FROM u_fund_transaction_sell
+                         where user_id = #{userId}
+                         GROUP BY sell_time
+                     ) amont
+               ) AS sell_6,
+               (SELECT sum(amont.purchaseAmount)
+                FROM (
+                         SELECT sum(purchase_amount) AS purchaseAmount,
+                                purchase_time
+                         FROM u_fund_transaction_purchase
+                         where user_id = #{userId}
+                         GROUP BY purchase_time
+                     ) amont
+               ) AS purchase_6
         from db_user
         where id = #{userId}
     </select>
@@ -230,9 +231,9 @@
                ffnwt.id                  AS fundNetWorthTempId,
                ffi.volatility_value      AS volatilityValue,
                ffnwt.level_number        as levelNumber,
-               uftp.yield                as yield
-
-
+               uftp.yield                as yield,
+               ffnwt.rise_fall           as riseFall,
+               uuf.total_amount          as totalAmount
         from u_user_fund uuf
                  left join db_user dbu on dbu.id = uuf.user_id
                  left join f_fund_info ffi on ffi.fund_code = uuf.fund_info_code

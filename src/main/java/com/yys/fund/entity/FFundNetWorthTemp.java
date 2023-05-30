@@ -1,12 +1,6 @@
 package com.yys.fund.entity;
 
-import com.baomidou.mybatisplus.enums.IdType;
 import java.util.Date;
-import com.baomidou.mybatisplus.annotations.TableId;
-import com.baomidou.mybatisplus.annotations.TableField;
-import com.baomidou.mybatisplus.activerecord.Model;
-import com.baomidou.mybatisplus.annotations.TableName;
-import java.io.Serializable;
 
 /**
  * <p>
@@ -29,12 +23,60 @@ public class FFundNetWorthTemp {
      */
 
 	private Date fundDay;
+	/**
+	 * 当前等级次数
+	 */
+	private Integer levelNumber;
+	/**
+	 * 当前等级前净值
+	 */
+	private Double levelFront;
+	/**
+	 * 当前等级后净值
+	 */
+	private Double levelBehind;
+
     /**
      * 当天净值
      */
 
 	private Double fundNetWorth;
+	/**
+	 * 涨跌
+	 */
+	private Double riseFall;
 
+	public Integer getLevelNumber() {
+		return levelNumber;
+	}
+
+	public void setLevelNumber(Integer levelNumber) {
+		this.levelNumber = levelNumber;
+	}
+
+	public Double getLevelFront() {
+		return levelFront;
+	}
+
+	public void setLevelFront(Double levelFront) {
+		this.levelFront = levelFront;
+	}
+
+	public Double getLevelBehind() {
+		return levelBehind;
+	}
+
+	public void setLevelBehind(Double levelBehind) {
+		this.levelBehind = levelBehind;
+	}
+
+	public Double getRiseFall() {
+		return riseFall;
+	}
+
+	public void setRiseFall(Double riseFall) {
+		this.riseFall = riseFall;
+	}
 
 	public Integer getId() {
 		return id;

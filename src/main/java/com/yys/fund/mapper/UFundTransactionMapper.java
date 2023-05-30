@@ -1,6 +1,6 @@
 package com.yys.fund.mapper;
 
-import com.yys.fund.entity.FFundNetWorth;
+import com.yys.fund.entity.FFundNetWorthTemp;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -30,8 +30,9 @@ public interface UFundTransactionMapper {
     Integer updateFundTransactionPurchaseForTask();
     Integer updateFundTransactionSellForTask();
     Integer updateFundTransactionMinimumForTask();
+    Integer updateFundTransactionTotalAmountForTask();
     Integer updateFundTransactionMinimumInitialForTask();
 
-    Integer updateFundTransactionPurchaseForTemp( FFundNetWorth fundNetWorth);
+    Integer updateFundTransactionPurchaseForTemp( FFundNetWorthTemp fundNetWorth);
     int deleteUserFundTransaction(Map map);
 }
