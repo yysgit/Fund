@@ -6,6 +6,7 @@
     <!-- import CSS -->
     <link rel="stylesheet" href="/static/elementUI/index.css">
     <style>
+
         .el-select {
             width: 100%;
         }
@@ -82,7 +83,7 @@
             <el-pagination
                     :page-size="page.pageSize"
                     :pager-count="11"
-                    layout="prev, pager, next"
+                    layout="total,prev, pager, next"
                     @current-change="changePage"
                     @prev-click="changePage"
                     @next-click="changePage"

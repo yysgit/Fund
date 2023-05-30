@@ -32,7 +32,7 @@
         <if test="fundName!=null and fundName!='' ">
             and ffi.fund_name LIKE concat(concat("%",#{fundName}),"%"))
         </if>
-        order by uftp.fund_info_code, uftp.purchase_time desc, uftp.yield desc limit #{page}, #{limit};
+        order by uftp.purchase_time desc, uftp.fund_info_code,  uftp.yield desc limit #{page}, #{limit};
     </select>
     <select id="findFundTransactionPurchaseCount" resultType="java.lang.Integer" parameterType="java.util.Map">
         select count(*)
@@ -81,7 +81,7 @@
             and ffi.fund_name LIKE concat(concat("%",#{fundName}),"%"))
         </if>
 
-        order by ffi.sorting , uftp.purchase_time desc, uftp.yield desc limit #{page}, #{limit};
+        order by uftp.purchase_time desc, ffi.sorting , uftp.yield desc limit #{page}, #{limit};
     </select>
     <select id="findFundTransactionPurchaseCountGroupBy" resultType="java.lang.Integer" parameterType="java.util.Map">
         select count(*)
@@ -124,7 +124,7 @@
         <if test="fundName!=null and fundName!='' ">
             and ffi.fund_name LIKE concat(concat("%",#{fundName}),"%"))
         </if>
-        order by ufts.fund_info_code, ufts.yield, ufts.sell_time desc limit #{page}, #{limit};
+        order by ufts.sell_time desc ,ufts.fund_info_code, ufts.yield limit #{page}, #{limit};
     </select>
     <select id="findFundTransactionSellCount" resultType="java.lang.Integer" parameterType="java.util.Map">
         select count(*)

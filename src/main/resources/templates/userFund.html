@@ -6,8 +6,13 @@
     <!-- import CSS -->
     <link rel="stylesheet" href="/static/elementUI/index.css">
     <style>
+
         .el-select,.el-date-editor{
             width: 100%!important;
+        }
+
+        .el-table .click-row {
+            background: #9bceea;
         }
 
         .el-table .warning-row {
@@ -140,7 +145,7 @@
             <el-pagination
                     :page-size="page.pageSize"
                     :pager-count="11"
-                    layout="prev, pager, next"
+                    layout="total,prev, pager, next"
                     @current-change="changePage"
                     @prev-click="changePage"
                     @next-click="changePage"
@@ -222,7 +227,9 @@
         },
         methods: {
             tableRowClassName({row, rowIndex}) {
-                if (rowIndex % 4 == 1) {
+                if (row.edit) {
+                    return 'click-row';
+                } else if (rowIndex % 4 == 1) {
                     return 'warning-row';
                 } else if (rowIndex % 4 == 3) {
                     return 'success-row';
