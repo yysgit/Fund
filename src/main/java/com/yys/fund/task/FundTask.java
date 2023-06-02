@@ -37,7 +37,7 @@ public class FundTask {
      */
     //    @Scheduled(cron = "* */4 * * * ?")
 //        @Scheduled(cron = " 0 54 2 * * *")
-    @Scheduled(cron = " 0 */5 8-23 * * mon,tue,wed,thu,fri,sat")
+    @Scheduled(cron = " 0 */5 7-16 * * mon,tue,wed,thu,fri,sat")
     public void task1() {
         for (int i = 0; i < 1000; i++) {
             Map map = new HashMap();
@@ -106,7 +106,7 @@ public class FundTask {
      * 更新每天基金的真实基金净值  每天凌晨1点执行一次：0 0 1 * * ?
      */
 //    @Scheduled(cron = "* */4 * * * ?")
-    @Scheduled(cron = " 0 */10 1-2 * * mon,tue,wed,thu,fri,sat")
+    @Scheduled(cron = " 0 */10 0-2 * * mon,tue,wed,thu,fri,sat")
 //    @Scheduled(cron = " 0 */3 8-23 * * mon,tue,wed,thu,fri,sat")
     public void task2() {
         for (int i = 0; i < 1000; i++) {
@@ -133,13 +133,13 @@ public class FundTask {
                         fundDataMySQL.put("maxNetWorth", fundDateNet.get("maxNetWorth"));
                         fundDataMySQL.put("maxNetWorthDate", fundDateNet.get("maxNetWorthDate"));
                         fundDataMySQL.put("fundName", fundDateNet.get("fundName"));
-                        Map mapFundLevel = getMapFundLevelForTask(Double.parseDouble(fundDataMySQL.get("maxNetWorth").toString()), String.valueOf(fundDataMySQL.get("fundCode")), Double.parseDouble(String.valueOf(fundDataMySQL.get("volatilityValue"))));
+                        Map mapFundLevel = SendRequest.getMapFundLevelForTask(Double.parseDouble(fundDataMySQL.get("maxNetWorth").toString()), String.valueOf(fundDataMySQL.get("fundCode")), Double.parseDouble(String.valueOf(fundDataMySQL.get("volatilityValue"))));
                         //更新基金信息的最大值净值和最大净值日期
                         fundInfoMapper.updateFundInfoForNetWorth(fundDataMySQL);
 
                         //添加基金等级
                         if (fundDataMySQL.get("fundLevelId") == null || "".equals(fundDataMySQL.get("fundLevelId"))) {
-                            Map mapFundLevel2 = getMapFundLevelForTask(Double.parseDouble(fundDataMySQL.get("maxNetWorth").toString()), String.valueOf(fundDataMySQL.get("fundCode")), Double.parseDouble(String.valueOf(fundDataMySQL.get("volatilityValue"))));
+                            Map mapFundLevel2 = SendRequest.getMapFundLevelForTask(Double.parseDouble(fundDataMySQL.get("maxNetWorth").toString()), String.valueOf(fundDataMySQL.get("fundCode")), Double.parseDouble(String.valueOf(fundDataMySQL.get("volatilityValue"))));
                             fundLevelMapper.addFundLevel(mapFundLevel2);
                         } else {
                             //更新基金等级
@@ -188,56 +188,10 @@ public class FundTask {
                 break;
             }
         }
-
+        this.task1();
     }
 
 
-    private Map getMapFundLevelForTask(double maxNetWorth, String fundCode, double volatilityValue) {
-        //更新等级
-        Map mapFundLevel = new HashMap();
-        mapFundLevel.put("fundInfoCode", fundCode);
-        double d = maxNetWorth * (1 - volatilityValue);
-        mapFundLevel.put("level1", d);
-        d = d * (1 - volatilityValue);
-        mapFundLevel.put("level2", d);
-        d = d * (1 - volatilityValue);
-        mapFundLevel.put("level3", d);
-        d = d * (1 - volatilityValue);
-        mapFundLevel.put("level4", d);
-        d = d * (1 - volatilityValue);
-        mapFundLevel.put("level5", d);
-        d = d * (1 - volatilityValue);
-        mapFundLevel.put("level6", d);
-        d = d * (1 - volatilityValue);
-        mapFundLevel.put("level7", d);
-        d = d * (1 - volatilityValue);
-        mapFundLevel.put("level8", d);
-        d = d * (1 - volatilityValue);
-        mapFundLevel.put("level9", d);
-        d = d * (1 - volatilityValue);
-        mapFundLevel.put("level10", d);
-        d = d * (1 - volatilityValue);
-        mapFundLevel.put("level11", d);
-        d = d * (1 - volatilityValue);
-        mapFundLevel.put("level12", d);
-        d = d * (1 - volatilityValue);
-        mapFundLevel.put("level13", d);
-        d = d * (1 - volatilityValue);
-        mapFundLevel.put("level14", d);
-        d = d * (1 - volatilityValue);
-        mapFundLevel.put("level15", d);
-        d = d * (1 - volatilityValue);
-        mapFundLevel.put("level16", d);
-        d = d * (1 - volatilityValue);
-        mapFundLevel.put("level17", d);
-        d = d * (1 - volatilityValue);
-        mapFundLevel.put("level18", d);
-        d = d * (1 - volatilityValue);
-        mapFundLevel.put("level19", d);
-        d = d * (1 - volatilityValue);
-        mapFundLevel.put("level20", d);
-        return mapFundLevel;
-    }
 
 
     /**

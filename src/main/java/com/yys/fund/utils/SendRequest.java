@@ -283,6 +283,52 @@ public class SendRequest {
         return fundDataStr;
     }
 
+    public  static Map getMapFundLevelForTask(double maxNetWorth, String fundCode, double volatilityValue) {
+        //更新等级
+        Map mapFundLevel = new HashMap();
+        mapFundLevel.put("fundInfoCode", fundCode);
+        double d = maxNetWorth * (1 - volatilityValue);
+        mapFundLevel.put("level1", d);
+        d = d * (1 - volatilityValue);
+        mapFundLevel.put("level2", d);
+        d = d * (1 - volatilityValue);
+        mapFundLevel.put("level3", d);
+        d = d * (1 - volatilityValue);
+        mapFundLevel.put("level4", d);
+        d = d * (1 - volatilityValue);
+        mapFundLevel.put("level5", d);
+        d = d * (1 - volatilityValue);
+        mapFundLevel.put("level6", d);
+        d = d * (1 - volatilityValue);
+        mapFundLevel.put("level7", d);
+        d = d * (1 - volatilityValue);
+        mapFundLevel.put("level8", d);
+        d = d * (1 - volatilityValue);
+        mapFundLevel.put("level9", d);
+        d = d * (1 - volatilityValue);
+        mapFundLevel.put("level10", d);
+        d = d * (1 - volatilityValue);
+        mapFundLevel.put("level11", d);
+        d = d * (1 - volatilityValue);
+        mapFundLevel.put("level12", d);
+        d = d * (1 - volatilityValue);
+        mapFundLevel.put("level13", d);
+        d = d * (1 - volatilityValue);
+        mapFundLevel.put("level14", d);
+        d = d * (1 - volatilityValue);
+        mapFundLevel.put("level15", d);
+        d = d * (1 - volatilityValue);
+        mapFundLevel.put("level16", d);
+        d = d * (1 - volatilityValue);
+        mapFundLevel.put("level17", d);
+        d = d * (1 - volatilityValue);
+        mapFundLevel.put("level18", d);
+        d = d * (1 - volatilityValue);
+        mapFundLevel.put("level19", d);
+        d = d * (1 - volatilityValue);
+        mapFundLevel.put("level20", d);
+        return mapFundLevel;
+    }
 
 
     public static void main(String[] args) {
