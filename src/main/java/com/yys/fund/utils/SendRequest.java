@@ -261,12 +261,29 @@ public class SendRequest {
             fundInfoParam.put("fundDay", simpleDateFormat.parse(resultDate.substring(0, 10)).getTime());
             fundInfoParam.put("fundNetWorth", jsonObject.get("gsz"));
             fundInfoParam.put("riseFall", jsonObject.get("gszzl"));
+            fundInfoParam.put("settlementNewWorth", jsonObject.get("dwjz"));
+            fundInfoParam.put("settlementDay", jsonObject.get("jzrq"));
             return fundInfoParam;
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
+
+    public static String getFundDataListThree(String id,long timestamp) {
+        String result =  sendGet("https://fund.eastmoney.com/pingzhongdata/"+id+".js?v="+timestamp,"");
+        String[] resultList=  result.split(";");
+        String fundDataStr=null;
+        for(String resultStr: resultList){
+            if(resultStr.indexOf("Data_ACWorthTrend")!=-1){
+                String[] fundDataList=resultStr.split("=");
+                fundDataStr = fundDataList[1];
+            };
+        }
+        return fundDataStr;
+    }
+
+
 
     public static void main(String[] args) {
         Map result = SendRequest.getFundDataListTwo("012414", new Date().getTime());

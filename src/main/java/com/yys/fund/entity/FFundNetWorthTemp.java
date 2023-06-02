@@ -45,6 +45,25 @@ public class FFundNetWorthTemp {
 	 * 涨跌
 	 */
 	private Double riseFall;
+	private Double settlementNewWorth;
+	private Date settlementDay;
+
+
+	public Double getSettlementNewWorth() {
+		return settlementNewWorth;
+	}
+
+	public void setSettlementNewWorth(Double settlementNewWorth) {
+		this.settlementNewWorth = settlementNewWorth;
+	}
+
+	public Date getSettlementDay() {
+		return settlementDay;
+	}
+
+	public void setSettlementDay(Date settlementDay) {
+		this.settlementDay = settlementDay;
+	}
 
 	public Integer getLevelNumber() {
 		return levelNumber;

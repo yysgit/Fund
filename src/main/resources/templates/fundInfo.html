@@ -6,10 +6,7 @@
     <!-- import CSS -->
     <link rel="stylesheet" href="/static/elementUI/index.css">
     <style>
-        html {
-            transform: scale(0.75);
-            transform-origin: 0 0;
-        }
+
         .el-select {
             width: 100%;
         }
@@ -103,7 +100,9 @@
                         width="80"
                         label="基金代码">
                     <template slot-scope="scope">
-                        <span v-if=" !scope.row.edit">{{scope.row.fundCode}}</span>
+                        <span v-if=" !scope.row.edit">
+                            <a target="_blank" :href="'/fund/fundInfo/fundHighcharts.html?fundCode='+scope.row.fundCode">{{scope.row.fundCode}}</a>
+                        </span>
                         <el-input v-else="scope.row.edit" v-model="scope.row.fundCode"
                                   @blur="levelChange(scope.row)">{{scope.row.fundCode}}
                         </el-input>

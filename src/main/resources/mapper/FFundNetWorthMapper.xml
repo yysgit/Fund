@@ -75,6 +75,8 @@
           , level_front          = #{levelFront}
           , level_behind          = #{levelBehind}
           , rise_fall          = #{riseFall}
+          , settlement_new_worth          = #{settlementNewWorth}
+          , settlement_day        = #{settlementDay}
         where fund_info_code = #{fundInfoCode}
     </update>
 

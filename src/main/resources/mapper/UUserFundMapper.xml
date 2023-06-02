@@ -81,7 +81,39 @@
                             where user_id = #{userId}
                             GROUP BY sell_time
                         ) amont
-               ) AS income_6
+               ) AS income_6,
+               (
+                   SELECT sum(amont.incomeAmount)
+                   FROM (
+                            SELECT sum(today_profit_amount) AS incomeAmount
+                            FROM u_user_fund
+                            where user_id = #{userId}
+                        ) amont
+               ) AS income_7,
+               (
+                   SELECT sum(amont.incomeAmount)
+                   FROM (
+                            SELECT sum(new_amount) AS incomeAmount
+                            FROM u_user_fund
+                            where user_id = #{userId}
+                        ) amont
+               ) AS income_8,
+               (
+                   SELECT sum(amont.incomeAmount)
+                   FROM (
+                            SELECT sum(profit_amount) AS incomeAmount
+                            FROM u_user_fund
+                            where user_id = #{userId}
+                        ) amont
+               ) AS income_9,
+               (
+                   SELECT sum(amont.incomeAmount)
+                   FROM (
+                            SELECT sum(total_amount) AS incomeAmount
+                            FROM u_user_fund
+                            where user_id = #{userId}
+                        ) amont
+               ) AS income_10
         from db_user
         where id = #{userId}
     </select>
@@ -233,7 +265,11 @@
                ffnwt.level_number        as levelNumber,
                uftp.yield                as yield,
                ffnwt.rise_fall           as riseFall,
-               uuf.total_amount          as totalAmount
+               uuf.total_amount          as totalAmount,
+               uuf.total_share           as totalShare,
+               uuf.new_amount            as newAmount,
+               uuf.profit_amount         as profitAmount,
+               uuf.today_profit_amount   as todayProfitAmount
         from u_user_fund uuf
                  left join db_user dbu on dbu.id = uuf.user_id
                  left join f_fund_info ffi on ffi.fund_code = uuf.fund_info_code

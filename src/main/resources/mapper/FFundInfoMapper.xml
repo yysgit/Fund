@@ -24,7 +24,8 @@
                ffi.sorting,
                ffnwt.id AS fundNetWorthTempId,
                ffl.id AS fundLevelId,
-               ffi.volatility_value AS volatilityValue
+               ffi.volatility_value AS volatilityValue,
+               ffi.bonus_net_worth AS bonusNetWorth
         from f_fund_info ffi
         left join f_fund_type fft on fft.id=ffi.fund_type_id
         left join f_fund_net_worth_temp ffnwt on ffi.fund_code=ffnwt.fund_info_code

@@ -13,6 +13,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -71,6 +72,12 @@ public class FundTask {
                     fundNetWorth.setLevelFront(levelFront);
                     fundNetWorth.setLevelBehind(levelBehind);
                     fundNetWorth.setRiseFall(Double.parseDouble(fundDateNet.get("riseFall").toString()));
+                    fundNetWorth.setSettlementNewWorth(Double.parseDouble(fundDateNet.get("settlementNewWorth").toString()));
+                    try{
+                        fundNetWorth.setSettlementDay(new SimpleDateFormat("yyyy-MM-dd").parse(fundDateNet.get("settlementDay").toString()));
+                    }catch ( Exception e){
+
+                    }
 
                     if (fundDataMySQL.get("fundNetWorthTempId") == null || "".equals(fundDataMySQL.get("fundNetWorthTempId"))) {
                         fundNetWorthMapper.deleteFundNetWorthTemp(fundNetWorth.getFundInfoCode());

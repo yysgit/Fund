@@ -90,7 +90,7 @@
                         width="80"
                         label="基金代码">
                     <template slot-scope="scope">
-                        <span>{{scope.row.fundCode}}</span>
+                        <span><a target="_blank" :href="'/fund/fundInfo/fundHighcharts.html?fundCode='+scope.row.fundCode">{{scope.row.fundCode}}</a> </span>
                     </template>
                 </el-table-column>
 
@@ -120,7 +120,7 @@
                 <el-table-column
                         sortable
                         prop="riseFall"
-                        label="涨跌">
+                        label="今日涨跌">
 
                     <template slot-scope="scope">
                        <span v-if="parseFloat(scope.row.riseFall)>0 "
@@ -129,23 +129,54 @@
                               style="color: green">{{scope.row.riseFall + '%'}}</span>
                     </template>
                 </el-table-column>
+
+                <el-table-column
+                        sortable
+                        prop="todayProfitAmount"
+                        label="今日盈利">
+
+                    <template slot-scope="scope">
+                       <span v-if="parseFloat(scope.row.todayProfitAmount)>0 "
+                             style="color: red">{{scope.row.todayProfitAmount}}</span>
+                        <span v-else-if="parseFloat(scope.row.todayProfitAmount)<=0 "
+                              style="color: green">{{scope.row.todayProfitAmount}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        sortable
+                        prop="newAmount"
+                        label="持有总金额">
+                    <template slot-scope="scope">
+                        <span>{{scope.row.newAmount}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        sortable
+                        prop="profitAmount"
+                        label="持有盈利">
+                    <template slot-scope="scope">
+                       <span v-if="parseFloat(scope.row.profitAmount)>0 "
+                             style="color: red">{{scope.row.profitAmount}}</span>
+                        <span v-else-if="parseFloat(scope.row.profitAmount)<=0 "
+                              style="color: green">{{scope.row.profitAmount}}</span>
+                    </template>
+                </el-table-column>
                 <el-table-column
                         sortable
                         prop="totalAmount"
-                        label="总金额">
+                        label="买入总金额">
                     <template slot-scope="scope">
                         <span>{{scope.row.totalAmount}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column
                         sortable
-                        label="盈利">
+                        prop="totalShare"
+                        label="持有总份额">
                     <template slot-scope="scope">
-                        <span>{{(parseFloat(scope.row.totalAmount)*parseFloat(scope.row.riseFall)/100).toFixed(2)}}</span>
+                        <span>{{scope.row.totalShare}}</span>
                     </template>
                 </el-table-column>
-
-
                 <el-table-column
                         sortable
                         prop="volatilityValue"

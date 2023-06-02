@@ -39,6 +39,9 @@
                 <el-table-column
                         prop="fundInfoCode"
                         label="代码">
+                    <template slot-scope="scope">
+                        <span><a target="_blank" :href="'/fund/fundInfo/fundHighcharts.html?fundCode='+scope.row.fundInfoCode">{{scope.row.fundInfoCode}}</a> </span>
+                    </template>
                 </el-table-column>
                 <el-table-column
                         prop="maxNetWorthDate"

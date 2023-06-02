@@ -9,6 +9,7 @@ import com.yys.fund.service.UUserFundService;
 import com.yys.fund.service.impl.FundLevelServiceImpl;
 import com.yys.fund.task.FundTask;
 import com.yys.fund.utils.ResultUtil;
+import com.yys.fund.utils.SendRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -53,6 +55,49 @@ public class FundInfoController {
     public String fundHtml() {
         return "fundInfo";
     }
+
+
+    @RequestMapping("/fundHighcharts.html")
+    public String fundHighcharts(){
+
+        return "fundHighcharts.html";
+    }
+    @RequestMapping("/fundHighchartsForBonusNetWorth")
+    @ResponseBody
+    public ResultUtil fundHighchartsForBonusNetWorth() {
+        Map map = new HashMap();
+        map.put("page", 0);
+        map.put("limit", 10000);
+        List<Map> mapList = fundInfoService.findFundInfoList(map);
+        Map fundMapBonusNetWorth = new HashMap();
+        Map fundMapVolatilityValue = new HashMap();
+        for (Map map1 : mapList) {
+            fundMapBonusNetWorth.put(map1.get("fundCode"), map1.get("bonusNetWorth"));
+            fundMapVolatilityValue.put(map1.get("fundCode"), (1-Double.parseDouble(map1.get("volatilityValue").toString())));
+        }
+
+
+        Map resultMap=new HashMap();
+        resultMap.put("fundMapBonusNetWorth",fundMapBonusNetWorth);
+        resultMap.put("fundMapVolatilityValue",fundMapVolatilityValue);
+        resultMap.put("fundList",mapList);
+
+        ResultUtil resultUtil = new ResultUtil();
+        resultUtil.setData(resultMap);
+        resultUtil.setMsg("查询成功!");
+        resultUtil.setCode(ExceptionConstant.SUCCESS_HTTPREUQEST);
+        return resultUtil;
+    }
+
+    @RequestMapping("getFundDataListOne")
+    @ResponseBody
+    public String getFundDataListOne(HttpServletRequest request,String fundId) {
+        long timestamp=System.currentTimeMillis();
+        return SendRequest.getFundDataListThree(fundId,timestamp);
+    }
+
+
+
 
 
     /**

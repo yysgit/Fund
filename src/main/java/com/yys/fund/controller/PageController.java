@@ -19,4 +19,5 @@ public class PageController {
     public String index2(){
         return "index.html";
     }
+
 }

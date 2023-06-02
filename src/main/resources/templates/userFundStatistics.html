@@ -183,6 +183,91 @@
                 </div>
             </el-col>
 
+            <el-col :span="4" style="    margin-top: 20px;">
+                <div class="content-con">
+                    <div class="left-area" style="background: rgb(236,243,149); width: 24%;"><i
+                            class="el-icon-warning"
+                            style="font-size: 36px; color: rgb(255, 255, 255);"></i></div>
+                    <div class="right-area" style="width: 76%;">
+                        <div>
+                            <div class="count-to-wrapper"><p class="content-outer"><span
+                                    class="count-to-count-text count-style" id="count_to_7">0</span><i
+                                    class="count-to-unit-text"></i></p></div>
+                            <p>今日盈收</p></div>
+                    </div>
+                </div>
+            </el-col>
+            <el-col :span="4" style="    margin-top: 20px;">
+                <div class="content-con">
+                    <div class="left-area" style="background: rgb(250,33,142); width: 24%;"><i
+                            class="el-icon-warning"
+                            style="font-size: 36px; color: rgb(255, 255, 255);"></i></div>
+                    <div class="right-area" style="width: 76%;">
+                        <div>
+                            <div class="count-to-wrapper"><p class="content-outer"><span
+                                    class="count-to-count-text count-style" id="count_to_11">0</span><i
+                                    class="count-to-unit-text"></i></p></div>
+                            <p>今日收益率</p></div>
+                    </div>
+                </div>
+            </el-col>
+            <el-col :span="4" style="    margin-top: 20px;">
+                <div class="content-con">
+                    <div class="left-area" style="background: rgb(181,246,111); width: 24%;"><i
+                            class="el-icon-warning"
+                            style="font-size: 36px; color: rgb(255, 255, 255);"></i></div>
+                    <div class="right-area" style="width: 76%;">
+                        <div>
+                            <div class="count-to-wrapper"><p class="content-outer"><span
+                                    class="count-to-count-text count-style" id="count_to_8">0</span><i
+                                    class="count-to-unit-text"></i></p></div>
+                            <p>持有总金额</p></div>
+                    </div>
+                </div>
+            </el-col>
+            <el-col :span="4" style="    margin-top: 20px;">
+                <div class="content-con">
+                    <div class="left-area" style="background: rgb(112,246,166); width: 24%;"><i
+                            class="el-icon-warning"
+                            style="font-size: 36px; color: rgb(255, 255, 255);"></i></div>
+                    <div class="right-area" style="width: 76%;">
+                        <div>
+                            <div class="count-to-wrapper"><p class="content-outer"><span
+                                    class="count-to-count-text count-style" id="count_to_9">0</span><i
+                                    class="count-to-unit-text"></i></p></div>
+                            <p>持有总盈利</p></div>
+                    </div>
+                </div>
+            </el-col>
+            <el-col :span="4" style="    margin-top: 20px;">
+                <div class="content-con">
+                    <div class="left-area" style="background: rgb(74,214,245); width: 24%;"><i
+                            class="el-icon-warning"
+                            style="font-size: 36px; color: rgb(255, 255, 255);"></i></div>
+                    <div class="right-area" style="width: 76%;">
+                        <div>
+                            <div class="count-to-wrapper"><p class="content-outer"><span
+                                    class="count-to-count-text count-style" id="count_to_12">0</span><i
+                                    class="count-to-unit-text"></i></p></div>
+                            <p>持有收益率</p></div>
+                    </div>
+                </div>
+            </el-col>
+            <el-col :span="4" style="    margin-top: 20px;">
+                <div class="content-con">
+                    <div class="left-area" style="background: rgb(194,136,248); width: 24%;"><i
+                            class="el-icon-warning"
+                            style="font-size: 36px; color: rgb(255, 255, 255);"></i></div>
+                    <div class="right-area" style="width: 76%;">
+                        <div>
+                            <div class="count-to-wrapper"><p class="content-outer"><span
+                                    class="count-to-count-text count-style" id="count_to_10">0</span><i
+                                    class="count-to-unit-text"></i></p></div>
+                            <p>买入总金额</p></div>
+                    </div>
+                </div>
+            </el-col>
+
         </el-row>
 
 
@@ -267,16 +352,31 @@
                 let that = this;
                 axios.post('/fund/userFund/fundUserFundIncomeStatistics')
                     .then(function (res) {
-                        that.getCountUp('count_to_1', (res.data.data[0]['income_1']==null ? 0:res.data.data[0]['income_1']));
-                        that.getCountUp('count_to_2', (res.data.data[0]['income_2']==null ? 0:res.data.data[0]['income_2']));
-                        that.getCountUp('count_to_3', (res.data.data[0]['income_3']==null ? 0:res.data.data[0]['income_3']));
-                        that.getCountUp('count_to_4', (res.data.data[0]['income_4']==null ? 0:res.data.data[0]['income_4']));
-                        that.getCountUp('count_to_5', (res.data.data[0]['income_5']==null ? 0:res.data.data[0]['income_5']));
-                        that.getCountUp('count_to_6', (res.data.data[0]['income_6']==null ? 0:res.data.data[0]['income_6']));
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
+
+                        let income_7 = res.data.data[0]['income_7'] == null ? 0 : res.data.data[0]['income_7'];
+                        let income_8 = res.data.data[0]['income_8'] == null ? 0 : res.data.data[0]['income_8'];
+                        let income_9 = res.data.data[0]['income_9'] == null ? 0 : res.data.data[0]['income_9'];
+                        let income_10 = res.data.data[0]['income_10'] == null ? 0 : res.data.data[0]['income_10'];
+                        let count_to_11 = parseFloat(Number(income_7) / Number(income_8) * 100).toFixed(2);
+                        let count_to_12 = parseFloat(Number(income_9) / Number(income_10) * 100).toFixed(2);
+
+
+
+                        that.getCountUp('count_to_1', (res.data.data[0]['income_1'] == null ? 0 : res.data.data[0]['income_1']),"");
+                        that.getCountUp('count_to_2', (res.data.data[0]['income_2'] == null ? 0 : res.data.data[0]['income_2']),"");
+                        that.getCountUp('count_to_3', (res.data.data[0]['income_3'] == null ? 0 : res.data.data[0]['income_3']),"");
+                        that.getCountUp('count_to_4', (res.data.data[0]['income_4'] == null ? 0 : res.data.data[0]['income_4']),"");
+                        that.getCountUp('count_to_5', (res.data.data[0]['income_5'] == null ? 0 : res.data.data[0]['income_5']),"");
+                        that.getCountUp('count_to_6', (res.data.data[0]['income_6'] == null ? 0 : res.data.data[0]['income_6']),"");
+                        that.getCountUp('count_to_7', (res.data.data[0]['income_7'] == null ? 0 : res.data.data[0]['income_7']),"");
+                        that.getCountUp('count_to_8', (res.data.data[0]['income_8'] == null ? 0 : res.data.data[0]['income_8']),"");
+                        that.getCountUp('count_to_9', (res.data.data[0]['income_9'] == null ? 0 : res.data.data[0]['income_9']),"");
+                        that.getCountUp('count_to_10', (res.data.data[0]['income_10'] == null ? 0 : res.data.data[0]['income_10']),"");
+                        that.getCountUp('count_to_11', count_to_11,"%");
+                        that.getCountUp('count_to_12', count_to_12,"%");
+                    }).catch(function (error) {
+                    console.log(error);
+                });
 
             },
             //买卖统计
@@ -289,101 +389,101 @@
                         .then(function (res) {
                             let tradeData = res.data.data[0];
                             console.log(tradeData['purchase_1']);
-                            console.log(tradeData['purchase_1']==null);
-                            console.log(tradeData['purchase_1']==null?0:tradeData['purchase_1']);
+                            console.log(tradeData['purchase_1'] == null);
+                            console.log(tradeData['purchase_1'] == null ? 0 : tradeData['purchase_1']);
 
                             let dataItem1 = [
                                 {
-                                    name: '买入:' + (tradeData['purchase_1']==null?0:tradeData['purchase_1']) + '元',
-                                    value: '' + (tradeData['purchase_1']==null?0:tradeData['purchase_1']),
+                                    name: '买入:' + (tradeData['purchase_1'] == null ? 0 : tradeData['purchase_1']) + '元',
+                                    value: '' + (tradeData['purchase_1'] == null ? 0 : tradeData['purchase_1']),
                                     label: {
                                         color: '#2d8cf0',
                                     }
                                 }, {
-                                    name: '卖出:' +( tradeData['sell_1']==null?0:tradeData['sell_1']) + '元',
-                                    value: '' +  (tradeData['sell_1']==null?0:tradeData['sell_1']) ,
+                                    name: '卖出:' + (tradeData['sell_1'] == null ? 0 : tradeData['sell_1']) + '元',
+                                    value: '' + (tradeData['sell_1'] == null ? 0 : tradeData['sell_1']),
                                     label: {
                                         color: '#ff0000',
                                     }
                                 }
                             ]
-                            that.pieEcharts('container1', dataItem1, '昨天买卖',['#2d8cf0','#ff0000']);
+                            that.pieEcharts('container1', dataItem1, '昨天买卖', ['#2d8cf0', '#ff0000']);
                             let dataItem2 = [
                                 {
-                                    name: '买入:' + (tradeData['purchase_2']==null?0:tradeData['purchase_2']) + '元',
-                                    value: '' + (tradeData['purchase_2']==null?0:tradeData['purchase_2']),
+                                    name: '买入:' + (tradeData['purchase_2'] == null ? 0 : tradeData['purchase_2']) + '元',
+                                    value: '' + (tradeData['purchase_2'] == null ? 0 : tradeData['purchase_2']),
                                     label: {
                                         color: '#19be6b',
                                     }
                                 }, {
-                                    name: '卖出:' + (tradeData['sell_2']==null?0:tradeData['sell_2']) + '元',
-                                    value: '' +(tradeData['sell_2']==null?0:tradeData['sell_2']),
+                                    name: '卖出:' + (tradeData['sell_2'] == null ? 0 : tradeData['sell_2']) + '元',
+                                    value: '' + (tradeData['sell_2'] == null ? 0 : tradeData['sell_2']),
                                     label: {
                                         color: '#ff0000',
                                     }
                                 }
                             ]
-                            that.pieEcharts('container2', dataItem2, '本周买卖',['#19be6b','#ff0000']);
+                            that.pieEcharts('container2', dataItem2, '本周买卖', ['#19be6b', '#ff0000']);
                             let dataItem3 = [
                                 {
-                                    name: '买入:' + (tradeData['purchase_3']==null?0:tradeData['purchase_3'] )+ '元',
-                                    value: '' + (tradeData['purchase_3']==null?0:tradeData['purchase_3']),
+                                    name: '买入:' + (tradeData['purchase_3'] == null ? 0 : tradeData['purchase_3']) + '元',
+                                    value: '' + (tradeData['purchase_3'] == null ? 0 : tradeData['purchase_3']),
                                     label: {
                                         color: '#ff9900',
                                     }
                                 }, {
-                                    name: '卖出:' + (tradeData['sell_3']==null?0:tradeData['sell_3']) + '元',
-                                    value: '' + (tradeData['sell_3']==null?0:tradeData['sell_3']),
+                                    name: '卖出:' + (tradeData['sell_3'] == null ? 0 : tradeData['sell_3']) + '元',
+                                    value: '' + (tradeData['sell_3'] == null ? 0 : tradeData['sell_3']),
                                     label: {
                                         color: '#ff0000',
                                     }
                                 }]
-                            that.pieEcharts('container3', dataItem3, '本月买卖',['#ff9900','#ff0000']);
+                            that.pieEcharts('container3', dataItem3, '本月买卖', ['#ff9900', '#ff0000']);
                             let dataItem4 = [
                                 {
-                                    name: '买入:' +(tradeData['purchase_4']==null?0:tradeData['purchase_4']) + '元',
-                                    value: '' + (tradeData['purchase_4']==null?0:tradeData['purchase_4']),
+                                    name: '买入:' + (tradeData['purchase_4'] == null ? 0 : tradeData['purchase_4']) + '元',
+                                    value: '' + (tradeData['purchase_4'] == null ? 0 : tradeData['purchase_4']),
                                     label: {
                                         color: '#008000',
                                     }
                                 }, {
-                                    name: '卖出:' + (tradeData['sell_4']==null?0:tradeData['sell_4']) + '元',
-                                    value: '' + (tradeData['sell_4']==null?0:tradeData['sell_4']),
+                                    name: '卖出:' + (tradeData['sell_4'] == null ? 0 : tradeData['sell_4']) + '元',
+                                    value: '' + (tradeData['sell_4'] == null ? 0 : tradeData['sell_4']),
                                     label: {
                                         color: '#ff0000',
                                     }
                                 }]
-                            that.pieEcharts('container4', dataItem4, '上月买卖',['#008000','#ff0000']);
+                            that.pieEcharts('container4', dataItem4, '上月买卖', ['#008000', '#ff0000']);
                             let dataItem5 = [
                                 {
-                                    name: '买入:' + (tradeData['purchase_5']==null?0:tradeData['purchase_5'] )+ '元',
-                                    value: '' + (tradeData['purchase_5']==null?0:tradeData['purchase_5']),
+                                    name: '买入:' + (tradeData['purchase_5'] == null ? 0 : tradeData['purchase_5']) + '元',
+                                    value: '' + (tradeData['purchase_5'] == null ? 0 : tradeData['purchase_5']),
                                     label: {
                                         color: '#e46cbb',
                                     }
                                 }, {
-                                    name: '卖出:' + (tradeData['sell_5']==null?0:tradeData['sell_5'])+ '元',
-                                    value: '' + (tradeData['sell_5']==null?0:tradeData['sell_5']),
+                                    name: '卖出:' + (tradeData['sell_5'] == null ? 0 : tradeData['sell_5']) + '元',
+                                    value: '' + (tradeData['sell_5'] == null ? 0 : tradeData['sell_5']),
                                     label: {
                                         color: '#ff0000',
                                     }
                                 }]
-                            that.pieEcharts('container5', dataItem5, '今年买卖',['#e46cbb','#ff0000']);
+                            that.pieEcharts('container5', dataItem5, '今年买卖', ['#e46cbb', '#ff0000']);
                             let dataItem6 = [
                                 {
-                                    name: '买入:' + (tradeData['purchase_6']==null?0:tradeData['purchase_6']) + '元',
-                                    value: '' + (tradeData['purchase_6']==null?0:tradeData['purchase_6']),
+                                    name: '买入:' + (tradeData['purchase_6'] == null ? 0 : tradeData['purchase_6']) + '元',
+                                    value: '' + (tradeData['purchase_6'] == null ? 0 : tradeData['purchase_6']),
                                     label: {
                                         color: '#9a66e4',
                                     }
                                 }, {
-                                    name: '卖出:' + (tradeData['sell_6']==null?0:tradeData['sell_6']) + '元',
-                                    value: '' + (tradeData['sell_6']==null?0:tradeData['sell_6']),
+                                    name: '卖出:' + (tradeData['sell_6'] == null ? 0 : tradeData['sell_6']) + '元',
+                                    value: '' + (tradeData['sell_6'] == null ? 0 : tradeData['sell_6']),
                                     label: {
                                         color: '#ff0000',
                                     }
                                 }]
-                            that.pieEcharts('container6', dataItem6, '全部买卖',['#9a66e4','#ff0000']);
+                            that.pieEcharts('container6', dataItem6, '全部买卖', ['#9a66e4', '#ff0000']);
                         })
                         .catch(function (error) {
                             console.log(error);
@@ -391,7 +491,7 @@
                 })
             },
             //饼图
-            pieEcharts(container, value, title,color) {
+            pieEcharts(container, value, title, color) {
                 let legend = value.map(_ => _.name)
                 let dom = document.getElementById(container);
                 let myChart = this.$echarts.init(dom, 'tdTheme', {
@@ -417,7 +517,7 @@
                         left: 'left',
                         data: legend
                     },
-                    color:color ,
+                    color: color,
                     series: [
                         {
                             type: 'pie',
@@ -441,7 +541,7 @@
             },
 
             //数字
-            getCountUp(count_to, endVal) {
+            getCountUp(count_to, endVal,suffix) {
                 this.$nextTick(() => {
                     let options = {
                         useEasing: true,  // 过渡动画效果，默认ture
@@ -449,7 +549,7 @@
                         separator: ',',   // 使用千分位时分割符号
                         decimal: '.',   // 小数位分割符号
                         prefix: '',    // 前置符号
-                        suffix: ''    // 后置符号，可汉字
+                        suffix: suffix    // 后置符号，可汉字
                     }
                     // target,startVal,endVal,decimals,duration,options
                     // dom节点, 初始值,  结束值, 小数位数, 过渡几秒 , 初始参数

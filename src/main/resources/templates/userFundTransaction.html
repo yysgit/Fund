@@ -6,7 +6,6 @@
     <!-- import CSS -->
     <link rel="stylesheet" href="/static/elementUI/index.css">
     <style>
-
         .el-select {
             width: 100%;
         }
@@ -66,7 +65,7 @@
                         label="代码"
                         align="center">
                     <template slot-scope="scope">
-                        <span>{{scope.row.fundInfoCode}}</span>
+                        <span><a target="_blank" :href="'/fund/fundInfo/fundHighcharts.html?fundCode='+scope.row.fundInfoCode">{{scope.row.fundInfoCode}}</a> </span>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -211,7 +210,7 @@
                         label="代码"
                         align="center">
                     <template slot-scope="scope">
-                        <span>{{scope.row.fundInfoCode}}</span>
+                        <span><a target="_blank" :href="'/fund/fundInfo/fundHighcharts.html?fundCode='+scope.row.fundInfoCode">{{scope.row.fundInfoCode}}</a> </span>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -357,7 +356,7 @@
                         label="代码"
                         align="center">
                     <template slot-scope="scope">
-                        <span>{{scope.row.fundInfoCode}}</span>
+                        <span><a target="_blank" :href="'/fund/fundInfo/fundHighcharts.html?fundCode='+scope.row.fundInfoCode">{{scope.row.fundInfoCode}}</a> </span>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -568,7 +567,7 @@
                 },
                 page1: {
                     pageCurrent: 1,
-                    pageSize: 200,
+                    pageSize: 100,
                     pageTotal: 0
                 },
                 page2: {
@@ -578,7 +577,7 @@
                 },
                 page3: {
                     pageCurrent: 1,
-                    pageSize: 100,
+                    pageSize: 200,
                     pageTotal: 0
                 },
                 dialogVisible: false,
