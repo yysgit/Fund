@@ -179,6 +179,29 @@
                 </el-table-column>
                 <el-table-column
                         sortable
+                        prop="purchaseRate"
+                        label="买入费率">
+                    <template slot-scope="scope">
+                        <span v-if=" !scope.row.edit">{{getYield(scope.row.purchaseRate) + '%'}}</span>
+                        <el-input v-else="scope.row.edit" v-model="scope.row.purchaseRate"
+                                  @blur="levelChange(scope.row)">{{scope.row.purchaseRate}}
+                        </el-input>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        sortable
+                        prop="sellRate"
+                        label="卖出费率">
+                    <template slot-scope="scope">
+                        <span v-if=" !scope.row.edit">{{getYield(scope.row.sellRate) + '%'}}</span>
+                        <el-input v-else="scope.row.edit" v-model="scope.row.sellRate"
+                                  @blur="levelChange(scope.row)">{{scope.row.sellRate}}
+                        </el-input>
+                    </template>
+                </el-table-column>
+
+                <!--<el-table-column
+                        sortable
                         prop="volatilityValue"
                         align="center"
                         label="基金等级利率">
@@ -198,7 +221,7 @@
                         align="center"
                         :formatter="dateFormatter"
                         label="基金最大净值日期">
-                </el-table-column>
+                </el-table-column>-->
             </el-table>
         </el-tab-pane>
 
@@ -222,6 +245,9 @@
             <el-form-item label="基金编号">
                 <el-input v-model="fundDataForm.fundCode"></el-input>
             </el-form-item>
+            <el-form-item label="基金名称">
+                <el-input v-model="fundDataForm.fundName"></el-input>
+            </el-form-item>
             <el-form-item label="选择日期">
                 <el-date-picker
                         v-model="fundDataForm.purchaseTime"
@@ -230,11 +256,19 @@
                         placeholder="选择日期">
                 </el-date-picker>
             </el-form-item>
-
-
-            <el-form-item label="金额">
+            <el-form-item label="买入总金额">
+                <el-input v-model="fundDataForm.purchaseAmountAll" @input="purchaseChange"></el-input>
+            </el-form-item>
+            <el-form-item label="买入费率">
+                <el-input v-model="fundDataForm.purchaseRate" @input="purchaseChange"></el-input>
+            </el-form-item>
+            <el-form-item label="买入费率金额">
+                <el-input v-model="fundDataForm.purchaseRateAmount"></el-input>
+            </el-form-item>
+            <el-form-item label="实际买入金额">
                 <el-input v-model="fundDataForm.purchaseAmount"></el-input>
             </el-form-item>
+
         </el-form>
 
 
@@ -259,8 +293,12 @@
                 tableData1: [],
                 fundDataForm: {
                     fundCode: '',
+                    fundName: '',
                     purchaseTime: '',
-                    purchaseAmount: '',
+                    purchaseAmountAll: 0,
+                    purchaseAmount: 0,
+                    purchaseRate: 0,
+                    purchaseRateAmount: 0,
                 },
                 page: {
                     pageCurrent: 1,
@@ -314,15 +352,24 @@
                 this.page.pageCurrent = page;
                 this.getFundInfoTable();
             },
+            //买入金额和买入费率改变时
+            purchaseChange(){
+                this.fundDataForm.purchaseRateAmount=parseFloat(this.fundDataForm.purchaseAmountAll*this.fundDataForm.purchaseRate).toFixed(4);
+                this.fundDataForm.purchaseAmount=parseFloat(this.fundDataForm.purchaseAmountAll).toFixed(4)-parseFloat(this.fundDataForm.purchaseRateAmount).toFixed(4);
+               },
             handleAddUserFundTransactionClick(index, row) {
                 this.fundDataForm.fundCode = row.fundCode;
+                this.fundDataForm.fundName = row.fundName;
+                this.fundDataForm.purchaseRate = row.purchaseRate;
                 this.fundDataForm.purchaseTime = this.dateFormat();
 
 
                 let that = this;
                 axios.post('/fund/fundLevelMoney/findFundLevelMoneyByFundInfoCode', this.fundDataForm)
                     .then(function (res) {
-                        that.fundDataForm.purchaseAmount = res.data.data[0]['money' + row.levelNumber];
+                        that.fundDataForm.purchaseAmountAll = res.data.data[0]['money' + row.levelNumber];
+                        that.fundDataForm.purchaseRateAmount=parseFloat(that.fundDataForm.purchaseAmountAll*that.fundDataForm.purchaseRate).toFixed(4);
+                        that.fundDataForm.purchaseAmount=parseFloat(that.fundDataForm.purchaseAmountAll).toFixed(4)-parseFloat(that.fundDataForm.purchaseRateAmount).toFixed(4);
                         that.dialogVisible = true;
                     })
                     .catch(function (error) {

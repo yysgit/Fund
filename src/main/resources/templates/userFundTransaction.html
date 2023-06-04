@@ -388,10 +388,10 @@
                 </el-table-column>
                 <el-table-column
                         sortable
-                        prop="purchaseAmount"
+                        prop="purchaseAmountAll"
                         label="买入金额">
                     <template slot-scope="scope">
-                        <span>{{scope.row.purchaseAmount}}</span>
+                        <span>{{scope.row.purchaseAmountAll}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -474,6 +474,9 @@
             <el-form-item label="基金编号">
                 <el-input v-model="fundDataForm.fundCode" clearable></el-input>
             </el-form-item>
+            <el-form-item label="基金名称">
+                <el-input v-model="fundDataForm.fundName" clearable></el-input>
+            </el-form-item>
             <el-form-item label="选择日期">
                 <el-date-picker clearable
                                 v-model="fundDataForm.sellTime"
@@ -483,7 +486,9 @@
                 </el-date-picker>
             </el-form-item>
 
-
+            <el-form-item label="卖出费率">
+                <el-input v-model="fundDataForm.sellRate"></el-input>
+            </el-form-item>
             <el-form-item label="份额">
                 <el-input v-model="fundDataForm.sellShare" clearable></el-input>
             </el-form-item>
@@ -517,9 +522,17 @@
                 </el-date-picker>
             </el-form-item>
 
-
-            <el-form-item label="金额">
-                <el-input v-model="fundDataFormPurchase.purchaseAmount" clearable></el-input>
+            <el-form-item label="买入总金额">
+                <el-input v-model="fundDataFormPurchase.purchaseAmountAll" @input="purchaseChange"></el-input>
+            </el-form-item>
+            <el-form-item label="买入费率">
+                <el-input v-model="fundDataFormPurchase.purchaseRate" @input="purchaseChange"></el-input>
+            </el-form-item>
+            <el-form-item label="买入费率金额">
+                <el-input v-model="fundDataFormPurchase.purchaseRateAmount"></el-input>
+            </el-form-item>
+            <el-form-item label="实际买入金额">
+                <el-input v-model="fundDataFormPurchase.purchaseAmount"></el-input>
             </el-form-item>
         </el-form>
 
@@ -556,7 +569,10 @@
                     fundCode: '',
                     fundName: '',
                     purchaseTime: '',
-                    purchaseAmount: '',
+                    purchaseAmountAll: 0,
+                    purchaseAmount: 0,
+                    purchaseRate: 0,
+                    purchaseRateAmount: 0,
                 },
 
                 fundDataForm: {
@@ -564,6 +580,7 @@
                     sellTime: '',
                     sellShare: '',
                     purchaseId: '',
+                    sellRate: '',
                 },
                 page1: {
                     pageCurrent: 1,
@@ -617,30 +634,41 @@
             handleAddUserFundTransactionClick3(index, row) {
                 this.fundDataFormPurchase.fundCode = row.fundInfoCode;
                 this.fundDataFormPurchase.fundName = row.fundName;
+                this.fundDataFormPurchase.purchaseRate = row.purchaseRate;
                 this.fundDataFormPurchase.purchaseTime = this.dateFormat();
 
                 let that = this;
                 axios.post('/fund/fundLevelMoney/findFundLevelMoneyByFundInfoCode', this.fundDataFormPurchase)
                     .then(function (res) {
-                        that.fundDataFormPurchase.purchaseAmount = res.data.data[0]['money' + row.levelNumber];
+                        that.fundDataFormPurchase.purchaseAmountAll = res.data.data[0]['money' + row.levelNumber];
+                        that.fundDataFormPurchase.purchaseRateAmount=parseFloat(that.fundDataFormPurchase.purchaseAmountAll*that.fundDataFormPurchase.purchaseRate).toFixed(4);
+                        that.fundDataFormPurchase.purchaseAmount=parseFloat(that.fundDataFormPurchase.purchaseAmountAll).toFixed(4)-parseFloat(that.fundDataFormPurchase.purchaseRateAmount).toFixed(4);
+
                         that.dialogVisiblePurchase = true;
                     })
                     .catch(function (error) {
                         console.log(error);
                     });
             },
-
+            purchaseChange(){
+                this.fundDataFormPurchase.purchaseRateAmount=parseFloat(this.fundDataFormPurchase.purchaseAmountAll*this.fundDataFormPurchase.purchaseRate).toFixed(4);
+                this.fundDataFormPurchase.purchaseAmount=parseFloat(this.fundDataFormPurchase.purchaseAmountAll).toFixed(4)-parseFloat(this.fundDataFormPurchase.purchaseRateAmount).toFixed(4);
+            },
             handleAddUserFundTransactionClick1(index, row) {
                 this.fundDataFormPurchase.fundCode = row.fundInfoCode;
                 this.fundDataFormPurchase.fundName = row.fundName;
-                this.fundDataFormPurchase.purchaseTime = this.dateFormatter(row, 0);
-                // this.fundDataFormPurchase.purchaseAmount = '';
+                this.fundDataFormPurchase.purchaseRate = row.purchaseRate;
+                this.fundDataFormPurchase.purchaseTime = this.dateFormatter(row,0);
+
 
 
                 let that = this;
                 axios.post('/fund/fundLevelMoney/findFundLevelMoneyByFundInfoCode', this.fundDataFormPurchase)
                     .then(function (res) {
-                        that.fundDataFormPurchase.purchaseAmount = res.data.data[0]['money' + row.levelNumber];
+                        that.fundDataFormPurchase.purchaseAmountAll = res.data.data[0]['money' + row.levelNumber];
+                        that.fundDataFormPurchase.purchaseRateAmount=parseFloat(that.fundDataFormPurchase.purchaseAmountAll*that.fundDataFormPurchase.purchaseRate).toFixed(4);
+                        that.fundDataFormPurchase.purchaseAmount=parseFloat(that.fundDataFormPurchase.purchaseAmountAll).toFixed(4)-parseFloat(that.fundDataFormPurchase.purchaseRateAmount).toFixed(4);
+
                         that.dialogVisiblePurchase = true;
                     })
                     .catch(function (error) {
@@ -701,8 +729,10 @@
 
             handleAddUserFundTransactionSellClick(index, row) {
                 this.fundDataForm.fundCode = row.fundInfoCode;
+                this.fundDataForm.fundName = row.fundName;
                 this.fundDataForm.sellTime = this.dateFormat();
                 this.fundDataForm.sellShare = row.purchaseShare;
+                this.fundDataForm.sellRate = row.sellRate;
                 this.fundDataForm.purchaseId = row.id;
                 this.dialogVisible = true;
             },

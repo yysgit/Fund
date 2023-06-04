@@ -8,18 +8,20 @@
         select uftp.id,
         uftp.fund_info_code as fundInfoCode,
         uuf.fund_info_name_number as fundInfoNameNumber,
+        uuf.purchase_rate as purchaseRate,
+        uuf.sell_rate as sellRate,
         ffi.fund_name as fundName,
         uftp.purchase_time as purchaseTime,
-        uftp.purchase_commission as purchaseCommission,
+        uftp.purchase_rate_amount as purchaseRateAmount,
         uftp.purchase_share as purchaseShare,
         uftp.purchase_net_worth as purchaseNetWorth,
         uftp.purchase_amount as purchaseAmount,
+        uftp.purchase_amount_all as purchaseAmountAll,
         uftp.yield as yield,
         uftp.income_amount as incomeAmount,
         uftp.today_time as todayTime,
         uftp.today_net_worth as todayNetWorth,
-        ffnwt.level_number as levelNumber,
-        uuf.fund_info_name_number as fundInfoNameNumber
+        ffnwt.level_number as levelNumber
         from u_fund_transaction_purchase uftp
         left join f_fund_info ffi on ffi.fund_code = uftp.fund_info_code
         left join u_user_fund uuf on uuf.fund_info_code = uftp.fund_info_code and uftp.user_id = uuf.user_id
@@ -60,9 +62,11 @@
         select uftp.id,
         uftp.fund_info_code as fundInfoCode,
         uuf.fund_info_name_number as fundInfoNameNumber,
+        uuf.purchase_rate as purchaseRate,
+        uuf.sell_rate as sellRate,
         ffi.fund_name as fundName,
         uftp.purchase_time as purchaseTime,
-        uftp.purchase_commission as purchaseCommission,
+        uftp.purchase_rate_amount as purchaseRateAmount,
         uftp.purchase_share as purchaseShare,
         uftp.purchase_net_worth as purchaseNetWorth,
         uftp.purchase_amount as purchaseAmount,
@@ -70,8 +74,7 @@
         uftp.income_amount as incomeAmount,
         uftp.today_time as todayTime,
         uftp.today_net_worth as todayNetWorth,
-        ffnwt.level_number as levelNumber,
-        uuf.fund_info_name_number as fundInfoNameNumber
+        ffnwt.level_number as levelNumber
         from u_fund_transaction_purchase uftp
         left join f_fund_info ffi on ffi.fund_code = uftp.fund_info_code
         left join u_user_fund uuf on uuf.fund_info_code = uftp.fund_info_code and uftp.user_id = uuf.user_id
@@ -110,10 +113,14 @@
         select ufts.id,
         ufts.fund_info_code as fundInfoCode,
         uuf.fund_info_name_number as fundInfoNameNumber,
+        uuf.purchase_rate as purchaseRate,
+        uuf.sell_rate as sellRate,
         ffi.fund_name as fundName,
         ufts.sell_time as sellTime,
         ufts.sell_amount as sellAmount,
-        ufts.sell_commission as sellCommission,
+        ufts.sell_rate_amount as sellRateAmount,
+        ufts.sell_rate as sellRate,
+        ufts.sell_amount_all as sellAmountAll,
         ufts.sell_share as sellShare,
         ufts.sell_net_worth as sellNetWorth,
         ufts.income_amount as incomeAmount,
@@ -147,13 +154,26 @@
 
 
     <insert id="addUserFundTtransactionPurchase" parameterType="java.util.Map">
-        insert into u_fund_transaction_purchase (user_id, fund_info_code, purchase_time, purchase_amount)
-        values (#{userId}, #{fundCode}, #{purchaseTime}, #{purchaseAmount});
+        insert into u_fund_transaction_purchase (user_id,
+                                                 fund_info_code,
+                                                 purchase_time,
+                                                 purchase_amount_all,
+                                                 purchase_rate,
+                                                 purchase_rate_amount,
+                                                 purchase_amount)
+        values (#{userId}, #{fundCode}, #{purchaseTime},
+                #{purchaseAmountAll},
+                #{purchaseRate},
+                #{purchaseRateAmount},
+                #{purchaseAmount});
     </insert>
 
     <insert id="addUserFundTtransactionSell" parameterType="java.util.Map">
-        insert into u_fund_transaction_sell (user_id, fund_info_code, sell_time, purchase_id, sell_share)
-        values (#{userId}, #{fundCode}, #{sellTime}, #{purchaseId}, #{sellShare});
+        insert into u_fund_transaction_sell (user_id, fund_info_code,
+                                             sell_time,
+                                             sell_rate,
+                                             purchase_id, sell_share)
+        values (#{userId}, #{fundCode}, #{sellTime}, #{sellRate}, #{purchaseId}, #{sellShare});
     </insert>
 
     <!--更新用户买入净值信息-->
@@ -201,18 +221,20 @@
     <!--更新用户卖出净值信息-->
     <update id="updateFundTransactionSellForTask">
         UPDATE u_fund_transaction_sell ufts
-        SET ufts.sell_net_worth = (select ffnw.fund_net_worth
-                                   from f_fund_net_worth ffnw
-                                   where ufts.fund_info_code = ffnw.fund_info_code
-                                     and ufts.sell_time = ffnw.fund_day),
-            ufts.sell_amount    =(select ufts.sell_share * ffnw.fund_net_worth
-                                  from f_fund_net_worth ffnw
-                                  where ufts.fund_info_code = ffnw.fund_info_code
-                                    and ufts.sell_time = ffnw.fund_day),
-            ufts.income_amount=(select ufts.sell_amount - uftp.purchase_amount - ufts.sell_commission
+        SET ufts.sell_net_worth   = (select ffnw.fund_net_worth
+                                     from f_fund_net_worth ffnw
+                                     where ufts.fund_info_code = ffnw.fund_info_code
+                                       and ufts.sell_time = ffnw.fund_day)
+          , ufts.sell_amount_all  =(select ufts.sell_share * ffnw.fund_net_worth
+                                    from f_fund_net_worth ffnw
+                                    where ufts.fund_info_code = ffnw.fund_info_code
+                                      and ufts.sell_time = ffnw.fund_day)
+          , ufts.sell_amount      =ufts.sell_amount_all * (1 - ufts.sell_rate)
+          , ufts.sell_rate_amount =ufts.sell_amount_all * ufts.sell_rate
+          , ufts.income_amount=(select ufts.sell_amount - uftp.purchase_amount_all
                                 from u_fund_transaction_purchase uftp
-                                where uftp.id = ufts.purchase_id),
-            ufts.yield=(select ufts.income_amount / uftp.purchase_amount
+                                where uftp.id = ufts.purchase_id)
+          , ufts.yield=(select ufts.income_amount / uftp.purchase_amount
                         from u_fund_transaction_purchase uftp
                         where uftp.id = ufts.purchase_id)
 
@@ -251,45 +273,43 @@
                         AND uftp.user_id = ffnwt.user_id
                   )
     </update>
-    <!--    total_share-->
-    <!--    new_amount-->
-    <!--    profit_amount-->
+
     <update id="updateFundTransactionTotalAmountForTask">
         UPDATE u_user_fund uuf
-        SET uuf.total_amount =(select ffnwt.purchase_amount
-                               from (
-                                        SELECT sum(uftp1.purchase_amount) purchase_amount,
-                                               uftp1.fund_info_code AS    fund_info_code,
-                                               uftp1.user_id
-                                        FROM u_fund_transaction_purchase uftp1
-                                        WHERE uftp1.state = 0
-                                        GROUP BY uftp1.fund_info_code,
-                                                 user_id
-                                    ) ffnwt
-                               where uuf.fund_info_code = ffnwt.fund_info_code
-                                 AND uuf.user_id = ffnwt.user_id),
-            uuf.total_share  =(select ffnwtt.purchase_share
-                               from (
-                                        SELECT sum(uftp11.purchase_share) purchase_share,
-                                               uftp11.fund_info_code AS   fund_info_code,
-                                               uftp11.user_id
-                                        FROM u_fund_transaction_purchase uftp11
-                                        WHERE uftp11.state = 0
-                                        GROUP BY uftp11.fund_info_code,
-                                                 user_id
-                                    ) ffnwtt
-                               where uuf.fund_info_code = ffnwtt.fund_info_code
-                                 AND uuf.user_id = ffnwtt.user_id),
+        SET uuf.total_amount       =(select ffnwt.purchase_amount
+                                     from (
+                                              SELECT sum(uftp1.purchase_amount) purchase_amount,
+                                                     uftp1.fund_info_code AS    fund_info_code,
+                                                     uftp1.user_id
+                                              FROM u_fund_transaction_purchase uftp1
+                                              WHERE uftp1.state = 0
+                                              GROUP BY uftp1.fund_info_code,
+                                                       user_id
+                                          ) ffnwt
+                                     where uuf.fund_info_code = ffnwt.fund_info_code
+                                       AND uuf.user_id = ffnwt.user_id),
+            uuf.total_share        =(select ffnwtt.purchase_share
+                                     from (
+                                              SELECT sum(uftp11.purchase_share) purchase_share,
+                                                     uftp11.fund_info_code AS   fund_info_code,
+                                                     uftp11.user_id
+                                              FROM u_fund_transaction_purchase uftp11
+                                              WHERE uftp11.state = 0
+                                              GROUP BY uftp11.fund_info_code,
+                                                       user_id
+                                          ) ffnwtt
+                                     where uuf.fund_info_code = ffnwtt.fund_info_code
+                                       AND uuf.user_id = ffnwtt.user_id),
             uuf.new_amount=uuf.total_share * (select ffnwt2.settlement_new_worth
                                               from f_fund_net_worth_temp ffnwt2
                                               where ffnwt2.fund_info_code = uuf.fund_info_code
             ),
 
-            uuf.profit_amount=uuf.new_amount-uuf.total_amount,
-            uuf.today_profit_amount= uuf.new_amount*(select ffnwt3.rise_fall
-                                              from f_fund_net_worth_temp ffnwt3
-                                              where ffnwt3.fund_info_code = uuf.fund_info_code
-            )/100
+            uuf.profit_amount=uuf.new_amount - uuf.total_amount,
+            uuf.today_profit_amount= uuf.new_amount * (select ffnwt3.rise_fall
+                                                       from f_fund_net_worth_temp ffnwt3
+                                                       where ffnwt3.fund_info_code = uuf.fund_info_code
+            ) / 100
 
     </update>
 

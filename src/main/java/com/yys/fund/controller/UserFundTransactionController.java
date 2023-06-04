@@ -143,7 +143,6 @@ public class UserFundTransactionController {
                 return ResultUtil.error("查询失败,未登录!");
             }
             map.put("userId", dbUser.getId());
-            //判断名称是否重复
             Integer num = fundTransactionService.addUserFundTtransactionPurchase(map);
             fundTask.taskForTransaction();
             return ResultUtil.success("买入成功!");

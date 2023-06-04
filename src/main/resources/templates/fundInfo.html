@@ -110,18 +110,6 @@
                 </el-table-column>
                 <el-table-column
                         sortable
-                        prop="volatilityValue"
-                        align="center"
-                        label="基金等级利率">
-                    <template slot-scope="scope">
-                        <span v-if=" !scope.row.edit">{{scope.row.volatilityValue}}</span>
-                        <el-input v-else="scope.row.edit" v-model="scope.row.volatilityValue"
-                                  @blur="levelChange(scope.row)">{{scope.row.volatilityValue}}
-                        </el-input>
-                    </template>
-                </el-table-column>
-                <el-table-column
-                        sortable
                         prop="sorting"
                         align="center"
                         label="排序">
@@ -132,6 +120,19 @@
                         </el-input>
                     </template>
                 </el-table-column>
+                <el-table-column
+                        sortable
+                        prop="volatilityValue"
+                        align="center"
+                        label="基金等级利率">
+                    <template slot-scope="scope">
+                        <span v-if=" !scope.row.edit">{{scope.row.volatilityValue}}</span>
+                        <el-input v-else="scope.row.edit" v-model="scope.row.volatilityValue"
+                                  @blur="levelChange(scope.row)">{{scope.row.volatilityValue}}
+                        </el-input>
+                    </template>
+                </el-table-column>
+
 
                 <el-table-column
                         sortable

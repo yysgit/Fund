@@ -131,7 +131,7 @@
                ) AS sell_1,
                (SELECT sum(amont.purchaseAmount)
                 FROM (
-                         SELECT sum(purchase_amount) AS purchaseAmount,
+                         SELECT sum(purchase_amount_all) AS purchaseAmount,
                                 purchase_time
                          FROM u_fund_transaction_purchase
                          where user_id = #{userId}
@@ -152,7 +152,7 @@
                ) AS sell_2,
                (SELECT sum(amont.purchaseAmount)
                 FROM (
-                         SELECT sum(purchase_amount) AS purchaseAmount,
+                         SELECT sum(purchase_amount_all) AS purchaseAmount,
                                 purchase_time
                          FROM u_fund_transaction_purchase
                          where user_id = #{userId}
@@ -173,7 +173,7 @@
                ) AS sell_3,
                (SELECT sum(amont.purchaseAmount)
                 FROM (
-                         SELECT sum(purchase_amount) AS purchaseAmount,
+                         SELECT sum(purchase_amount_all) AS purchaseAmount,
                                 purchase_time
                          FROM u_fund_transaction_purchase
                          where user_id = #{userId}
@@ -196,7 +196,7 @@
                ) AS sell_4,
                (SELECT sum(amont.purchaseAmount)
                 FROM (
-                         SELECT sum(purchase_amount) AS purchaseAmount,
+                         SELECT sum(purchase_amount_all) AS purchaseAmount,
                                 purchase_time
                          FROM u_fund_transaction_purchase
                          where user_id = #{userId}
@@ -218,7 +218,7 @@
                ) AS sell_5,
                (SELECT sum(amont.purchaseAmount)
                 FROM (
-                         SELECT sum(purchase_amount) AS purchaseAmount,
+                         SELECT sum(purchase_amount_all) AS purchaseAmount,
                                 purchase_time
                          FROM u_fund_transaction_purchase
                          where user_id = #{userId}
@@ -237,7 +237,7 @@
                ) AS sell_6,
                (SELECT sum(amont.purchaseAmount)
                 FROM (
-                         SELECT sum(purchase_amount) AS purchaseAmount,
+                         SELECT sum(purchase_amount_all) AS purchaseAmount,
                                 purchase_time
                          FROM u_fund_transaction_purchase
                          where user_id = #{userId}
@@ -269,7 +269,9 @@
                uuf.total_share           as totalShare,
                uuf.new_amount            as newAmount,
                uuf.profit_amount         as profitAmount,
-               uuf.today_profit_amount   as todayProfitAmount
+               uuf.today_profit_amount   as todayProfitAmount,
+               uuf.purchase_rate   as purchaseRate,
+               uuf.sell_rate   as sellRate
         from u_user_fund uuf
                  left join db_user dbu on dbu.id = uuf.user_id
                  left join f_fund_info ffi on ffi.fund_code = uuf.fund_info_code
@@ -303,6 +305,8 @@
         update u_user_fund
         set update_time           = now()
           , fund_info_name_number = #{fundInfoNameNumber}
+          , purchase_rate = #{purchaseRate}
+          , sell_rate = #{sellRate}
         where id = #{id}
           and user_id = #{userId}
     </update>
