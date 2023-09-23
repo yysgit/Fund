@@ -274,41 +274,60 @@
                   )
     </update>
 
+
     <update id="updateFundTransactionTotalAmountForTask">
         UPDATE u_user_fund uuf
-        SET uuf.total_amount       =(select ffnwt.purchase_amount
-                                     from (
-                                              SELECT sum(uftp1.purchase_amount) purchase_amount,
-                                                     uftp1.fund_info_code AS    fund_info_code,
-                                                     uftp1.user_id
-                                              FROM u_fund_transaction_purchase uftp1
-                                              WHERE uftp1.state = 0
-                                              GROUP BY uftp1.fund_info_code,
-                                                       user_id
-                                          ) ffnwt
-                                     where uuf.fund_info_code = ffnwt.fund_info_code
-                                       AND uuf.user_id = ffnwt.user_id),
-            uuf.total_share        =(select ffnwtt.purchase_share
-                                     from (
-                                              SELECT sum(uftp11.purchase_share) purchase_share,
-                                                     uftp11.fund_info_code AS   fund_info_code,
-                                                     uftp11.user_id
-                                              FROM u_fund_transaction_purchase uftp11
-                                              WHERE uftp11.state = 0
-                                              GROUP BY uftp11.fund_info_code,
-                                                       user_id
-                                          ) ffnwtt
-                                     where uuf.fund_info_code = ffnwtt.fund_info_code
-                                       AND uuf.user_id = ffnwtt.user_id),
-            uuf.new_amount=uuf.total_share * (select ffnwt2.settlement_new_worth
-                                              from f_fund_net_worth_temp ffnwt2
-                                              where ffnwt2.fund_info_code = uuf.fund_info_code
+        SET uuf.total_amount   =(select ffnwt.purchase_amount
+                                 from (
+                                          SELECT sum(uftp1.purchase_amount) purchase_amount,
+                                                 uftp1.fund_info_code AS    fund_info_code,
+                                                 uftp1.user_id
+                                          FROM u_fund_transaction_purchase uftp1
+                                          WHERE uftp1.state = 0
+                                          GROUP BY uftp1.fund_info_code,
+                                                   user_id
+                                      ) ffnwt
+                                 where uuf.fund_info_code = ffnwt.fund_info_code
+                                   AND uuf.user_id = ffnwt.user_id),
+
+
+            uuf.total_share    =(select ffnwtt.purchase_share
+                                 from (
+                                          SELECT sum(uftp11.purchase_share) purchase_share,
+                                                 uftp11.fund_info_code AS   fund_info_code,
+                                                 uftp11.user_id
+                                          FROM u_fund_transaction_purchase uftp11
+                                          WHERE uftp11.state = 0
+                                          GROUP BY uftp11.fund_info_code,
+                                                   user_id
+                                      ) ffnwtt
+                                 where uuf.fund_info_code = ffnwtt.fund_info_code
+                                   AND uuf.user_id = ffnwtt.user_id),
+            uuf.new_amount=uuf.total_share * (
+               select IF ( MAX(ffnwt21.settlement_new_worth) is null,
+                   (select IF ( MAX(ffnwt22.fund_net_worth) is null, 0, ffnwt22.fund_net_worth )
+                                                                         from f_fund_net_worth_temp ffnwt22
+                                                                         where ffnwt22.fund_info_code = uuf.fund_info_code
+                ), ffnwt21.settlement_new_worth )
+                                              from f_fund_net_worth_temp ffnwt21
+                                              where ffnwt21.fund_info_code = uuf.fund_info_code
+                                                and ffnwt21.fund_day=CURRENT_DATE()
+
+
+
             ),
 
             uuf.profit_amount=uuf.new_amount - uuf.total_amount,
-            uuf.today_profit_amount= uuf.new_amount * (select ffnwt3.rise_fall
+
+            uuf.cumulative_gain=uuf.profit_amount + (select sum(ufts.income_amount)
+                                                     from u_fund_transaction_sell ufts
+                                                     where ufts.fund_info_code = uuf.fund_info_code
+                                                       and ufts.user_id=uuf.user_id ),
+            uuf.today_profit_amount= uuf.new_amount * (select IF ( MAX(ffnwt3.rise_fall) is null, 0, ffnwt3.rise_fall )
                                                        from f_fund_net_worth_temp ffnwt3
                                                        where ffnwt3.fund_info_code = uuf.fund_info_code
+                                                         and ffnwt3.fund_day=CURRENT_DATE()
+
             ) / 100
 
     </update>
