@@ -9,11 +9,12 @@
         .el-select {
             width: 100%;
         }
-
+        .el-table .click-row {
+            background: #9bceea;
+        }
         .el-table .warning-row {
             background: oldlace;
         }
-
         .el-table .success-row {
             background: #f0f9eb;
         }
@@ -258,6 +259,44 @@
                 </el-table-column>
                 <el-table-column
                         sortable
+                        prop="purchaseAmountAll"
+                        label="买入金额">
+                    <template slot-scope="scope">
+                        <span>{{scope.row.purchaseAmountAll}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        sortable
+                        prop="purchaseYield"
+                        label="预计收益率">
+
+                    <template slot-scope="scope">
+
+                        <span v-if="scope.row.incomeAmount==null">
+                             <span v-if="parseFloat(scope.row.purchaseYield)>0 "
+                                   style="color: red">{{getYield(scope.row.purchaseYield) + '%'}}</span>
+                        <span v-else-if="parseFloat(scope.row.purchaseYield)<=0 "
+                              style="color: green">{{getYield(scope.row.purchaseYield) + '%'}}</span>
+                        </span>
+                        <span v-if="scope.row.incomeAmount!=null">
+                             <span v-if="parseFloat(scope.row.yield)>0 "
+                                   style="color: red">{{getYield(scope.row.yield) + '%'}}</span>
+                        <span v-else-if="parseFloat(scope.row.yield)<=0 "
+                              style="color: green">{{getYield(scope.row.yield) + '%'}}</span>
+                        </span>
+
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        sortable
+                        prop="purchaseIncomeAmount"
+                        label="预计收益金额">
+                    <template slot-scope="scope">
+                        <span>{{scope.row.incomeAmount!=null?scope.row.incomeAmount:scope.row.purchaseIncomeAmount}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        sortable
                         prop="sellNetWorth"
                         label="卖出净值">
                     <template slot-scope="scope">
@@ -290,7 +329,13 @@
                         <span>{{scope.row.incomeAmount}}</span>
                     </template>
                 </el-table-column>
-
+                <el-table-column
+                        sortable
+                        width="230"
+                        prop="createTime"
+                        :formatter="dateFormatter4"
+                        label="创建时间">
+                </el-table-column>
             </el-table>
             <div style="text-align: center;margin-top: 30px">
                 <el-pagination
@@ -449,6 +494,13 @@
                         prop="todayTime"
                         :formatter="dateFormatter2"
                         label="今日时间">
+                </el-table-column>
+                <el-table-column
+                        sortable
+                        width="230"
+                        prop="createTime"
+                        :formatter="dateFormatter4"
+                        label="创建时间">
                 </el-table-column>
 
             </el-table>
@@ -679,10 +731,13 @@
             handleClick(tab, event) {
                 console.log(tab.index);
                 if (tab.index == 0) {
+                    this.page3.pageCurrent = 1;
                     this.getFundTransactionTable3(this.fundSearch);
                 } else if (tab.index == 1) {
+                    this.page2.pageCurrent = 1;
                     this.getFundTransactionTable2(this.fundSearch);
                 } else if (tab.index == 2) {
+                    this.page1.pageCurrent = 1;
                     this.getFundTransactionTable1(this.fundSearch);
                 }
             },
@@ -694,7 +749,9 @@
                 }
             },
             tableRowClassName({row, rowIndex}) {
-                if (rowIndex % 4 == 1) {
+                if (row.edit) {
+                    return 'click-row';
+                }else if (rowIndex % 4 == 1) {
                     return 'warning-row';
                 } else if (rowIndex % 4 == 3) {
                     return 'success-row';
@@ -810,7 +867,7 @@
             getFundTransactionTable2(fundSearch) {
                 let that = this;
                 let fromData = {
-                    page: (that.page2.pageCurrent - 1) * 10,
+                    page: (that.page2.pageCurrent - 1) * 100,
                     limit: that.page2.pageSize,
                     fundCode: fundSearch.fundCode,
                     fundName: fundSearch.fundName,
@@ -830,7 +887,7 @@
             getFundTransactionTable1(fundSearch) {
                 let that = this;
                 let fromData = {
-                    page: (that.page1.pageCurrent - 1) * 10,
+                    page: (that.page1.pageCurrent - 1) * 100,
                     limit: that.page1.pageSize,
                     state: 0,
                     fundCode: fundSearch.fundCode,
@@ -852,7 +909,7 @@
             getFundTransactionTable3(fundSearch) {
                 let that = this;
                 let fromData = {
-                    page: (that.page3.pageCurrent - 1) * 10,
+                    page: (that.page3.pageCurrent - 1) * 200,
                     limit: that.page3.pageSize,
                     state: 0,
                     fundCode: fundSearch.fundCode,
@@ -871,12 +928,15 @@
 
 
             onSubmit1() {
+                this.page1.pageCurrent = 1;
                 this.getFundTransactionTable1(this.fundSearch);
             },
             onSubmit2() {
+                this.page2.pageCurrent = 1;
                 this.getFundTransactionTable2(this.fundSearch);
             },
             onSubmit3() {
+                this.page3.pageCurrent = 1;
                 this.getFundTransactionTable3(this.fundSearch);
             },
 
@@ -896,6 +956,15 @@
             dateFormatter2(row, column) {
                 if (row.todayTime != null && row.todayTime != '') {
                     return row.todayTime.substring(0, 10);
+                } else {
+                    return null;
+                }
+
+            },
+
+            dateFormatter4(row, column) {
+                if (row.createTime != null && row.createTime != '') {
+                    return row.createTime.substring(5, 20);
                 } else {
                     return null;
                 }

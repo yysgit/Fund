@@ -93,6 +93,7 @@ public class UserFundController {
             }
             Map map=new HashMap();
             map.put("userId", dbUser.getId());
+            map.put("trade_0", DateUtil.getPastDate(0));
             map.put("trade_1", DateUtil.getPastDate(1));
             map.put("trade_2", DateUtil.getWeekFirstDate());
             map.put("trade_3", DateUtil.getMoonFirstDate());

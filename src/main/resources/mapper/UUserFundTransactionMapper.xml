@@ -21,7 +21,8 @@
         uftp.income_amount as incomeAmount,
         uftp.today_time as todayTime,
         uftp.today_net_worth as todayNetWorth,
-        ffnwt.level_number as levelNumber
+        ffnwt.level_number as levelNumber,
+        uftp.create_time as createTime
         from u_fund_transaction_purchase uftp
         left join f_fund_info ffi on ffi.fund_code = uftp.fund_info_code
         left join u_user_fund uuf on uuf.fund_info_code = uftp.fund_info_code and uftp.user_id = uuf.user_id
@@ -35,10 +36,18 @@
             and ffi.fund_name LIKE concat(concat("%",#{fundName}),"%"))
         </if>
         <if test="sort!=null and sort!='' and sort=='sort_1' ">
-            order by uftp.purchase_time desc,uftp.yield desc, uftp.fund_info_code limit #{page}, #{limit};
+        and uftp.purchase_share IS NULL
+        order by uftp.purchase_time desc,uftp.yield desc, uftp.fund_info_code limit #{page}, #{limit};
         </if>
         <if test="sort!=null and sort!='' and sort=='sort_2' ">
-            order by uftp.yield desc, uftp.purchase_time desc, uftp.fund_info_code limit #{page}, #{limit};
+            order by
+            <if test="fundCode!=null and fundCode!='' ">
+                uftp.purchase_time desc,uftp.create_time desc,uftp.yield desc,
+            </if>
+            <if test="fundCode==null or fundCode=='' ">
+                uftp.yield desc, uftp.purchase_time desc,
+            </if>
+            uftp.fund_info_code limit #{page}, #{limit};
         </if>
 
     </select>
@@ -54,6 +63,11 @@
         <if test="fundName!=null and fundName!='' ">
             and ffi.fund_name LIKE concat(concat("%",#{fundName}),"%"))
         </if>
+        <if test="sort!=null and sort!='' and sort=='sort_1' ">
+            and uftp.purchase_share IS NULL
+
+        </if>
+
     </select>
 
 
@@ -126,10 +140,15 @@
         ufts.income_amount as incomeAmount,
         ufts.purchase_id as purchaseId,
         ufts.yield as yield,
-        uuf.fund_info_name_number as fundInfoNameNumber
+        uuf.fund_info_name_number as fundInfoNameNumber,
+        uftp.purchase_amount_all as purchaseAmountAll,
+        uftp.yield as purchaseYield,
+        uftp.income_amount as purchaseIncomeAmount,
+        ufts.create_time as createTime
         from u_fund_transaction_sell ufts
         left join f_fund_info ffi on ffi.fund_code = ufts.fund_info_code
         left join u_user_fund uuf on uuf.fund_info_code = ufts.fund_info_code and ufts.user_id = uuf.user_id
+        left join u_fund_transaction_purchase uftp on uftp.id = ufts.purchase_id
         where ufts.user_id = #{userId}
         <if test="fundCode!=null and fundCode!='' ">
             and ufts.fund_info_code = #{fundCode}
@@ -137,7 +156,7 @@
         <if test="fundName!=null and fundName!='' ">
             and ffi.fund_name LIKE concat(concat("%",#{fundName}),"%"))
         </if>
-        order by ufts.sell_time desc ,ufts.fund_info_code, ufts.yield limit #{page}, #{limit};
+        order by ufts.sell_time desc ,ufts.create_time desc,ufts.fund_info_code, ufts.yield limit #{page}, #{limit};
     </select>
     <select id="findFundTransactionSellCount" resultType="java.lang.Integer" parameterType="java.util.Map">
         select count(*)
@@ -160,20 +179,23 @@
                                                  purchase_amount_all,
                                                  purchase_rate,
                                                  purchase_rate_amount,
-                                                 purchase_amount)
+                                                 purchase_amount,
+                                                 create_time
+                                                 )
         values (#{userId}, #{fundCode}, #{purchaseTime},
                 #{purchaseAmountAll},
                 #{purchaseRate},
                 #{purchaseRateAmount},
-                #{purchaseAmount});
+                #{purchaseAmount},now());
     </insert>
 
     <insert id="addUserFundTtransactionSell" parameterType="java.util.Map">
         insert into u_fund_transaction_sell (user_id, fund_info_code,
                                              sell_time,
                                              sell_rate,
-                                             purchase_id, sell_share)
-        values (#{userId}, #{fundCode}, #{sellTime}, #{sellRate}, #{purchaseId}, #{sellShare});
+                                             purchase_id, sell_share,
+                                             create_time)
+        values (#{userId}, #{fundCode}, #{sellTime}, #{sellRate}, #{purchaseId}, #{sellShare},now());
     </insert>
 
     <!--更新用户买入净值信息-->

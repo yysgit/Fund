@@ -118,7 +118,31 @@
         where id = #{userId}
     </select>
     <select id="fundUserFundTradeStatistics" resultType="java.util.Map" parameterType="java.util.Map">
-        select (
+        select
+            (
+                SELECT sum(amont.sellAmount)
+                FROM (
+                         SELECT sum(uftp.purchase_amount_all) AS sellAmount,
+                                ufts.sell_time
+                         FROM u_fund_transaction_sell ufts
+                         left join u_fund_transaction_purchase uftp on uftp.id = ufts.purchase_id
+                         where ufts.user_id = #{userId}
+                         GROUP BY ufts.sell_time
+                     ) amont
+                where sell_time >= #{trade_0}
+            ) AS sell_0,
+            (SELECT sum(amont.purchaseAmount)
+             FROM (
+                      SELECT sum(purchase_amount_all) AS purchaseAmount,
+                             purchase_time
+                      FROM u_fund_transaction_purchase
+                      where user_id = #{userId}
+                      GROUP BY purchase_time
+                  ) amont
+             where purchase_time >= #{trade_0}
+            ) AS purchase_0,
+
+               (
                    SELECT sum(amont.sellAmount)
                    FROM (
                             SELECT sum(sell_amount - income_amount) AS sellAmount,
@@ -138,6 +162,7 @@
                          GROUP BY purchase_time
                      ) amont
                 where purchase_time >= #{trade_1}
+                   and #{trade_0} > purchase_time
                ) AS purchase_1,
 
                (SELECT sum(amont.sellAmount)
