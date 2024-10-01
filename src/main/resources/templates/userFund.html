@@ -105,6 +105,25 @@
 
                 <el-table-column
                         sortable
+                        prop="todayMoneyExpect"
+                        label="预购金额">
+                    <template slot-scope="scope">
+                        <span>{{scope.row.todayMoneyExpect}}</span>
+                    </template>
+                </el-table-column>
+
+                <el-table-column
+                        sortable
+                        prop="todayMoneyPurchased"
+                        label="已购金额">
+                    <template slot-scope="scope">
+                        <span>{{scope.row.todayMoneyPurchased}}</span>
+                    </template>
+                </el-table-column>
+
+
+                <el-table-column
+                        sortable
                         prop="yield"
                         label="收益率">
 

@@ -204,8 +204,8 @@ public class FundTask {
         fundTransactionMapper.updateFundTransactionMinimumInitialForTask();
         fundTransactionMapper.updateFundTransactionMinimumForTask();
         fundTransactionMapper.updateFundTransactionTotalAmountForTask();
-
-
+        fundTransactionMapper.updateFundTransactionTodayMoneyExpectForTask();
+        fundTransactionMapper.updateFundTransactionTodayMoneyPurchasedForTask();
 
     }
 

@@ -297,7 +297,9 @@
                uuf.profit_amount         as profitAmount,
                uuf.today_profit_amount   as todayProfitAmount,
                uuf.purchase_rate   as purchaseRate,
-               uuf.sell_rate   as sellRate
+               uuf.sell_rate   as sellRate,
+               uuf.today_money_expect as todayMoneyExpect,
+               uuf.today_money_purchased as todayMoneyPurchased
         from u_user_fund uuf
                  left join db_user dbu on dbu.id = uuf.user_id
                  left join f_fund_info ffi on ffi.fund_code = uuf.fund_info_code
