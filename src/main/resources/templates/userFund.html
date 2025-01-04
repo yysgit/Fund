@@ -44,7 +44,7 @@
                         <el-button
                                 size="mini"
                                 type="danger"
-                                @click="handleDelete(scope.$index, scope.row)">删除
+                                @click="handleDeleteUserFundTransaction(scope.$index, scope.row)">删除
                         </el-button>
                     </template>
                 </el-table-column>
@@ -232,28 +232,17 @@
                     </template>
                 </el-table-column>
 
-                <!--<el-table-column
-                        sortable
-                        prop="volatilityValue"
-                        align="center"
-                        label="基金等级利率">
+                <el-table-column fixed="right" label="操作" width="100">
                     <template slot-scope="scope">
-                        <span>{{scope.row.volatilityValue}}</span>
+                        <el-button
+                                size="mini"
+                                type="danger"
+                                @click="handleDelete(scope.$index, scope.row)">删除基金
+                        </el-button>
                     </template>
                 </el-table-column>
-                <el-table-column
-                        sortable
-                        prop="maxNetWorth"
-                        align="center"
-                        label="基金最大净值">
-                </el-table-column>
-                <el-table-column
-                        sortable
-                        prop="maxNetWorthDate"
-                        align="center"
-                        :formatter="dateFormatter"
-                        label="基金最大净值日期">
-                </el-table-column>-->
+
+
             </el-table>
         </el-tab-pane>
 
@@ -399,7 +388,11 @@
                 let that = this;
                 axios.post('/fund/fundLevelMoney/findFundLevelMoneyByFundInfoCode', this.fundDataForm)
                     .then(function (res) {
-                        that.fundDataForm.purchaseAmountAll = res.data.data[0]['money' + row.levelNumber];
+                        if(row.levelNumber==0){
+                            that.fundDataForm.purchaseAmountAll = res.data.data[0]['money1'];
+                        }else{
+                            that.fundDataForm.purchaseAmountAll = res.data.data[0]['money' + row.levelNumber];
+                        }
                         that.fundDataForm.purchaseRateAmount=parseFloat(that.fundDataForm.purchaseAmountAll*that.fundDataForm.purchaseRate).toFixed(4);
                         that.fundDataForm.purchaseAmount=parseFloat(that.fundDataForm.purchaseAmountAll).toFixed(4)-parseFloat(that.fundDataForm.purchaseRateAmount).toFixed(4);
                         that.dialogVisible = true;
@@ -415,7 +408,9 @@
                 axios.post('/fund/userFundTransaction/addUserFundTtransactionPurchase', this.fundDataForm)
                     .then(function (res) {
                         that.$message.success(res.data.msg);
+                        that.page.pageCurrent = 1;
                         that.dialogVisible = false;
+                        that.getUserFundInfoTable();
                     })
                     .catch(function (error) {
                         console.log(error);
@@ -433,6 +428,18 @@
 
             },
 
+            handleDeleteUserFundTransaction(index, row) {
+                let that = this;
+                axios.post('/fund/userFundTransaction/deleteUserFundTransactionForCode', {fundInfoCode: row.fundCode})
+                    .then(function (res) {
+                        that.$message.success(res.data.msg);
+                        that.page.pageCurrent = 1;
+                        that.getUserFundInfoTable()
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            },
 
             handleDelete(index, row) {
                 let that = this;

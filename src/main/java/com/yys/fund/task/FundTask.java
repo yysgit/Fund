@@ -105,7 +105,7 @@ public class FundTask {
     /**
      * 更新每天基金的真实基金净值  每天凌晨1点执行一次：0 0 1 * * ?
      */
-//    @Scheduled(cron = "* */2 * * * ?")
+//    @Scheduled(cron = "* */5 * * * ?")
     @Scheduled(cron = " 0 */10 0-2 * * mon,tue,wed,thu,fri,sat")
 //    @Scheduled(cron = " 0 */3 8-23 * * mon,tue,wed,thu,fri,sat")
     public void task2() {

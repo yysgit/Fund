@@ -16,6 +16,7 @@ public interface UFundTransactionService {
     Integer addUserFundTtransactionPurchase(Map map);
     Integer addUserFundTtransactionSell(Map map);
     int deleteUserFundTransaction(Map map);
+    int deleteUserFundTransactionForCode(Map map);
     int deleteUserFundTransactionSell(Map map);
 
 }

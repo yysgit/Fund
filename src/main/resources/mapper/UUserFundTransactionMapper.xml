@@ -470,6 +470,15 @@
     </delete>
 
 
+    <!--    删除我的基金买入-->
+    <delete id="deleteUserFundTransactionForCode" parameterType="java.util.Map">
+        delete
+        from u_fund_transaction_purchase
+        where fund_info_code = #{fundInfoCode}
+          and user_id = #{userId}
+          and purchase_share IS NULL
+    </delete>
+
     <!--    删除我的基金卖出-->
     <delete id="deleteUserFundTransactionSell" parameterType="java.util.Map">
         delete

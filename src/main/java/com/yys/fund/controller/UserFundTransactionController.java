@@ -185,6 +185,32 @@ public class UserFundTransactionController {
      * @param map
      * @return
      */
+    @RequestMapping("/deleteUserFundTransactionForCode")
+    @ResponseBody
+    public ResultUtil deleteUserFundTransactionForCode(HttpServletRequest request, @RequestBody Map map) {
+        try {
+            DbUser dbUser = (DbUser) request.getSession().getAttribute("dbUser");
+            if (dbUser == null) {
+                return ResultUtil.error("删除失败,未登录!");
+            }
+            map.put("userId", dbUser.getId());
+            fundTransactionService.deleteUserFundTransactionForCode(map);
+            fundTask.taskForTransaction();
+            return ResultUtil.success("删除成功!");
+        } catch (Exception e) {
+            logger.error("删除基金买入错误: " + e.getMessage());
+            return ResultUtil.error("删除失败!");
+        }
+    }
+
+
+    /**
+     * 删除基金买入
+     *
+     * @param request
+     * @param map
+     * @return
+     */
     @RequestMapping("/deleteUserFundTransaction")
     @ResponseBody
     public ResultUtil deleteUserFundTransaction(HttpServletRequest request, @RequestBody Map map) {

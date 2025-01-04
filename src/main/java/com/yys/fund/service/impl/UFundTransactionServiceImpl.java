@@ -70,6 +70,10 @@ public class UFundTransactionServiceImpl implements UFundTransactionService {
     }
 
     @Override
+    public int deleteUserFundTransactionForCode(Map map) {
+        return fundTransactionMapper.deleteUserFundTransactionForCode(map);
+    }
+    @Override
     public int deleteUserFundTransactionSell(Map map) {
         Integer int2= fundTransactionMapper.updateUserFundTtransactionPurchaseforDelete(map);
         Integer int1=  fundTransactionMapper.deleteUserFundTransactionSell(map);
