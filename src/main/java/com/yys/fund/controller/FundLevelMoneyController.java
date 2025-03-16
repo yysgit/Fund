@@ -109,6 +109,7 @@ public class FundLevelMoneyController {
             if(dbUser==null){
                 return ResultUtil.error("更新失败,未登录!");
             }
+            fundType.put("userId", dbUser.getId());
             fundLevelMoneyService.updateFundLevelMoney(fundType);
             return ResultUtil.success("更新成功!");
         } catch (Exception e) {

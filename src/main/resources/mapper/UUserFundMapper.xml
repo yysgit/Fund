@@ -160,7 +160,7 @@
                    FROM (
                             SELECT sum(uftp.income_amount) AS incomeAmount
                             from u_fund_transaction_sell ufts
-                                left join u_fund_transaction_purchase uftp on uftp.id = ufts.purchase_id
+                                left join u_fund_transaction_purchase uftp on uftp.id = ufts.purchase_id and ufts.user_id = uftp.user_id
                             where ufts.user_id = #{userId}
                               and ufts.income_amount is null
                         ) amont
@@ -176,7 +176,7 @@
                          SELECT sum(uftp.purchase_amount_all) AS sellAmount,
                                 ufts.sell_time
                          FROM u_fund_transaction_sell ufts
-                         left join u_fund_transaction_purchase uftp on uftp.id = ufts.purchase_id
+                         left join u_fund_transaction_purchase uftp on uftp.id = ufts.purchase_id and ufts.user_id = uftp.user_id
                          where ufts.user_id = #{userId}
                          GROUP BY ufts.sell_time
                      ) amont
@@ -363,7 +363,7 @@
                  left join f_fund_type fft on ffi.fund_type_id = fft.id
                  left join f_fund_net_worth_temp ffnwt on uuf.fund_info_code = ffnwt.fund_info_code and ffnwt.fund_day=CURRENT_DATE()
                  left join f_fund_net_worth_temp ffnwt2 on uuf.fund_info_code = ffnwt2.fund_info_code
-                 left join u_fund_transaction_purchase uftp on uuf.fund_info_code = uftp.fund_info_code
+                 left join u_fund_transaction_purchase uftp on uuf.fund_info_code = uftp.fund_info_code and uftp.user_id = uuf.user_id
             and uftp.user_id = #{userId}
             and uftp.state = 0
             and uftp.minimum_new_worth = 1

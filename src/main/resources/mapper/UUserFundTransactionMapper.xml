@@ -148,7 +148,7 @@
         from u_fund_transaction_sell ufts
         left join f_fund_info ffi on ffi.fund_code = ufts.fund_info_code
         left join u_user_fund uuf on uuf.fund_info_code = ufts.fund_info_code and ufts.user_id = uuf.user_id
-        left join u_fund_transaction_purchase uftp on uftp.id = ufts.purchase_id
+        left join u_fund_transaction_purchase uftp on uftp.id = ufts.purchase_id and uftp.user_id = ufts.user_id
         where ufts.user_id = #{userId}
         <if test="fundCode!=null and fundCode!='' ">
             and ufts.fund_info_code = #{fundCode}
@@ -203,7 +203,7 @@
         SET uftp.state=1,
             uftp.sell_id =(select id
                            from u_fund_transaction_sell ufts
-                           where ufts.purchase_id = #{purchaseId}
+                           where ufts.purchase_id = #{purchaseId} and uftp.user_id= ufts.user_id
             )
         WHERE uftp.id = #{purchaseId}
 
@@ -254,10 +254,10 @@
           , ufts.sell_rate_amount =ufts.sell_amount_all * ufts.sell_rate
           , ufts.income_amount=(select ufts.sell_amount - uftp.purchase_amount_all
                                 from u_fund_transaction_purchase uftp
-                                where uftp.id = ufts.purchase_id)
+                                where uftp.id = ufts.purchase_id and uftp.user_id=ufts.user_id)
           , ufts.yield=(select ufts.income_amount / uftp.purchase_amount
                         from u_fund_transaction_purchase uftp
-                        where uftp.id = ufts.purchase_id)
+                        where uftp.id = ufts.purchase_id and uftp.user_id=ufts.user_id)
 
         WHERE ufts.sell_amount is null
           and EXISTS(select ffnw.fund_net_worth
@@ -354,67 +354,67 @@
         SET uuf.today_money_expect =(case
                              when ((select ffnwt2.level_number as levelNumber
                                   from f_fund_net_worth_temp ffnwt2
-                                  where uuf.fund_info_code = ffnwt2.fund_info_code)='0') then (select uflm.money1 from u_fund_level_money uflm where uflm.fund_info_code= uuf.fund_info_code )
+                                  where uuf.fund_info_code = ffnwt2.fund_info_code)='0') then (select uflm.money1 from u_fund_level_money uflm where uflm.fund_info_code= uuf.fund_info_code and uuf.user_id=uflm.user_id    )
                              when ((select ffnwt2.level_number as levelNumber
                                   from f_fund_net_worth_temp ffnwt2
-                                  where uuf.fund_info_code = ffnwt2.fund_info_code)='1') then (select uflm.money1 from u_fund_level_money uflm where uflm.fund_info_code= uuf.fund_info_code )
+                                  where uuf.fund_info_code = ffnwt2.fund_info_code)='1') then (select uflm.money1 from u_fund_level_money uflm where uflm.fund_info_code= uuf.fund_info_code and uuf.user_id=uflm.user_id)
                              when ((select ffnwt2.level_number as levelNumber
                                   from f_fund_net_worth_temp ffnwt2
-                                  where uuf.fund_info_code = ffnwt2.fund_info_code)='2') then (select uflm.money2 from u_fund_level_money uflm where uflm.fund_info_code= uuf.fund_info_code )
+                                  where uuf.fund_info_code = ffnwt2.fund_info_code)='2') then (select uflm.money2 from u_fund_level_money uflm where uflm.fund_info_code= uuf.fund_info_code and uuf.user_id=uflm.user_id)
                              when ((select ffnwt2.level_number as levelNumber
                                   from f_fund_net_worth_temp ffnwt2
-                                  where uuf.fund_info_code = ffnwt2.fund_info_code)='3') then (select uflm.money3 from u_fund_level_money uflm where uflm.fund_info_code= uuf.fund_info_code )
+                                  where uuf.fund_info_code = ffnwt2.fund_info_code)='3') then (select uflm.money3 from u_fund_level_money uflm where uflm.fund_info_code= uuf.fund_info_code and uuf.user_id=uflm.user_id)
                              when ((select ffnwt2.level_number as levelNumber
                                   from f_fund_net_worth_temp ffnwt2
-                                  where uuf.fund_info_code = ffnwt2.fund_info_code)='4') then (select uflm.money4 from u_fund_level_money uflm where uflm.fund_info_code= uuf.fund_info_code )
+                                  where uuf.fund_info_code = ffnwt2.fund_info_code)='4') then (select uflm.money4 from u_fund_level_money uflm where uflm.fund_info_code= uuf.fund_info_code and uuf.user_id=uflm.user_id)
                              when ((select ffnwt2.level_number as levelNumber
                                   from f_fund_net_worth_temp ffnwt2
-                                  where uuf.fund_info_code = ffnwt2.fund_info_code)='5') then (select uflm.money5 from u_fund_level_money uflm where uflm.fund_info_code= uuf.fund_info_code )
+                                  where uuf.fund_info_code = ffnwt2.fund_info_code)='5') then (select uflm.money5 from u_fund_level_money uflm where uflm.fund_info_code= uuf.fund_info_code and uuf.user_id=uflm.user_id)
                              when ((select ffnwt2.level_number as levelNumber
                                   from f_fund_net_worth_temp ffnwt2
-                                  where uuf.fund_info_code = ffnwt2.fund_info_code)='6') then (select uflm.money6 from u_fund_level_money uflm where uflm.fund_info_code= uuf.fund_info_code )
+                                  where uuf.fund_info_code = ffnwt2.fund_info_code)='6') then (select uflm.money6 from u_fund_level_money uflm where uflm.fund_info_code= uuf.fund_info_code and uuf.user_id=uflm.user_id)
                              when ((select ffnwt2.level_number as levelNumber
                                   from f_fund_net_worth_temp ffnwt2
-                                  where uuf.fund_info_code = ffnwt2.fund_info_code)='7') then (select uflm.money7 from u_fund_level_money uflm where uflm.fund_info_code= uuf.fund_info_code )
+                                  where uuf.fund_info_code = ffnwt2.fund_info_code)='7') then (select uflm.money7 from u_fund_level_money uflm where uflm.fund_info_code= uuf.fund_info_code and uuf.user_id=uflm.user_id)
                              when ((select ffnwt2.level_number as levelNumber
                                   from f_fund_net_worth_temp ffnwt2
-                                  where uuf.fund_info_code = ffnwt2.fund_info_code)='8') then (select uflm.money8 from u_fund_level_money uflm where uflm.fund_info_code= uuf.fund_info_code )
+                                  where uuf.fund_info_code = ffnwt2.fund_info_code)='8') then (select uflm.money8 from u_fund_level_money uflm where uflm.fund_info_code= uuf.fund_info_code and uuf.user_id=uflm.user_id)
                              when ((select ffnwt2.level_number as levelNumber
                                   from f_fund_net_worth_temp ffnwt2
-                                  where uuf.fund_info_code = ffnwt2.fund_info_code)='9') then (select uflm.money9 from u_fund_level_money uflm where uflm.fund_info_code= uuf.fund_info_code )
+                                  where uuf.fund_info_code = ffnwt2.fund_info_code)='9') then (select uflm.money9 from u_fund_level_money uflm where uflm.fund_info_code= uuf.fund_info_code and uuf.user_id=uflm.user_id)
                              when ((select ffnwt2.level_number as levelNumber
                                   from f_fund_net_worth_temp ffnwt2
-                                  where uuf.fund_info_code = ffnwt2.fund_info_code)='10') then (select uflm.money10 from u_fund_level_money uflm where uflm.fund_info_code= uuf.fund_info_code )
+                                  where uuf.fund_info_code = ffnwt2.fund_info_code)='10') then (select uflm.money10 from u_fund_level_money uflm where uflm.fund_info_code= uuf.fund_info_code and uuf.user_id=uflm.user_id)
                              when ((select ffnwt2.level_number as levelNumber
                                   from f_fund_net_worth_temp ffnwt2
-                                  where uuf.fund_info_code = ffnwt2.fund_info_code)='11') then (select uflm.money11 from u_fund_level_money uflm where uflm.fund_info_code= uuf.fund_info_code )
+                                  where uuf.fund_info_code = ffnwt2.fund_info_code)='11') then (select uflm.money11 from u_fund_level_money uflm where uflm.fund_info_code= uuf.fund_info_code and uuf.user_id=uflm.user_id)
                              when ((select ffnwt2.level_number as levelNumber
                                   from f_fund_net_worth_temp ffnwt2
-                                  where uuf.fund_info_code = ffnwt2.fund_info_code)='12') then (select uflm.money12 from u_fund_level_money uflm where uflm.fund_info_code= uuf.fund_info_code )
+                                  where uuf.fund_info_code = ffnwt2.fund_info_code)='12') then (select uflm.money12 from u_fund_level_money uflm where uflm.fund_info_code= uuf.fund_info_code and uuf.user_id=uflm.user_id)
                              when ((select ffnwt2.level_number as levelNumber
                                   from f_fund_net_worth_temp ffnwt2
-                                  where uuf.fund_info_code = ffnwt2.fund_info_code)='13') then (select uflm.money13 from u_fund_level_money uflm where uflm.fund_info_code= uuf.fund_info_code )
+                                  where uuf.fund_info_code = ffnwt2.fund_info_code)='13') then (select uflm.money13 from u_fund_level_money uflm where uflm.fund_info_code= uuf.fund_info_code and uuf.user_id=uflm.user_id)
                              when ((select ffnwt2.level_number as levelNumber
                                   from f_fund_net_worth_temp ffnwt2
-                                  where uuf.fund_info_code = ffnwt2.fund_info_code)='14') then (select uflm.money14 from u_fund_level_money uflm where uflm.fund_info_code= uuf.fund_info_code )
+                                  where uuf.fund_info_code = ffnwt2.fund_info_code)='14') then (select uflm.money14 from u_fund_level_money uflm where uflm.fund_info_code= uuf.fund_info_code and uuf.user_id=uflm.user_id)
                              when ((select ffnwt2.level_number as levelNumber
                                   from f_fund_net_worth_temp ffnwt2
-                                  where uuf.fund_info_code = ffnwt2.fund_info_code)='15') then (select uflm.money15 from u_fund_level_money uflm where uflm.fund_info_code= uuf.fund_info_code )
+                                  where uuf.fund_info_code = ffnwt2.fund_info_code)='15') then (select uflm.money15 from u_fund_level_money uflm where uflm.fund_info_code= uuf.fund_info_code and uuf.user_id=uflm.user_id)
                              when ((select ffnwt2.level_number as levelNumber
                                   from f_fund_net_worth_temp ffnwt2
-                                  where uuf.fund_info_code = ffnwt2.fund_info_code)='16') then (select uflm.money16 from u_fund_level_money uflm where uflm.fund_info_code= uuf.fund_info_code )
+                                  where uuf.fund_info_code = ffnwt2.fund_info_code)='16') then (select uflm.money16 from u_fund_level_money uflm where uflm.fund_info_code= uuf.fund_info_code and uuf.user_id=uflm.user_id)
                              when ((select ffnwt2.level_number as levelNumber
                                   from f_fund_net_worth_temp ffnwt2
-                                  where uuf.fund_info_code = ffnwt2.fund_info_code)='17') then (select uflm.money17 from u_fund_level_money uflm where uflm.fund_info_code= uuf.fund_info_code )
+                                  where uuf.fund_info_code = ffnwt2.fund_info_code)='17') then (select uflm.money17 from u_fund_level_money uflm where uflm.fund_info_code= uuf.fund_info_code and uuf.user_id=uflm.user_id)
                              when ((select ffnwt2.level_number as levelNumber
                                   from f_fund_net_worth_temp ffnwt2
-                                  where uuf.fund_info_code = ffnwt2.fund_info_code)='18') then (select uflm.money18 from u_fund_level_money uflm where uflm.fund_info_code= uuf.fund_info_code )
+                                  where uuf.fund_info_code = ffnwt2.fund_info_code)='18') then (select uflm.money18 from u_fund_level_money uflm where uflm.fund_info_code= uuf.fund_info_code and uuf.user_id=uflm.user_id)
                              when ((select ffnwt2.level_number as levelNumber
                                   from f_fund_net_worth_temp ffnwt2
-                                  where uuf.fund_info_code = ffnwt2.fund_info_code)='19') then (select uflm.money19 from u_fund_level_money uflm where uflm.fund_info_code= uuf.fund_info_code )
+                                  where uuf.fund_info_code = ffnwt2.fund_info_code)='19') then (select uflm.money19 from u_fund_level_money uflm where uflm.fund_info_code= uuf.fund_info_code and uuf.user_id=uflm.user_id)
                              when ((select ffnwt2.level_number as levelNumber
                                   from f_fund_net_worth_temp ffnwt2
-                                  where uuf.fund_info_code = ffnwt2.fund_info_code)>='20') then (select uflm.money20 from u_fund_level_money uflm where uflm.fund_info_code= uuf.fund_info_code )
+                                  where uuf.fund_info_code = ffnwt2.fund_info_code)>='20') then (select uflm.money20 from u_fund_level_money uflm where uflm.fund_info_code= uuf.fund_info_code and uuf.user_id=uflm.user_id)
                              end
 
                                           )
@@ -429,6 +429,7 @@
             WHERE
             DATE(uftp.purchase_time) = CURDATE()
             AND uftp.fund_info_code = uuf.fund_info_code
+            and uftp.user_id=uuf.user_id
             )
 
     </update>
@@ -510,7 +511,7 @@
                     ufts.sell_time AS fundTransactionTime
                 FROM
                     u_fund_transaction_sell ufts
-                        LEFT JOIN u_fund_transaction_purchase uftp ON uftp.sell_id = ufts.id
+                        LEFT JOIN u_fund_transaction_purchase uftp ON uftp.sell_id = ufts.id and uftp.user_id = ufts.user_id
                 WHERE
                     uftp.user_id = #{userId}
                   AND uftp.fund_info_code = #{fundCode}

@@ -32,7 +32,7 @@
           , money18 = #{money18}
           , money19 = #{money19}
           , money20 = #{money20}
-        where fund_info_code = #{fundInfoCode}
+        where fund_info_code = #{fundInfoCode} and user_id = #{userId}
     </update>
 
 
@@ -80,7 +80,7 @@
         money13,
         money14, money15, money16, money17,
         money18, money19, money20
-        from u_fund_level_money where fund_info_code=#{fundCode}
+        from u_fund_level_money where fund_info_code=#{fundCode} and user_id=#{userId}
     </select>
     <!--    删除用户基金等级金额-->
     <delete id="deleteLevelMoneyByFundInfoCode" parameterType="java.util.Map">
