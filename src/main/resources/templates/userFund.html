@@ -209,6 +209,54 @@
                         <span>{{scope.row.totalShare}}</span>
                     </template>
                 </el-table-column>
+
+                <el-table-column
+                        sortable
+                        prop="allCumulativeTotalAmount"
+                        label="全部累计总投入金额">
+                    <template slot-scope="scope">
+                        <span>{{scope.row.allCumulativeTotalAmount}}</span>
+                    </template>
+                </el-table-column>
+
+
+                <el-table-column
+                        sortable
+                        prop="sinceThisYearOnAmount"
+                        label="今年以来总投入金额">
+                    <template slot-scope="scope">
+                        <span>{{scope.row.sinceThisYearOnAmount}}</span>
+                    </template>
+                </el-table-column>
+
+                <el-table-column
+                        sortable
+                        prop="inThePastYearAmount"
+                        label="近一年以来总投入金额">
+                    <template slot-scope="scope">
+                        <span>{{scope.row.inThePastYearAmount}}</span>
+                    </template>
+                </el-table-column>
+
+                <el-table-column
+                        sortable
+                        prop="sinceLastYearAmount"
+                        label="去年以来总投入金额">
+                    <template slot-scope="scope">
+                        <span>{{scope.row.sinceLastYearAmount}}</span>
+                    </template>
+                </el-table-column>
+
+                <el-table-column
+                        sortable
+                        prop="sinceTwoYearsAgoAmount"
+                        label="前年以来总投入金额">
+                    <template slot-scope="scope">
+                        <span>{{scope.row.sinceTwoYearsAgoAmount}}</span>
+                    </template>
+                </el-table-column>
+
+
                 <el-table-column
                         sortable
                         prop="purchaseRate"
@@ -232,7 +280,8 @@
                     </template>
                 </el-table-column>
 
-                <el-table-column fixed="right" label="操作" width="100">
+<!--                <el-table-column fixed="right" label="操作" width="100">-->
+                <el-table-column  label="操作" width="100">
                     <template slot-scope="scope">
                         <el-button
                                 size="mini"

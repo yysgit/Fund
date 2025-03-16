@@ -113,7 +113,58 @@
                             FROM u_user_fund
                             where user_id = #{userId}
                         ) amont
-               ) AS income_10
+               ) AS income_10,
+
+               (
+                   SELECT sum(amont.incomeAmount)
+                   FROM (
+                            SELECT sum(all_cumulative_total_amount) AS incomeAmount
+                            FROM u_user_fund
+                            where user_id = #{userId}
+                        ) amont
+               ) AS amount_1,
+               (
+                   SELECT sum(amont.incomeAmount)
+                   FROM (
+                            SELECT sum(since_this_year_on_amount) AS incomeAmount
+                            FROM u_user_fund
+                            where user_id = #{userId}
+                        ) amont
+               ) AS amount_2,
+               (
+                   SELECT sum(amont.incomeAmount)
+                   FROM (
+                            SELECT sum(in_the_past_year_amount) AS incomeAmount
+                            FROM u_user_fund
+                            where user_id = #{userId}
+                        ) amont
+               ) AS amount_3,
+               (
+                   SELECT sum(amont.incomeAmount)
+                   FROM (
+                            SELECT sum(since_last_year_amount) AS incomeAmount
+                            FROM u_user_fund
+                            where user_id = #{userId}
+                        ) amont
+               ) AS amount_4,
+               (
+                   SELECT sum(amont.incomeAmount)
+                   FROM (
+                            SELECT sum(since_two_years_ago_amount) AS incomeAmount
+                            FROM u_user_fund
+                            where user_id = #{userId}
+                        ) amont
+               ) AS amount_5,
+               (
+                   SELECT sum(amont.incomeAmount)
+                   FROM (
+                            SELECT sum(uftp.income_amount) AS incomeAmount
+                            from u_fund_transaction_sell ufts
+                                left join u_fund_transaction_purchase uftp on uftp.id = ufts.purchase_id
+                            where ufts.user_id = #{userId}
+                              and ufts.income_amount is null
+                        ) amont
+               ) AS amount_6
         from db_user
         where id = #{userId}
     </select>
@@ -299,7 +350,13 @@
                uuf.purchase_rate   as purchaseRate,
                uuf.sell_rate   as sellRate,
                uuf.today_money_expect as todayMoneyExpect,
-               uuf.today_money_purchased as todayMoneyPurchased
+               uuf.today_money_purchased as todayMoneyPurchased,
+               uuf.user_id as userId,
+               uuf.all_cumulative_total_amount as allCumulativeTotalAmount,
+               uuf.since_this_year_on_amount as sinceThisYearOnAmount,
+               uuf.in_the_past_year_amount as inThePastYearAmount,
+               uuf.since_last_year_amount as sinceLastYearAmount,
+               uuf.since_two_years_ago_amount as sinceTwoYearsAgoAmount
         from u_user_fund uuf
                  left join db_user dbu on dbu.id = uuf.user_id
                  left join f_fund_info ffi on ffi.fund_code = uuf.fund_info_code
@@ -340,4 +397,26 @@
           and user_id = #{userId}
     </update>
 
+    <update id="updateUserFundForAmount" parameterType="java.util.Map">
+        update u_user_fund
+        set update_time           = now()
+
+        <if test="allCumulativeTotalAmount!=null and allCumulativeTotalAmount!='' ">
+            , all_cumulative_total_amount = #{allCumulativeTotalAmount}
+        </if>
+        <if test="sinceThisYearOnAmount!=null and sinceThisYearOnAmount!='' ">
+            , since_this_year_on_amount = #{sinceThisYearOnAmount}
+        </if>
+        <if test="inThePastYearAmount!=null and inThePastYearAmount!='' ">
+            , in_the_past_year_amount = #{inThePastYearAmount}
+        </if>
+        <if test="sinceLastYearAmount!=null and sinceLastYearAmount!='' ">
+            , since_last_year_amount = #{sinceLastYearAmount}
+        </if>
+        <if test="sinceTwoYearsAgoAmount!=null and sinceTwoYearsAgoAmount!='' ">
+            , since_two_years_ago_amount = #{sinceTwoYearsAgoAmount}
+        </if>
+        where fund_info_code = #{fundCode}
+          and user_id = #{userId}
+    </update>
 </mapper>

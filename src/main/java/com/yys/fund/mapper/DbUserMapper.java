@@ -48,5 +48,6 @@ public interface DbUserMapper {
      */
     List<DbUser> findUserByUserName(@Param("userId") Integer userId, @Param("username") String username);
 
+    List<DbUser> findUserByRoleId(@Param("roleId") Integer roleId);
 
 }

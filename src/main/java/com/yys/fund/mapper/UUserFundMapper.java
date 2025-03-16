@@ -53,4 +53,12 @@ public interface UUserFundMapper {
      * @param map
      */
     List<Map> findUserFundByCode(Map map);
+
+
+    /**
+     * 更新用户累积求和的最大买入量: 今年,去年,前年,近一年,累积
+     * @param map
+     * @return
+     */
+    int updateUserFundForAmount(Map map);
 }

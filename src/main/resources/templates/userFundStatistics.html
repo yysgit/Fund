@@ -277,6 +277,99 @@
                 </div>
             </el-col>
 
+
+
+
+
+
+            <el-col :span="4" style="    margin-top: 20px;">
+                <div class="content-con">
+                    <div class="left-area" style="background: rgb(154, 102, 228); width: 24%;"><i
+                            class="el-icon-warning"
+                            style="font-size: 36px; color: rgb(255, 255, 255);"></i></div>
+                    <div class="right-area" style="width: 76%;">
+                        <div>
+                            <div class="count-to-wrapper"><p class="content-outer"><span
+                                    class="count-to-count-text count-style" id="count_to_26">0</span><i
+                                    class="count-to-unit-text"></i></p></div>
+                            <p>今天预计收入</p></div>
+                    </div>
+                </div>
+            </el-col>
+
+
+            <el-col :span="4" style="    margin-top: 20px;">
+                <div class="content-con">
+                    <div class="left-area" style="background: rgb(250,33,142); width: 24%;"><i
+                            class="el-icon-warning"
+                            style="font-size: 36px; color: rgb(255, 255, 255);"></i></div>
+                    <div class="right-area" style="width: 76%;">
+                        <div>
+                            <div class="count-to-wrapper"><p class="content-outer"><span
+                                    class="count-to-count-text count-style" id="count_to_22">0</span><i
+                                    class="count-to-unit-text"></i></p></div>
+                            <p>今年以来总投入金额</p></div>
+                    </div>
+                </div>
+            </el-col>
+            <el-col :span="4" style="    margin-top: 20px;">
+                <div class="content-con">
+                    <div class="left-area" style="background: rgb(181,246,111); width: 24%;"><i
+                            class="el-icon-warning"
+                            style="font-size: 36px; color: rgb(255, 255, 255);"></i></div>
+                    <div class="right-area" style="width: 76%;">
+                        <div>
+                            <div class="count-to-wrapper"><p class="content-outer"><span
+                                    class="count-to-count-text count-style" id="count_to_23">0</span><i
+                                    class="count-to-unit-text"></i></p></div>
+                            <p>近一年以来总投入金额</p></div>
+                    </div>
+                </div>
+            </el-col>
+            <el-col :span="4" style="    margin-top: 20px;">
+                <div class="content-con">
+                    <div class="left-area" style="background: rgb(112,246,166); width: 24%;"><i
+                            class="el-icon-warning"
+                            style="font-size: 36px; color: rgb(255, 255, 255);"></i></div>
+                    <div class="right-area" style="width: 76%;">
+                        <div>
+                            <div class="count-to-wrapper"><p class="content-outer"><span
+                                    class="count-to-count-text count-style" id="count_to_24">0</span><i
+                                    class="count-to-unit-text"></i></p></div>
+                            <p>去年以来总投入金额</p></div>
+                    </div>
+                </div>
+            </el-col>
+            <el-col :span="4" style="    margin-top: 20px;">
+                <div class="content-con">
+                    <div class="left-area" style="background: rgb(74,214,245); width: 24%;"><i
+                            class="el-icon-warning"
+                            style="font-size: 36px; color: rgb(255, 255, 255);"></i></div>
+                    <div class="right-area" style="width: 76%;">
+                        <div>
+                            <div class="count-to-wrapper"><p class="content-outer"><span
+                                    class="count-to-count-text count-style" id="count_to_25">0</span><i
+                                    class="count-to-unit-text"></i></p></div>
+                            <p>前年以来总投入金额</p></div>
+                    </div>
+                </div>
+            </el-col>
+            <el-col :span="4" style="    margin-top: 20px;">
+                <div class="content-con">
+                    <div class="left-area" style="background: rgb(236,243,149); width: 24%;"><i
+                            class="el-icon-warning"
+                            style="font-size: 36px; color: rgb(255, 255, 255);"></i></div>
+                    <div class="right-area" style="width: 76%;">
+                        <div>
+                            <div class="count-to-wrapper"><p class="content-outer"><span
+                                    class="count-to-count-text count-style" id="count_to_21">0</span><i
+                                    class="count-to-unit-text"></i></p></div>
+                            <p>全部累计总投入金额</p></div>
+                    </div>
+                </div>
+            </el-col>
+
+
         </el-row>
 
 
@@ -389,6 +482,14 @@
                         that.getCountUp('count_to_10', (res.data.data[0]['income_10'] == null ? 0 : res.data.data[0]['income_10']),"");
                         that.getCountUp('count_to_11', count_to_11,"%");
                         that.getCountUp('count_to_12', count_to_12,"%");
+
+                        that.getCountUp('count_to_21', (res.data.data[0]['amount_1'] == null ? 0 : res.data.data[0]['amount_1']),"");
+                        that.getCountUp('count_to_22', (res.data.data[0]['amount_2'] == null ? 0 : res.data.data[0]['amount_2']),"");
+                        that.getCountUp('count_to_23', (res.data.data[0]['amount_3'] == null ? 0 : res.data.data[0]['amount_3']),"");
+                        that.getCountUp('count_to_24', (res.data.data[0]['amount_4'] == null ? 0 : res.data.data[0]['amount_4']),"");
+                        that.getCountUp('count_to_25', (res.data.data[0]['amount_5'] == null ? 0 : res.data.data[0]['amount_5']),"");
+                        that.getCountUp('count_to_26', (res.data.data[0]['amount_6'] == null ? 0 : res.data.data[0]['amount_6']),"");
+
                     }).catch(function (error) {
                     console.log(error);
                 });

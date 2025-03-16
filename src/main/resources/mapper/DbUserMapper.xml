@@ -50,6 +50,24 @@
     </update>
 
 
+    <select id="findUserByRoleId" resultType="com.yys.fund.entity.DbUser">
+        select
+        dbu.id,
+        dbu.user_name     AS userName,
+        dbu.user_fullname AS userFullname,
+        dbu.email         AS email,
+        dbu.user_phone    AS userPhone,
+        dbu.role_id       AS roleId,
+        dbu.create_time   AS createTime,
+        dbu.update_time   AS updateTime,
+        dbu.last_login_time AS lastLoginTime
+        from db_user dbu
+        where dbu.role_id=#{roleId};
+
+
+    </select>
+
+
     <!--通过登陆名称查询单个管理员用户-->
     <select id="findUserByUserName" resultType="com.yys.fund.entity.DbUser">
         select

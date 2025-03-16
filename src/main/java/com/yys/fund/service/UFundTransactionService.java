@@ -19,4 +19,13 @@ public interface UFundTransactionService {
     int deleteUserFundTransactionForCode(Map map);
     int deleteUserFundTransactionSell(Map map);
 
+
+    /**
+     * 查询当前用户所有的交易记录:买入记录和卖出记录
+     * @return
+     */
+    void findFundTransactionAll();
+
+
+
 }

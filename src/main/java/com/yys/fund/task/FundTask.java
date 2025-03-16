@@ -7,6 +7,7 @@ import com.yys.fund.mapper.FFundInfoMapper;
 import com.yys.fund.mapper.FFundLevelMapper;
 import com.yys.fund.mapper.FFundNetWorthMapper;
 import com.yys.fund.mapper.UFundTransactionMapper;
+import com.yys.fund.service.UFundTransactionService;
 import com.yys.fund.utils.SendRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -30,13 +31,13 @@ public class FundTask {
 
     @Autowired
     private UFundTransactionMapper fundTransactionMapper;
-
+    @Autowired
+    UFundTransactionService fundTransactionService;
 
     /**
      * 时时更新每个基金当天
      */
-    //    @Scheduled(cron = "* */4 * * * ?")
-//        @Scheduled(cron = " 0 54 2 * * *")
+       // @Scheduled(cron = "* */4 * * * ?")
     @Scheduled(cron = " 0 */5 7-16 * * mon,tue,wed,thu,fri,sat")
     public void task1() {
         for (int i = 0; i < 1000; i++) {
@@ -105,8 +106,8 @@ public class FundTask {
     /**
      * 更新每天基金的真实基金净值  每天凌晨1点执行一次：0 0 1 * * ?
      */
-//    @Scheduled(cron = "* */5 * * * ?")
-    @Scheduled(cron = " 0 */10 0-2 * * mon,tue,wed,thu,fri,sat")
+   // @Scheduled(cron = "* */5 * * * ?")
+    @Scheduled(cron = " 0 */30 0-2 * * mon,tue,wed,thu,fri,sat")
 //    @Scheduled(cron = " 0 */3 8-23 * * mon,tue,wed,thu,fri,sat")
     public void task2() {
         for (int i = 0; i < 1000; i++) {
@@ -206,7 +207,6 @@ public class FundTask {
         fundTransactionMapper.updateFundTransactionTotalAmountForTask();
         fundTransactionMapper.updateFundTransactionTodayMoneyExpectForTask();
         fundTransactionMapper.updateFundTransactionTodayMoneyPurchasedForTask();
-
     }
 
 
@@ -215,6 +215,7 @@ public class FundTask {
     public void taskForInfo() {
         this.task2();
         this.task1();
+        fundTransactionService.findFundTransactionAll();
     }
 
     @Async

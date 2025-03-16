@@ -487,4 +487,40 @@
           and user_id = #{userId}
     </delete>
 
+    <select id="findFundTransactionAll" resultType="java.util.Map" parameterType="java.util.Map">
+        SELECT
+            *
+        FROM
+            (
+                SELECT
+                    uftp.purchase_amount_all AS amountAll,
+                    uftp.fund_info_code AS fundInfoCode,
+                    "1" AS type,
+                    uftp.purchase_time AS fundTransactionTime
+                FROM
+                    u_fund_transaction_purchase uftp
+                WHERE
+                    uftp.user_id = #{userId}
+                  AND uftp.fund_info_code = #{fundCode}
+                UNION ALL
+                SELECT
+                    uftp.purchase_amount_all AS amountAll,
+                    uftp.fund_info_code AS fundInfoCode,
+                    "2" AS type,
+                    ufts.sell_time AS fundTransactionTime
+                FROM
+                    u_fund_transaction_sell ufts
+                        LEFT JOIN u_fund_transaction_purchase uftp ON uftp.sell_id = ufts.id
+                WHERE
+                    uftp.user_id = #{userId}
+                  AND uftp.fund_info_code = #{fundCode}
+            ) AS fund
+        ORDER BY
+            fundTransactionTime;
+
+    </select>
+
+
+
+
 </mapper>
