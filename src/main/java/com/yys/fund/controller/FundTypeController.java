@@ -54,6 +54,9 @@ public class FundTypeController {
             if(dbUser==null){
                 return ResultUtil.error("添加失败,未登录!");
             }
+            if(dbUser.getRoleId()==2&&!"admin".equals(dbUser.getUserName())){
+                return ResultUtil.error("添加失败,无权限!");
+            }
             //判断名称是否重复
             List<FFundType> list = fundTypeService.findFundTypeByNameAndNumber(fundType);
             if (list != null && list.size() > 0) {
@@ -69,7 +72,7 @@ public class FundTypeController {
 
 
     /**
-     * 更新文章菜单
+     * 更新基金类型
      *
      * @param request
      * @param fundType
@@ -81,12 +84,15 @@ public class FundTypeController {
         try {
             DbUser dbUser=(DbUser)request.getSession().getAttribute("dbUser");
             if(dbUser==null){
-                return ResultUtil.error("添加失败,未登录!");
+                return ResultUtil.error("更新失败,未登录!");
+            }
+            if(dbUser.getRoleId()==2&&!"admin".equals(dbUser.getUserName())){
+                return ResultUtil.error("更新失败,无权限!");
             }
             //判断名称是否重复
             List<FFundType> list = fundTypeService.findFundTypeByNameAndNumber(fundType);
             if (list != null && list.size() > 0) {
-                return ResultUtil.error("添加失败,名称和编号重复!");
+                return ResultUtil.error("更新失败,名称和编号重复!");
             }
             fundTypeService.updateFundType(fundType);
             return ResultUtil.success("更新成功!");
@@ -111,6 +117,9 @@ public class FundTypeController {
             DbUser dbUser=(DbUser)request.getSession().getAttribute("dbUser");
             if(dbUser==null){
                 return ResultUtil.error("删除失败,未登录!");
+            }
+            if(dbUser.getRoleId()==2&&!"admin".equals(dbUser.getUserName())){
+                return ResultUtil.error("删除失败,无权限!");
             }
             fundType.setDeleteStatus(1);
             fundTypeService.deleteFundType(fundType);

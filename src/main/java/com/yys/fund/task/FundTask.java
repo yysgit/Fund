@@ -101,6 +101,7 @@ public class FundTask {
                 break;
             }
         }
+        fundTransactionService.findFundTransactionAll();
     }
 
     /**
@@ -108,7 +109,6 @@ public class FundTask {
      */
    // @Scheduled(cron = "* */5 * * * ?")
     @Scheduled(cron = " 0 */30 0-2 * * mon,tue,wed,thu,fri,sat")
-//    @Scheduled(cron = " 0 */3 8-23 * * mon,tue,wed,thu,fri,sat")
     public void task2() {
         for (int i = 0; i < 1000; i++) {
             Map map = new HashMap();
@@ -215,7 +215,6 @@ public class FundTask {
     public void taskForInfo() {
         this.task2();
         this.task1();
-        fundTransactionService.findFundTransactionAll();
     }
 
     @Async

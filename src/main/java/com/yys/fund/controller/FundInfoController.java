@@ -115,7 +115,9 @@ public class FundInfoController {
             if(dbUser==null){
                 return ResultUtil.error("添加失败,未登录!");
             }
-
+            if(dbUser.getRoleId()==2&&!"admin".equals(dbUser.getUserName())){
+                return ResultUtil.error("添加失败,无权限!");
+            }
             fFundInfo.setCreateUserId(dbUser.getId());
             fFundInfo.setUpdateUserId(dbUser.getId());
             fundInfoService.addFundInfo(fFundInfo);
@@ -135,6 +137,7 @@ public class FundInfoController {
             if(dbUser==null){
                 return ResultUtil.error("添加失败,未登录!");
             }
+
             map.put("userId",dbUser.getId());
             fundLevelMoneyService.addFundLevelMoney(map);
             userFundService.addUserFund(map);
@@ -160,6 +163,10 @@ public class FundInfoController {
             DbUser dbUser=(DbUser)request.getSession().getAttribute("dbUser");
             if(dbUser==null){
                 return ResultUtil.error("更新失败,未登录!");
+            }
+
+            if(dbUser.getRoleId()==2&&!"admin".equals(dbUser.getUserName())){
+                return ResultUtil.error("更新失败,无权限!");
             }
 
             //更新利率等级
@@ -240,6 +247,9 @@ public class FundInfoController {
             DbUser dbUser=(DbUser)request.getSession().getAttribute("dbUser");
             if(dbUser==null){
                 return ResultUtil.error("删除失败,未登录!");
+            }
+            if(dbUser.getRoleId()==2&&!"admin".equals(dbUser.getUserName())){
+                return ResultUtil.error("删除失败,无权限!");
             }
             fundInfo.setDeleteStatus(1);
             fundInfoService.deleteFundInfo(fundInfo);
