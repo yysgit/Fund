@@ -133,7 +133,14 @@ public class FundTask {
                     if (fundDateNet.get("maxNetWorth") != null && !fundDateNetMaxNetWorth.equals(fundDataMySQLMaxNetWorth)) {
                         fundDataMySQL.put("maxNetWorth", fundDateNet.get("maxNetWorth"));
                         fundDataMySQL.put("maxNetWorthDate", fundDateNet.get("maxNetWorthDate"));
-                        fundDataMySQL.put("fundName", fundDateNet.get("fundName"));
+
+                        String fundName=String.valueOf(fundDataMySQL.get("maxNetWorth"));
+                        if("".equals(fundName)||fundName==null){
+                            fundDataMySQL.put("fundName", fundDateNet.get("fundName"));
+                        }else{
+                            fundDataMySQL.put("fundName", fundName);
+                        }
+
                         Map mapFundLevel = SendRequest.getMapFundLevelForTask(Double.parseDouble(fundDataMySQL.get("maxNetWorth").toString()), String.valueOf(fundDataMySQL.get("fundCode")), Double.parseDouble(String.valueOf(fundDataMySQL.get("volatilityValue"))));
                         //更新基金信息的最大值净值和最大净值日期
                         fundInfoMapper.updateFundInfoForNetWorth(fundDataMySQL);
