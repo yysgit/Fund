@@ -134,7 +134,7 @@ public class FundTask {
                         fundDataMySQL.put("maxNetWorth", fundDateNet.get("maxNetWorth"));
                         fundDataMySQL.put("maxNetWorthDate", fundDateNet.get("maxNetWorthDate"));
 
-                        String fundName=String.valueOf(fundDataMySQL.get("maxNetWorth"));
+                        String fundName=String.valueOf(fundDataMySQL.get("fundName"));
                         if("".equals(fundName)||fundName==null){
                             fundDataMySQL.put("fundName", fundDateNet.get("fundName"));
                         }else{
